@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Час для себе — Студія масажу · Миколаїв</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+</head>
+<body>
+
+<div class="noise" aria-hidden="true"></div>
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero__3d-wrap">
+    <model-viewer
+      id="heroModel"
+      src="https://raw.githubusercontent.com/CakeBoxDeveloper/lacar/main/LC.glb"
+      alt="Час для себе"
+      camera-controls touch-action="pan-y" disable-zoom
+      camera-orbit="0deg 90deg 105%" field-of-view="30deg"
+      orientation="0deg -90deg 0deg"
+      environment-image="neutral" exposure="3.2" shadow-intensity="0"
+      interaction-prompt="none" tone-mapping="commerce"
+      style="background:transparent;width:100%;height:100%;display:block;transform:scaleX(-1) rotate(180deg);--progress-bar-height:0px;--progress-bar-color:transparent;"
+    ></model-viewer>
+  </div>
+
+  <div class="hero__content">
+    <h1 class="hero__title">ЧАС ДЛЯ СЕБЕ</h1>
+    <p class="hero__slogan">Зупинись і знайди час для себе</p>
+    <a href="https://maps.google.com/?q=вул.+Захисників+Миколаєва,+15,+Миколаїв" class="hero__location" target="_blank" rel="noopener">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+      вул. Захисників Миколаєва, 15
+    </a>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECTION 1 — СЕРТИФІКАТИ (3D carousel)
+══════════════════════════════════════ -->
+<section class="section" id="certificates">
+  <div class="col">
+    <h2 class="section-title">Сертифікати</h2>
+  </div>
+
+  <div class="cert-carousel" id="certCarousel">
+    <div class="cert-slide" data-idx="0">
+      <img src="Chocolate2500.png" alt="Chocolate" />
+    </div>
+    <div class="cert-slide" data-idx="1">
+      <img src="Cranberry9000.png" alt="Cranberry" />
+    </div>
+    <div class="cert-slide" data-idx="2">
+      <img src="Matcha5000.png" alt="Matcha" />
+    </div>
+    <div class="cert-slide" data-idx="3">
+      <img src="Mustard7500.png" alt="Mustard" />
+    </div>
+  </div>
+
+  <div class="snap-dots col" id="certDots"></div>
+
+  <!-- Gift CTA block -->
+  <div class="col">
+    <div class="cert-gift-block">
+      <div class="cert-gift-block__icon">🎁</div>
+      <div class="cert-gift-block__text">
+        <strong>Подаруй близькій людині</strong>
+        <span>Сертифікат на масаж — найкращий подарунок для тих, хто забуває піклуватися про себе</span>
+      </div>
+      <a href="https://t.me/pro_telo_niko" class="btn btn--accent btn--full cert-buy-btn" target="_blank" rel="noopener">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.94 8.19l-2.02 9.52c-.15.67-.54.84-1.09.52l-3-2.21-1.45 1.39c-.16.16-.3.3-.61.3l.21-3.03 5.52-4.99c.24-.21-.05-.33-.37-.12L6.55 14.6 3.6 13.7c-.66-.21-.67-.66.14-.97l11.62-4.48c.54-.2 1.02.13.58 1.94z"/></svg>
+        Придбати сертифікат
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECTION 2 — ПОСЛУГИ
+══════════════════════════════════════ -->
+<section class="section section--alt" id="services">
+  <div class="col">
+    <h2 class="section-title">Послуги</h2>
+    <p class="section-sub">Обери свій тип масажу</p>
+  </div>
+
+  <div class="services-scroll-wrap">
+    <div class="services-fade services-fade--left"></div>
+    <div class="snap-track" id="servicesTrack">
+      <div class="snap-inner">
+
+        <div class="service-card">
+          <div class="service-card__ico"><img src="https://cdn.svgrepo.com/show/530577/massage.svg" alt="" /></div>
+          <h3 class="service-card__name">Класичний масаж</h3>
+          <p class="service-card__desc">Авторська методика. Зняття загального напруження та накопиченої втоми. Повертаю тілу легкість, а голові — спокій.</p>
+          <div class="service-card__tags"><span>Розслаблення</span><span>Втома</span><span>Стрес</span></div>
+          <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__ico"><img src="https://cdn.svgrepo.com/show/530552/brain.svg" alt="" /></div>
+          <h3 class="service-card__name">Антистрес</h3>
+          <p class="service-card__desc">Для тих, хто відчуває емоційне та нервове виснаження. Глибока робота з нервовою системою.</p>
+          <div class="service-card__tags"><span>Нерви</span><span>Сон</span><span>Тривога</span></div>
+          <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__ico"><img src="https://cdn.svgrepo.com/show/530575/muscle.svg" alt="" /></div>
+          <h3 class="service-card__name">Глибокий тканинний</h3>
+          <p class="service-card__desc">Перкусія та глибокий тканинний масаж. Для спортсменів і людей з хронічним болем у м'язах.</p>
+          <div class="service-card__tags"><span>М'язи</span><span>Спорт</span><span>Перкусія</span></div>
+          <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__ico"><img src="https://cdn.svgrepo.com/show/530573/lotus.svg" alt="" /></div>
+          <h3 class="service-card__name">Стоун-масаж</h3>
+          <p class="service-card__desc">Масаж гарячими каменями. Глибоке прогрівання м'язів, зняття спазму, повне розслаблення.</p>
+          <div class="service-card__tags"><span>Камені</span><span>Тепло</span><span>Спазм</span></div>
+          <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__ico"><img src="https://cdn.svgrepo.com/show/530569/needle.svg" alt="" /></div>
+          <h3 class="service-card__name">Dry Needling</h3>
+          <p class="service-card__desc">Суха голкотерапія. Точкова робота з тригерними точками — зняття хронічного болю та м'язового напруження.</p>
+          <div class="service-card__tags"><span>Акупунктура</span><span>Тригери</span><span>Біль</span></div>
+          <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__ico"><img src="https://cdn.svgrepo.com/show/530581/sun.svg" alt="" /></div>
+          <h3 class="service-card__name">Терапія червоним світлом</h3>
+          <p class="service-card__desc">Фотобіомодуляція. Прискорює відновлення тканин, зменшує запалення, покращує стан шкіри.</p>
+          <div class="service-card__tags"><span>Відновлення</span><span>Шкіра</span><span>Запалення</span></div>
+          <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__ico"><img src="https://cdn.svgrepo.com/show/530557/spa.svg" alt="" /></div>
+          <h3 class="service-card__name">СПА-програма</h3>
+          <p class="service-card__desc">Повна програма відновлення: масаж + ароматерапія + стоун. Для глибокого релаксу тіла та розуму.</p>
+          <div class="service-card__tags"><span>СПА</span><span>Аромат</span><span>Релакс</span></div>
+          <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+        </div>
+
+      </div>
+    </div>
+    <div class="services-fade services-fade--right"></div>
+  </div>
+  <div class="snap-dots col" id="servicesDots"></div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECTION 3 — ПРАЙС
+══════════════════════════════════════ -->
+<section class="section" id="price">
+  <div class="col">
+    <h2 class="section-title">Прайс</h2>
+    <p class="section-sub">Перший сеанс — знижка 10%</p>
+
+    <div class="price-list">
+      <div class="price-group">
+        <div class="price-group__title">Масаж</div>
+        <div class="price-item"><span class="price-item__name">Класичний / загальний</span><span class="price-item__line"></span><span class="price-item__val">від 600 <span class="accent">₴</span></span></div>
+        <div class="price-item"><span class="price-item__name">Антистрес (60 хв)</span><span class="price-item__line"></span><span class="price-item__val">700 <span class="accent">₴</span></span></div>
+        <div class="price-item"><span class="price-item__name">Глибокий тканинний</span><span class="price-item__line"></span><span class="price-item__val">від 800 <span class="accent">₴</span></span></div>
+        <div class="price-item"><span class="price-item__name">Стоун-масаж (90 хв)</span><span class="price-item__line"></span><span class="price-item__val">1 200 <span class="accent">₴</span></span></div>
+        <div class="price-item"><span class="price-item__name">СПА-програма (120 хв)</span><span class="price-item__line"></span><span class="price-item__val">1 800 <span class="accent">₴</span></span></div>
+      </div>
+
+      <div class="price-group">
+        <div class="price-group__title">Фізіотерапія</div>
+        <div class="price-item"><span class="price-item__name">Dry Needling</span><span class="price-item__line"></span><span class="price-item__val">від 500 <span class="accent">₴</span></span></div>
+        <div class="price-item"><span class="price-item__name">Терапія червоним світлом</span><span class="price-item__line"></span><span class="price-item__val">від 400 <span class="accent">₴</span></span></div>
+        <div class="price-item"><span class="price-item__name">Перкусія (локальна)</span><span class="price-item__line"></span><span class="price-item__val">від 300 <span class="accent">₴</span></span></div>
+      </div>
+
+      <div class="price-note">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Точну вартість назве майстер після консультації — але ви завжди можете її знизити, взявши участь у миттєвій лотереї нижче.
+      </div>
+
+      <!-- LOTTERY CARD -->
+      <div class="lottery-card" id="lotteryCard">
+        <div class="lottery-card__left">
+          <div class="lottery-card__label">Миттєва лотерея</div>
+          <div class="lottery-card__desc">Зіграй і отримай знижку на свій сеанс</div>
+          <button class="btn btn--accent lottery-card__btn" id="lotteryBtn">Спробувати</button>
+        </div>
+        <div class="lottery-card__right">
+          <div class="lottery-card__wheel" id="lotteryWheel">
+            <svg viewBox="0 0 80 80" width="80" height="80">
+              <circle cx="40" cy="40" r="36" fill="none" stroke="rgba(77,140,255,0.2)" stroke-width="8"/>
+              <circle cx="40" cy="40" r="36" fill="none" stroke="var(--accent)" stroke-width="8"
+                stroke-dasharray="56 170" stroke-linecap="round"
+                transform="rotate(-90 40 40)"/>
+              <text x="40" y="45" text-anchor="middle" fill="#fff" font-size="18" font-weight="800">?</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECTION 4 — КОНТАКТИ
+══════════════════════════════════════ -->
+<section class="section section--alt" id="contacts">
+  <div class="col">
+    <h2 class="section-title">Контакти</h2>
+    <p class="section-sub">Фізіотерапевт з мед. освітою · Миколаїв</p>
+
+    <div class="contacts-block">
+
+      <!-- Map -->
+      <div class="map-wrap">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2735.5!2d31.9950!3d46.9750!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40c5c8f0!2z0LLRg9C7LiDQl9Cw0YXQuNGB0L3QuNC60ZbQstCh0LXQsdC1LCAxNSwg0JzQuNC60L7Qu9Cw0ZfQsg!5e0!3m2!1suk!2sua!4v1234567890"
+          allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          title="Час для себе на карті">
+        </iframe>
+      </div>
+
+      <!-- Address chip -->
+      <a href="https://maps.google.com/?q=вул.+Захисників+Миколаєва,+15,+Миколаїв" class="map-chip" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        вул. Захисників Миколаєва, 15
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="map-chip__arrow"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+
+      <!-- Telegram CTA -->
+      <a href="https://t.me/pro_telo_niko" class="contact-btn contact-btn--tg" target="_blank" rel="noopener">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.94 8.19l-2.02 9.52c-.15.67-.54.84-1.09.52l-3-2.21-1.45 1.39c-.16.16-.3.3-.61.3l.21-3.03 5.52-4.99c.24-.21-.05-.33-.37-.12L6.55 14.6 3.6 13.7c-.66-.21-.67-.66.14-.97l11.62-4.48c.54-.2 1.02.13.58 1.94z"/></svg>
+        Написати у Telegram
+      </a>
+
+      <!-- Perks -->
+      <div class="perks-list">
+        <div class="perk-item">
+          <div class="perk-item__ico"><img src="https://cdn.svgrepo.com/show/530577/massage.svg" alt="" /></div>
+          <div class="perk-item__text"><strong>Авторські методики</strong><span>Стоун · Dry Needling · Перкусія · Класика</span></div>
+        </div>
+        <div class="perk-item">
+          <div class="perk-item__ico"><img src="https://cdn.svgrepo.com/show/530552/brain.svg" alt="" /></div>
+          <div class="perk-item__text"><strong>Медична освіта</strong><span>Фізіотерапевт з офіційною кваліфікацією</span></div>
+        </div>
+        <div class="perk-item">
+          <div class="perk-item__ico"><img src="https://cdn.svgrepo.com/show/530573/lotus.svg" alt="" /></div>
+          <div class="perk-item__text"><strong>Індивідуальний підхід</strong><span>Кожен сеанс адаптований під вас</span></div>
+        </div>
+        <div class="perk-item">
+          <div class="perk-item__ico"><img src="https://cdn.svgrepo.com/show/530581/sun.svg" alt="" /></div>
+          <div class="perk-item__text"><strong>Терапія червоним світлом</strong><span>Фотобіомодуляція для відновлення тканин</span></div>
+        </div>
+        <div class="perk-item">
+          <div class="perk-item__ico"><img src="https://cdn.svgrepo.com/show/530569/needle.svg" alt="" /></div>
+          <div class="perk-item__text"><strong>Акупунктура (Dry Needling)</strong><span>Точкова робота з тригерними зонами</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FLOATING CTA -->
+<div class="float-cta" id="floatCta">
+  <a href="https://t.me/pro_telo_niko" class="float-cta__btn" target="_blank" rel="noopener">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.94 8.19l-2.02 9.52c-.15.67-.54.84-1.09.52l-3-2.21-1.45 1.39c-.16.16-.3.3-.61.3l.21-3.03 5.52-4.99c.24-.21-.05-.33-.37-.12L6.55 14.6 3.6 13.7c-.66-.21-.67-.66.14-.97l11.62-4.48c.54-.2 1.02.13.58 1.94z"/></svg>
+    Записатись
+  </a>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
