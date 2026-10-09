@@ -320,7 +320,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
 
 /* ── Service card ── */
 .service-card {
-  width: calc(var(--col) * 0.88);
+  width: min(calc(var(--col) * 0.88), calc(100vw - 48px));
   max-width: calc(var(--col) * 0.88);
   flex-shrink: 0;
   scroll-snap-align: center;
@@ -331,7 +331,6 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
   display: flex;
   flex-direction: column;
   gap: 10px;
-  /* Fixed height so cards don't stretch on mobile */
   min-height: 0;
   height: auto;
   transition: border-color var(--ease), box-shadow var(--ease);
