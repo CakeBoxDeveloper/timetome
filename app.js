@@ -1,9 +1,7 @@
 'use strict';
 
 /* ══════════════════════════════════════════════
-   CERT CAROUSEL — ClassicClub pattern (exact copy)
-   data-position attribute, CSS handles all visuals,
-   infinite wrap-around via diff calculation
+   CERT CAROUSEL — exact ClassicClub pattern, no tilt
 ══════════════════════════════════════════════ */
 (function () {
   const container = document.getElementById('certCarousel');
@@ -27,7 +25,6 @@
 
   function update() {
     slides.forEach((slide, i) => {
-      /* Wrap-around diff — same as ClassicClub */
       let diff = i - activeIndex;
       if (diff >  slides.length / 2) diff -= slides.length;
       if (diff < -slides.length / 2) diff += slides.length;
@@ -37,52 +34,41 @@
       else if (diff === -1) slide.setAttribute('data-position', '-1');
       else                  slide.setAttribute('data-position', 'hide');
     });
-
     dots.forEach((d, i) => d.classList.toggle('is-active', i === activeIndex));
   }
 
-  /* Click on side slides to navigate */
+  /* Click any slide */
   slides.forEach((slide, i) => {
-    slide.addEventListener('click', () => {
-      activeIndex = i;
-      update();
-    });
+    slide.addEventListener('click', () => { activeIndex = i; update(); });
   });
 
-  /* Touch swipe — same as ClassicClub */
-  let touchStart     = 0;
-  let touchStartTime = 0;
+  /* Touch swipe */
+  let touchStart = 0, touchTime = 0;
   container.addEventListener('touchstart', e => {
-    touchStart     = e.touches[0].clientX;
-    touchStartTime = Date.now();
+    touchStart = e.touches[0].clientX;
+    touchTime  = Date.now();
   }, { passive: true });
   container.addEventListener('touchend', e => {
-    const touchEnd      = e.changedTouches[0].clientX;
-    const touchDuration = Date.now() - touchStartTime;
-    const swipeDist     = touchStart - touchEnd;
-    if (swipeDist > 50 && touchDuration < 500) {
-      activeIndex = (activeIndex + 1) % slides.length;
-      update();
-    } else if (swipeDist < -50 && touchDuration < 500) {
-      activeIndex = (activeIndex - 1 + slides.length) % slides.length;
+    const dx = touchStart - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 50 && Date.now() - touchTime < 500) {
+      activeIndex = (activeIndex + (dx > 0 ? 1 : -1) + slides.length) % slides.length;
       update();
     }
   }, { passive: true });
 
-  /* Mouse drag for desktop */
-  let mouseStart = 0;
-  let isDragging = false;
-  container.addEventListener('mousedown',  e => { isDragging = true; mouseStart = e.clientX; });
+  /* Mouse drag */
+  let mStart = 0, dragging = false;
+  container.addEventListener('mousedown',  e => { dragging = true; mStart = e.clientX; });
   container.addEventListener('mouseup',    e => {
-    if (!isDragging) return;
-    isDragging = false;
-    const dx = mouseStart - e.clientX;
-    if (dx >  60) { activeIndex = (activeIndex + 1) % slides.length; update(); }
-    if (dx < -60) { activeIndex = (activeIndex - 1 + slides.length) % slides.length; update(); }
+    if (!dragging) return; dragging = false;
+    const dx = mStart - e.clientX;
+    if (Math.abs(dx) > 60) {
+      activeIndex = (activeIndex + (dx > 0 ? 1 : -1) + slides.length) % slides.length;
+      update();
+    }
   });
-  container.addEventListener('mouseleave', () => { isDragging = false; });
+  container.addEventListener('mouseleave', () => { dragging = false; });
 
-  /* Init */
   update();
 })();
 
@@ -131,23 +117,19 @@
    SCRATCH CARD
 ══════════════════════════════════════ */
 (function () {
-  const canvas  = document.getElementById('scratchCanvas');
-  const valEl   = document.getElementById('lotValue');
-  const hintEl  = document.getElementById('scratchHint');
+  const canvas = document.getElementById('scratchCanvas');
+  const valEl  = document.getElementById('lotValue');
   if (!canvas) return;
 
-  // Random prize
   const prizes = ['−5%', '−10%', '−15%', '−7%', '−20%', '−10%', '−5%', '−10%'];
   if (valEl) valEl.textContent = prizes[Math.floor(Math.random() * prizes.length)];
 
   const ctx = canvas.getContext('2d');
-  let drawing = false;
-  let total   = 1;
-  let done    = false;
+  let drawing = false, done = false, total = 1;
 
   function resize() {
-    // Canvas size = its CSS rendered size
     const r = canvas.getBoundingClientRect();
+    if (!r.width || !r.height) return;
     canvas.width  = r.width;
     canvas.height = r.height;
     if (!done) drawLayer();
@@ -155,47 +137,39 @@
   }
 
   function drawLayer() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#f13c77';
-    ctx.beginPath();
-    ctx.roundRect(0, 0, canvas.width, canvas.height, 6);
-    ctx.fill();
-    // Diagonal pattern
-    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
-    ctx.lineWidth = 1.5;
-    for (let x = -canvas.height; x < canvas.width + canvas.height; x += 16) {
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x + canvas.height, canvas.height);
-      ctx.stroke();
+    /* Grey scratch surface */
+    ctx.fillStyle = '#b0b0b8';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    /* Subtle texture lines */
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    ctx.lineWidth = 1;
+    for (let x = -canvas.height; x < canvas.width + canvas.height; x += 14) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + canvas.height, canvas.height); ctx.stroke();
     }
-    // Text
-    ctx.fillStyle = 'rgba(255,255,255,0.55)';
-    ctx.font = `bold ${Math.max(11, canvas.height * 0.2)}px Manrope, sans-serif`;
+    /* Hint text */
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.font = `bold ${Math.max(12, canvas.height * 0.22)}px Manrope, sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('✦  ЗІТРИ  ✦', canvas.width / 2, canvas.height / 2);
+    ctx.fillText('ЗІТРИ', canvas.width / 2, canvas.height / 2);
   }
 
   function erase(x, y) {
     if (done) return;
     ctx.globalCompositeOperation = 'destination-out';
     ctx.beginPath();
-    ctx.arc(x, y, Math.max(20, canvas.height * 0.28), 0, Math.PI * 2);
+    ctx.arc(x, y, Math.max(18, canvas.height * 0.25), 0, Math.PI * 2);
     ctx.fill();
     ctx.globalCompositeOperation = 'source-over';
-    if (Math.random() < 0.08) checkDone();
-  }
-
-  function checkDone() {
-    const d = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-    let t = 0;
-    for (let i = 3; i < d.length; i += 4) if (d[i] < 128) t++;
-    if (t / total > 0.55) {
-      done = true;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      canvas.style.pointerEvents = 'none';
-      if (hintEl) { hintEl.textContent = 'Покажи цей екран майстру 🎉'; hintEl.classList.add('is-done'); }
+    if (Math.random() < 0.1) {
+      const d = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      let t = 0;
+      for (let i = 3; i < d.length; i += 4) if (d[i] < 128) t++;
+      if (t / total > 0.55) {
+        done = true;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.style.pointerEvents = 'none';
+      }
     }
   }
 
@@ -213,13 +187,9 @@
   canvas.addEventListener('touchmove',  e => { e.preventDefault(); if (drawing) erase(...pos(e)); }, { passive: false });
   canvas.addEventListener('touchend',   () => drawing = false);
 
-  // Init after SVG image loads (it drives the layout)
-  const bgImg = document.getElementById('lotBg');
-  if (bgImg && !bgImg.complete) {
-    bgImg.addEventListener('load', () => setTimeout(resize, 50));
-  } else {
-    setTimeout(resize, 200);
-  }
+  /* Init after layout */
+  if (document.readyState === 'complete') { setTimeout(resize, 100); }
+  else { window.addEventListener('load', () => setTimeout(resize, 100)); }
   window.addEventListener('resize', () => { if (!done) resize(); });
 })();
 

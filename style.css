@@ -223,19 +223,19 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    115deg,
-    rgba(255,255,255,0)    20%,
-    rgba(255,255,255,0.22) 48%,
-    rgba(255,255,255,0)    70%
+    105deg,
+    transparent 30%,
+    rgba(255,255,255,0.22) 50%,
+    transparent 70%
   );
-  background-size: 200% 100%;
-  animation: certShimmer 3s linear infinite;
+  background-size: 300% 100%;
+  animation: certShimmer 2.5s linear infinite;
   pointer-events: none;
   border-radius: inherit;
 }
 @keyframes certShimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -100% 0; }
+  0%   { background-position: 200% center; }
+  100% { background-position: -100% center; }
 }
 
 /* ── Cert gift block ── */
@@ -320,16 +320,21 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
 
 /* ── Service card ── */
 .service-card {
-  width:calc(var(--col)*0.88);
-  max-width:calc(var(--col)*0.88);
-  flex-shrink:0;
-  scroll-snap-align:center;
-  background:var(--bg-card);
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  padding:22px 18px 20px;
-  display:flex; flex-direction:column; gap:12px;
-  transition:border-color var(--ease), box-shadow var(--ease);
+  width: calc(var(--col) * 0.88);
+  max-width: calc(var(--col) * 0.88);
+  flex-shrink: 0;
+  scroll-snap-align: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* Fixed height so cards don't stretch on mobile */
+  min-height: 0;
+  height: auto;
+  transition: border-color var(--ease), box-shadow var(--ease);
 }
 .service-card:hover { border-color:var(--border-accent); box-shadow:0 0 36px var(--accent-glow); }
 
@@ -407,88 +412,93 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
 .price-note svg { flex-shrink:0; margin-top:1px; color:var(--accent); }
 
 /* ══════════════════════════════════════════════
-   LOT CARD — SVG as background image, canvas over dashed zone
+   LOT CARD — credit card style: 1/3 pink top, 2/3 yellow bottom
 ══════════════════════════════════════════════ */
 .lot-card {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  /* Credit card aspect ratio ~1.586:1 */
+  aspect-ratio: 1.586 / 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
-.lot-card__img-wrap {
-  position: relative;
-  width: 100%;
-  border-radius: 12px;
-  overflow: hidden;
-  /* SVG has its own aspect ratio — let it drive the height */
-  line-height: 0;
+/* Top 1/3 — pink */
+.lot-card__top {
+  flex: 1;
+  background: #f13c77;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+}
+.lot-card__title {
+  font-family: var(--font-title);
+  font-size: clamp(18px, 6vw, 28px);
+  font-weight: 900;
+  color: #f5e6ad;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1;
 }
 
-.lot-card__bg {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 12px;
-}
-
-/* Prize text — absolute, centered over the dashed rectangle in the SVG.
-   Based on mockup: dashed zone is roughly 30%–70% from top, 10%–90% wide */
-.lot-card__prize-layer {
-  position: absolute;
-  /* These percentages match the SVG dashed rectangle position */
-  top: 52%;
-  left: 8%;
-  right: 8%;
-  bottom: 12%;
+/* Bottom 2/3 — yellow */
+.lot-card__body {
+  flex: 2;
+  background: #f5e6ad;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  pointer-events: none;
+  padding: 12px 16px 14px;
+  gap: 10px;
 }
-.lot-card__prize-val {
+.lot-card__subtitle {
   font-family: var(--font-title);
-  font-size: clamp(32px, 10vw, 48px);
+  font-size: clamp(10px, 3vw, 14px);
+  font-weight: 700;
+  color: #f13c77;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Scratch zone */
+.lot-card__scratch-zone {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.lot-card__prize {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5e6ad;
+}
+.lot-card__prize span {
+  font-family: var(--font-title);
+  font-size: clamp(28px, 9vw, 44px);
   font-weight: 900;
   color: #f13c77;
   line-height: 1;
   letter-spacing: -0.02em;
 }
-.lot-card__prize-lbl {
-  font-size: 11px;
-  font-weight: 700;
-  color: rgba(241,60,119,0.7);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-/* Canvas — exact same area as prize layer */
 .lot-card__canvas {
   position: absolute;
-  top: 52%;
-  left: 8%;
-  right: 8%;
-  bottom: 12%;
-  width: calc(100% - 16%);
-  height: auto;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   cursor: crosshair;
   touch-action: none;
   border-radius: 6px;
 }
 
-.lot-card__hint {
-  font-size: 12px;
-  font-weight: 600;
-  color: rgba(241,60,119,0.65);
-  text-align: center;
-  letter-spacing: 0.04em;
-  padding: 0 4px;
-}
-.lot-card__hint.is-done {
-  color: #f13c77;
-  font-weight: 700;
-}
 /* ══════════════════════════════════════════════
    CONTACTS
 ══════════════════════════════════════════════ */
@@ -576,46 +586,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
 .perk-item__text strong { font-size:13px; font-weight:700; }
 .perk-item__text span   { font-size:12px; color:var(--text-muted); line-height:1.4; }
 
-/* ══════════════════════════════════════════════
-   FLOATING CTA
-══════════════════════════════════════════════ */
-.float-cta {
-  position:fixed; bottom:28px; left:50%;
-  transform:translateX(-50%) translateY(20px);
-  z-index:80; opacity:0; pointer-events:none;
-  transition:opacity .4s ease, transform .4s ease;
-}
-.float-cta.is-visible {
-  opacity:1; transform:translateX(-50%) translateY(0); pointer-events:all;
-}
-.float-cta__btn {
-  display:inline-flex; align-items:center; gap:10px;
-  padding:14px 32px; border-radius:50px;
-  font-size:15px; font-weight:700; color:#fff;
-  white-space:nowrap;
-  background:rgba(77,140,255,0.22);
-  -webkit-backdrop-filter:blur(20px) saturate(160%);
-  backdrop-filter:blur(20px) saturate(160%);
-  border:1.5px solid rgba(77,140,255,0.55);
-  box-shadow:0 8px 32px rgba(0,0,0,0.5), 0 0 24px var(--accent-glow);
-  position:relative; overflow:hidden;
-  transition:background var(--ease), filter var(--ease), transform var(--ease);
-}
-.float-cta__btn:hover  { background:rgba(77,140,255,0.38); }
-.float-cta__btn:active { transform:scale(0.97); }
-.float-cta__btn::before {
-  content:''; position:absolute; inset:0; border-radius:50px; padding:1.5px;
-  background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.7) 50%,rgba(255,255,255,0) 100%);
-  background-size:200% 100%; background-position:200% 0;
-  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  animation:floatShimmer 3s linear infinite; pointer-events:none;
-}
-@keyframes floatShimmer {
-  0%  { background-position:200% 0; }
-  100%{ background-position:-200% 0; }
-}
+/* FLOATING CTA — see rules at end of file */
 
 /* ══════════════════════════════════════════════
    DESKTOP
@@ -628,4 +599,58 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
 }
 @media (prefers-reduced-motion:reduce) {
   *,*::before,*::after { animation-duration:.01ms !important; transition-duration:.01ms !important; }
+}
+
+/* Pause tilt during swipe transition */
+.cert-slide.no-tilt {
+  animation: none !important;
+}
+
+/* Float CTA — two separate pill buttons with gap */
+.float-cta {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  z-index: 80;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .4s ease, transform .4s ease;
+  display: flex;
+  gap: 10px;
+  max-width: calc(100vw - 32px);
+}
+.float-cta.is-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: all;
+}
+.float-cta__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 20px;
+  border-radius: 40px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 2px solid rgba(255,255,255,0.55);
+  background: rgba(14, 12, 10, 0.60);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+  cursor: pointer;
+  transition: background var(--ease), border-color var(--ease), transform var(--ease);
+}
+.float-cta__btn:active { transform: scale(0.97); background: rgba(255,255,255,0.12); }
+.float-cta__btn--tg:hover { background: rgba(255,255,255,0.1); }
+.float-cta__btn--ig:hover { background: rgba(255,255,255,0.1); }
+.float-cta__ico {
+  width: 18px;
+  height: 18px;
+  filter: brightness(0) invert(1);
+  flex-shrink: 0;
 }

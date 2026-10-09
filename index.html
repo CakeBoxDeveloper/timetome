@@ -50,9 +50,10 @@
       camera-controls
       touch-action="pan-y"
       disable-zoom
-      field-of-view="30deg"
+      camera-orbit="0deg 70deg 90%"
+      field-of-view="28deg"
       environment-image="neutral"
-      exposure="2.8"
+      exposure="3.0"
       shadow-intensity="0"
       interaction-prompt="none"
       tone-mapping="commerce"
@@ -217,25 +218,22 @@
 
       <!-- SCRATCH LOTTERY CARD -->
       <div class="lot-card" id="lotCard">
-        <!-- SVG template as background image -->
-        <div class="lot-card__img-wrap">
-          <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/8b751215fdca7912296c5a4c5eacd897f850e6eb/Lot.svg"
-               alt="Лотерея"
-               class="lot-card__bg"
-               id="lotBg"
-               crossorigin="anonymous" />
-
-          <!-- Prize text — positioned over dashed area -->
-          <div class="lot-card__prize-layer" id="lotPrizeLayer">
-            <span class="lot-card__prize-val" id="lotValue">−10%</span>
-            <span class="lot-card__prize-lbl">знижка на сеанс</span>
-          </div>
-
-          <!-- Scratch canvas — covers only the dashed zone -->
-          <canvas class="lot-card__canvas" id="scratchCanvas"></canvas>
+        <!-- Top 1/3 — pink header -->
+        <div class="lot-card__top">
+          <span class="lot-card__title">ЧАС ДЛЯ СЕБЕ</span>
         </div>
-
-        <div class="lot-card__hint" id="scratchHint">Зітри захисний шар, щоб дізнатися знижку</div>
+        <!-- Bottom 2/3 — yellow body -->
+        <div class="lot-card__body">
+          <div class="lot-card__subtitle">— МИТТЄВА ЛОТЕРЕЯ —</div>
+          <div class="lot-card__scratch-zone">
+            <!-- Prize text underneath -->
+            <div class="lot-card__prize" id="lotPrize">
+              <span id="lotValue">−10%</span>
+            </div>
+            <!-- Grey scratch canvas on top -->
+            <canvas id="scratchCanvas" class="lot-card__canvas"></canvas>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -309,8 +307,12 @@
 
 <!-- FLOATING CTA -->
 <div class="float-cta" id="floatCta">
-  <a href="https://t.me/pro_telo_niko" class="float-cta__btn" target="_blank" rel="noopener">
-    <img src="https://www.svgrepo.com/show/388724/telegram.svg" alt="" width="18" height="18" />
+  <a href="https://t.me/pro_telo_niko" class="float-cta__btn float-cta__btn--tg" target="_blank" rel="noopener">
+    <img src="https://www.svgrepo.com/show/388724/telegram.svg" alt="" class="float-cta__ico" />
+    Записатись
+  </a>
+  <a href="https://www.instagram.com/pro_telo_niko" class="float-cta__btn float-cta__btn--ig" target="_blank" rel="noopener">
+    <img src="https://www.svgrepo.com/show/521711/instagram.svg" alt="" class="float-cta__ico" />
     Записатись
   </a>
 </div>
