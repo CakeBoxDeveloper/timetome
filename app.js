@@ -127,6 +127,44 @@
   const ctx = canvas.getContext('2d');
   let drawing = false, done = false, total = 1;
 
+  /* ── Fingerprint-like pattern ── */
+  function drawLayer() {
+    const W = canvas.width, H = canvas.height;
+    ctx.fillStyle = '#9a9aaa';
+    ctx.fillRect(0, 0, W, H);
+
+    /* Concentric arc "fingerprint" lines */
+    ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+    ctx.lineWidth = 1;
+    const cx = W * 0.5, cy = H * 0.5;
+    const steps = 14;
+    for (let i = 1; i <= steps; i++) {
+      const r = (i / steps) * Math.max(W, H) * 0.7;
+      /* Slightly deform each arc for organic feel */
+      ctx.beginPath();
+      for (let a = 0; a <= Math.PI * 2; a += 0.06) {
+        const wobble = 1 + 0.04 * Math.sin(a * 6 + i * 1.3);
+        const x = cx + Math.cos(a) * r * wobble;
+        const y = cy + Math.sin(a) * r * wobble * 0.55; /* flatten vertically */
+        a === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.stroke();
+    }
+
+    /* Extra fine horizontal ridges */
+    ctx.strokeStyle = 'rgba(255,255,255,0.10)';
+    ctx.lineWidth = 0.5;
+    for (let y = 2; y < H; y += 4) {
+      ctx.beginPath();
+      ctx.moveTo(0, y + Math.sin(y * 0.4) * 1.5);
+      for (let x = 0; x <= W; x += 3) {
+        ctx.lineTo(x, y + Math.sin(y * 0.4 + x * 0.05) * 1.5);
+      }
+      ctx.stroke();
+    }
+  }
+
   function resize() {
     const r = canvas.getBoundingClientRect();
     if (!r.width || !r.height) return;
@@ -136,40 +174,43 @@
     total = canvas.width * canvas.height || 1;
   }
 
-  function drawLayer() {
-    /* Grey scratch surface */
-    ctx.fillStyle = '#b0b0b8';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    /* Subtle texture lines */
-    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
-    ctx.lineWidth = 1;
-    for (let x = -canvas.height; x < canvas.width + canvas.height; x += 14) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + canvas.height, canvas.height); ctx.stroke();
-    }
-    /* Hint text */
-    ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    ctx.font = `bold ${Math.max(12, canvas.height * 0.22)}px Manrope, sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('ЗІТРИ', canvas.width / 2, canvas.height / 2);
-  }
-
+  /* ── Uneven brush: multiple overlapping ellipses ── */
   function erase(x, y) {
     if (done) return;
     ctx.globalCompositeOperation = 'destination-out';
+
+    /* Main blob */
+    const rx = 18 + Math.random() * 10;
+    const ry = 10 + Math.random() * 8;
+    const rot = Math.random() * Math.PI;
     ctx.beginPath();
-    ctx.arc(x, y, Math.max(18, canvas.height * 0.25), 0, Math.PI * 2);
+    ctx.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2);
     ctx.fill();
+
+    /* 2–3 satellite blobs for rough/irregular edge */
+    const n = 2 + Math.floor(Math.random() * 2);
+    for (let i = 0; i < n; i++) {
+      const ox = x + (Math.random() - 0.5) * 22;
+      const oy = y + (Math.random() - 0.5) * 14;
+      const sr = 6 + Math.random() * 8;
+      ctx.beginPath();
+      ctx.arc(ox, oy, sr, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
     ctx.globalCompositeOperation = 'source-over';
-    if (Math.random() < 0.1) {
-      const d = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-      let t = 0;
-      for (let i = 3; i < d.length; i += 4) if (d[i] < 128) t++;
-      if (t / total > 0.55) {
-        done = true;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        canvas.style.pointerEvents = 'none';
-      }
+
+    if (Math.random() < 0.08) checkDone();
+  }
+
+  function checkDone() {
+    const d = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    let t = 0;
+    for (let i = 3; i < d.length; i += 4) if (d[i] < 128) t++;
+    if (t / total > 0.55) {
+      done = true;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.style.pointerEvents = 'none';
     }
   }
 
@@ -187,9 +228,8 @@
   canvas.addEventListener('touchmove',  e => { e.preventDefault(); if (drawing) erase(...pos(e)); }, { passive: false });
   canvas.addEventListener('touchend',   () => drawing = false);
 
-  /* Init after layout */
-  if (document.readyState === 'complete') { setTimeout(resize, 100); }
-  else { window.addEventListener('load', () => setTimeout(resize, 100)); }
+  if (document.readyState === 'complete') setTimeout(resize, 100);
+  else window.addEventListener('load', () => setTimeout(resize, 100));
   window.addEventListener('resize', () => { if (!done) resize(); });
 })();
 

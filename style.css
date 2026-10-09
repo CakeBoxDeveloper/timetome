@@ -464,14 +464,40 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
   text-transform: uppercase;
 }
 
-/* Scratch zone */
+/* ── Lot card shimmer overlay (over the whole card) ── */
+.lot-card {
+  position: relative;
+  overflow: hidden;
+}
+.lot-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent        25%,
+    rgba(255,255,255,0.18) 50%,
+    transparent        75%
+  );
+  background-size: 300% 100%;
+  animation: lotShimmer 3s linear infinite;
+  pointer-events: none;
+  z-index: 5;
+  border-radius: 16px;
+}
+@keyframes lotShimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -100% center; }
+}
+
+/* Scratch zone — smaller (half previous) */
 .lot-card__scratch-zone {
   position: relative;
-  width: 100%;
-  flex: 1;
-  min-height: 0;
+  width: 80%;
+  height: 52px;
   border-radius: 6px;
   overflow: hidden;
+  z-index: 6; /* above card shimmer */
 }
 .lot-card__prize {
   position: absolute;
@@ -480,10 +506,11 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
   align-items: center;
   justify-content: center;
   background: #f5e6ad;
+  z-index: 1;
 }
 .lot-card__prize span {
   font-family: var(--font-title);
-  font-size: clamp(28px, 9vw, 44px);
+  font-size: clamp(22px, 7vw, 36px);
   font-weight: 900;
   color: #f13c77;
   line-height: 1;
@@ -497,6 +524,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
   cursor: crosshair;
   touch-action: none;
   border-radius: 6px;
+  z-index: 2;
 }
 
 /* ══════════════════════════════════════════════
