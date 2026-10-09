@@ -202,19 +202,25 @@
     /* No auto-reveal — scratches stay as-is */
   }
 
-  function pos(e) {
+  function pos(e, src) {
     const r = canvas.getBoundingClientRect();
     const s = e.touches ? e.touches[0] : e;
     return [s.clientX - r.left, s.clientY - r.top];
   }
 
-  canvas.addEventListener('mousedown',  e => { drawing = true;  erase(...pos(e)); });
-  canvas.addEventListener('mousemove',  e => { if (drawing) erase(...pos(e)); });
-  canvas.addEventListener('mouseup',    () => drawing = false);
-  canvas.addEventListener('mouseleave', () => drawing = false);
-  canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true;  erase(...pos(e)); }, { passive: false });
-  canvas.addEventListener('touchmove',  e => { e.preventDefault(); if (drawing) erase(...pos(e)); }, { passive: false });
-  canvas.addEventListener('touchend',   () => drawing = false);
+  /* ── pointer events on document so stroke continues outside canvas ── */
+  canvas.addEventListener('mousedown', e => { drawing = true; erase(...pos(e)); });
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; erase(...pos(e)); }, { passive: false });
+
+  document.addEventListener('mousemove', e => { if (drawing) erase(...pos(e)); });
+  document.addEventListener('touchmove', e => {
+    if (!drawing) return;
+    e.preventDefault();
+    erase(...pos(e));
+  }, { passive: false });
+
+  document.addEventListener('mouseup',  () => drawing = false);
+  document.addEventListener('touchend', () => drawing = false);
 
   if (document.readyState === 'complete') setTimeout(resize, 100);
   else window.addEventListener('load', () => setTimeout(resize, 100));
@@ -242,22 +248,5 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
 });
 
 /* ══════════════════════════════════════
-   HERO MODEL — snap back to default orbit after user interaction
+   HERO MODEL — snap-back disabled (idle animation handles orbit)
 ══════════════════════════════════════ */
-(function () {
-  const mv = document.getElementById('heroModel');
-  if (!mv) return;
-
-  const DEFAULT_ORBIT = '0deg 88deg 90%';
-  let snapTimer = null;
-
-  mv.addEventListener('camera-change', e => {
-    if (!e.detail || e.detail.source !== 'user-interaction') return;
-
-    clearTimeout(snapTimer);
-    snapTimer = setTimeout(() => {
-      /* Smooth snap back — model-viewer interpolates automatically */
-      mv.cameraOrbit = DEFAULT_ORBIT;
-    }, 300);
-  });
-})();

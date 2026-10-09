@@ -46,7 +46,6 @@
       id="heroModel"
       src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/3D%20Logo.glb"
       alt="Час для себе"
-      autoplay
       camera-controls
       touch-action="pan-y"
       disable-zoom
@@ -318,6 +317,46 @@
   </a>
 </div>
 
+<script>
+(function () {
+  const mv = document.getElementById('heroModel');
+  if (!mv) return;
+
+  const BASE_PHI    = 105;   // твій поточний phi
+  const SWING_DEG   = 10;    // ±10° по azimuth (Y)
+  const PERIOD_MS   = 8000;  // повний цикл туди-назад
+  let   startTime   = null;
+  let   userTouched = false;
+  let   resumeTimer = null;
+
+  function tick(ts) {
+    if (!userTouched) {
+      if (!startTime) startTime = ts;
+      const t = (ts - startTime) / PERIOD_MS;
+      const azimuth = SWING_DEG * Math.sin(2 * Math.PI * t);
+      mv.cameraOrbit = `${azimuth}deg ${BASE_PHI}deg 90%`;
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // Зупиняємо коли юзер взаємодіє
+  mv.addEventListener('camera-change', (e) => {
+    if (e.detail.source === 'user-interaction') {
+      userTouched = true;
+      startTime = null;
+      clearTimeout(resumeTimer);
+      // Відновлюємо через 3с після того як відпустив
+      resumeTimer = setTimeout(() => { userTouched = false; }, 3000);
+    }
+  });
+
+  mv.addEventListener('load', () => {
+    console.log('Available animations:', mv.availableAnimations);
+    // animations paused
+    requestAnimationFrame(tick);
+  });
+})();
+</script>
 <script src="app.js"></script>
 </body>
 </html>
