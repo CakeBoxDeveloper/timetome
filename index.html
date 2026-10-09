@@ -44,11 +44,14 @@
   <div class="hero__3d-wrap">
     <model-viewer
       id="heroModel"
-      src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/3D%20Logo.glb"
+      src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/3D%20Logo.glb?v=4"
       alt="Час для себе"
+      autoplay
+      animation-name="Empty.002Action"
       camera-controls
-      touch-action="pan-y"
+      touch-action="none"
       disable-zoom
+      disable-pan
       camera-orbit="0deg 105deg 90%"
       orientation="0deg 90deg 0deg"
       field-of-view="28deg"
@@ -115,7 +118,7 @@
 ══════════════════════════════════════ -->
 <section class="section section--alt" id="services">
   <div class="col">
-    <h2 class="section-title">Послуги</h2>
+    <h2 class="section-title">Послуги <svg class="section-title__ico" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2 2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg></h2>
     <p class="section-sub">Обери свій тип масажу</p>
   </div>
 
@@ -192,7 +195,7 @@
 ══════════════════════════════════════ -->
 <section class="section" id="price">
   <div class="col">
-    <h2 class="section-title">Прайс</h2>
+    <h2 class="section-title">Прайс <svg class="section-title__ico" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></h2>
 
     <div class="price-list">
       <div class="price-group">
@@ -224,7 +227,10 @@
         </div>
         <!-- Bottom 2/3 — yellow body -->
         <div class="lot-card__body">
-          <div class="lot-card__subtitle">МИТТЄВА ЛОТЕРЕЯ</div>
+          <div class="lot-card__rules-note">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Стирай покриття пальцем — знижка діє при записі сьогодні. 1 спроба на 24 години.
+          </div>
           <div class="lot-card__scratch-zone">
             <!-- Prize text underneath -->
             <div class="lot-card__prize" id="lotPrize">
@@ -233,6 +239,7 @@
             <!-- Grey scratch canvas on top -->
             <canvas id="scratchCanvas" class="lot-card__canvas"></canvas>
           </div>
+          <p class="lot-card__disclaimer" id="lotDisclaimer">Спробувати можна раз на 24 години</p>
         </div>
       </div>
     </div>
@@ -244,7 +251,7 @@
 ══════════════════════════════════════ -->
 <section class="section section--alt" id="contacts">
   <div class="col">
-    <h2 class="section-title">Контакти</h2>
+    <h2 class="section-title">Контакти <svg class="section-title__ico" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></h2>
     <p class="section-sub">Фізіотерапевт з мед. освітою · Миколаїв</p>
 
     <div class="contacts-block">
@@ -345,14 +352,17 @@
       userTouched = true;
       startTime = null;
       clearTimeout(resumeTimer);
-      // Відновлюємо через 1с після того як відпустив
-      resumeTimer = setTimeout(() => { userTouched = false; }, 1000);
+      // Відновлюємо через 300мс після того як відпустив
+      resumeTimer = setTimeout(() => { userTouched = false; }, 300);
     }
   });
 
   mv.addEventListener('load', () => {
-    console.log('Available animations:', mv.availableAnimations);
-    // animations paused
+    console.log('Clips:', mv.availableAnimations);
+    if (mv.availableAnimations.length) {
+      mv.animationName = mv.availableAnimations[0];
+      mv.play({ repetitions: Infinity });
+    }
     requestAnimationFrame(tick);
   });
 })();

@@ -23,7 +23,7 @@
     });
   }
 
-  function update() {
+  function update(animate = true) {
     slides.forEach((slide, i) => {
       let diff = i - activeIndex;
       if (diff >  slides.length / 2) diff -= slides.length;
@@ -35,11 +35,18 @@
       else                  slide.setAttribute('data-position', 'hide');
     });
     dots.forEach((d, i) => d.classList.toggle('is-active', i === activeIndex));
+
+    if (!animate) {
+      // Pause tilt on all slides during transition
+      slides.forEach(s => s.classList.add('no-tilt'));
+      // Re-enable after transition completes (600ms matches CSS transition duration)
+      setTimeout(() => slides.forEach(s => s.classList.remove('no-tilt')), 650);
+    }
   }
 
   /* Click any slide */
   slides.forEach((slide, i) => {
-    slide.addEventListener('click', () => { activeIndex = i; update(); });
+    slide.addEventListener('click', () => { activeIndex = i; update(true); });
   });
 
   /* Touch swipe */
@@ -52,7 +59,7 @@
     const dx = touchStart - e.changedTouches[0].clientX;
     if (Math.abs(dx) > 50 && Date.now() - touchTime < 500) {
       activeIndex = (activeIndex + (dx > 0 ? 1 : -1) + slides.length) % slides.length;
-      update();
+      update(false);
     }
   }, { passive: true });
 
@@ -64,7 +71,7 @@
     const dx = mStart - e.clientX;
     if (Math.abs(dx) > 60) {
       activeIndex = (activeIndex + (dx > 0 ? 1 : -1) + slides.length) % slides.length;
-      update();
+      update(false);
     }
   });
   container.addEventListener('mouseleave', () => { dragging = false; });
@@ -117,12 +124,33 @@
    SCRATCH CARD
 ══════════════════════════════════════ */
 (function () {
-  const canvas = document.getElementById('scratchCanvas');
-  const valEl  = document.getElementById('lotValue');
+  const canvas   = document.getElementById('scratchCanvas');
+  const valEl    = document.getElementById('lotValue');
+  const disclaimer = document.getElementById('lotDisclaimer');
   if (!canvas) return;
+
+  const STORAGE_KEY = 'ttm_scratch_date';
+  const today = new Date().toISOString().slice(0, 10);
+  const lastPlayed = localStorage.getItem(STORAGE_KEY);
+  const alreadyPlayed = lastPlayed === today;
 
   const prizes = ['−5%', '−10%', '−15%', '−7%', '−20%', '−10%', '−5%', '−10%'];
   if (valEl) valEl.textContent = prizes[Math.floor(Math.random() * prizes.length)];
+
+  // Generate discount ID: TTM + encoded date + random suffix
+  function genDiscountId() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const prefix = 'TTM';
+    // Encode today as base32-like: month+day
+    const d = new Date();
+    const datePart = (d.getMonth() + 1).toString(16).toUpperCase().padStart(1,'0') +
+                     d.getDate().toString(16).toUpperCase().padStart(2,'0');
+    let rand = '';
+    for (let i = 0; i < 9; i++) rand += chars[Math.floor(Math.random() * chars.length)];
+    return prefix + datePart + rand; // e.g. TTM-A1F-XKQM3V2PJ → 16 chars total
+  }
+  const discountId = genDiscountId();
+  let idShown = false;
 
   const ctx = canvas.getContext('2d');
   let drawing = false, done = false, total = 1;
@@ -172,6 +200,9 @@
     canvas.height = r.height;
     if (!done) drawLayer();
     total = canvas.width * canvas.height || 1;
+    // Make prize visible only after canvas is drawn
+    const prize = document.getElementById('lotPrize');
+    if (prize) prize.style.visibility = 'visible';
   }
 
   /* ── Uneven brush: smaller, more natural ── */
@@ -199,7 +230,23 @@
     }
 
     ctx.globalCompositeOperation = 'source-over';
-    /* No auto-reveal — scratches stay as-is */
+
+    // Check if 50%+ scratched — show discount ID
+    if (!idShown && disclaimer) {
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      let transparent = 0;
+      for (let i = 3; i < imgData.data.length; i += 4) {
+        if (imgData.data[i] < 128) transparent++;
+      }
+      const pct = transparent / (canvas.width * canvas.height);
+      if (pct > 0.5) {
+        idShown = true;
+        disclaimer.textContent = 'ID знижки: ' + discountId;
+        disclaimer.style.fontWeight = '700';
+        disclaimer.style.color = '#c0234e';
+        disclaimer.style.letterSpacing = '0.08em';
+      }
+    }
   }
 
   function pos(e, src) {
@@ -209,8 +256,16 @@
   }
 
   /* ── pointer events on document so stroke continues outside canvas ── */
-  canvas.addEventListener('mousedown', e => { drawing = true; erase(...pos(e)); });
-  canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; erase(...pos(e)); }, { passive: false });
+  canvas.addEventListener('mousedown', e => {
+    if (alreadyPlayed) return;
+    drawing = true; erase(...pos(e));
+    localStorage.setItem(STORAGE_KEY, today);
+  });
+  canvas.addEventListener('touchstart', e => {
+    if (alreadyPlayed) return;
+    e.preventDefault(); drawing = true; erase(...pos(e));
+    localStorage.setItem(STORAGE_KEY, today);
+  }, { passive: false });
 
   document.addEventListener('mousemove', e => { if (drawing) erase(...pos(e)); });
   document.addEventListener('touchmove', e => {
@@ -221,6 +276,16 @@
 
   document.addEventListener('mouseup',  () => drawing = false);
   document.addEventListener('touchend', () => drawing = false);
+
+  function applyAlreadyPlayed() {
+    if (disclaimer) {
+      disclaimer.textContent = 'Ви вже спробували сьогодні. Повертайтесь завтра.';
+      disclaimer.style.color = '#c0234e';
+      disclaimer.style.fontWeight = '600';
+    }
+  }
+
+  if (alreadyPlayed) applyAlreadyPlayed();
 
   if (document.readyState === 'complete') setTimeout(resize, 100);
   else window.addEventListener('load', () => setTimeout(resize, 100));
