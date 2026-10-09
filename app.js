@@ -174,44 +174,32 @@
     total = canvas.width * canvas.height || 1;
   }
 
-  /* ── Uneven brush: multiple overlapping ellipses ── */
+  /* ── Uneven brush: smaller, more natural ── */
   function erase(x, y) {
     if (done) return;
     ctx.globalCompositeOperation = 'destination-out';
 
-    /* Main blob */
-    const rx = 18 + Math.random() * 10;
-    const ry = 10 + Math.random() * 8;
+    /* Main blob — smaller */
+    const rx = 8 + Math.random() * 6;
+    const ry = 5 + Math.random() * 4;
     const rot = Math.random() * Math.PI;
     ctx.beginPath();
     ctx.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2);
     ctx.fill();
 
-    /* 2–3 satellite blobs for rough/irregular edge */
-    const n = 2 + Math.floor(Math.random() * 2);
+    /* 1–2 small satellite blobs */
+    const n = 1 + Math.floor(Math.random() * 2);
     for (let i = 0; i < n; i++) {
-      const ox = x + (Math.random() - 0.5) * 22;
-      const oy = y + (Math.random() - 0.5) * 14;
-      const sr = 6 + Math.random() * 8;
+      const ox = x + (Math.random() - 0.5) * 14;
+      const oy = y + (Math.random() - 0.5) * 8;
+      const sr = 2 + Math.random() * 5;
       ctx.beginPath();
       ctx.arc(ox, oy, sr, 0, Math.PI * 2);
       ctx.fill();
     }
 
     ctx.globalCompositeOperation = 'source-over';
-
-    if (Math.random() < 0.08) checkDone();
-  }
-
-  function checkDone() {
-    const d = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-    let t = 0;
-    for (let i = 3; i < d.length; i += 4) if (d[i] < 128) t++;
-    if (t / total > 0.55) {
-      done = true;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      canvas.style.pointerEvents = 'none';
-    }
+    /* No auto-reveal — scratches stay as-is */
   }
 
   function pos(e) {
@@ -252,3 +240,24 @@
 document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
   btn.addEventListener('click', () => window.open('https://t.me/pro_telo_niko', '_blank', 'noopener'));
 });
+
+/* ══════════════════════════════════════
+   HERO MODEL — snap back to default orbit after user interaction
+══════════════════════════════════════ */
+(function () {
+  const mv = document.getElementById('heroModel');
+  if (!mv) return;
+
+  const DEFAULT_ORBIT = '0deg 88deg 90%';
+  let snapTimer = null;
+
+  mv.addEventListener('camera-change', e => {
+    if (!e.detail || e.detail.source !== 'user-interaction') return;
+
+    clearTimeout(snapTimer);
+    snapTimer = setTimeout(() => {
+      /* Smooth snap back — model-viewer interpolates automatically */
+      mv.cameraOrbit = DEFAULT_ORBIT;
+    }, 300);
+  });
+})();
