@@ -95,6 +95,19 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
   text-align:center;
 }
 
+.hero__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 20px 18px;
+  background: rgba(77,140,255,0.06);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--r);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
 .hero__title {
   font-family: var(--font-title);
   font-size:clamp(32px,10vw,56px);
@@ -102,8 +115,10 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
   line-height:1.0;
   letter-spacing:0.06em;
   text-transform:uppercase;
-  margin-bottom:10px;
+  margin-bottom:0;
   white-space:nowrap;
+  color: var(--accent);
+  text-shadow: 0 0 30px rgba(77,140,255,0.5);
 }
 
 .hero__slogan {

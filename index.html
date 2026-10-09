@@ -60,17 +60,19 @@
       shadow-intensity="0"
       interaction-prompt="none"
       tone-mapping="commerce"
-      style="background:transparent;width:100%;height:100%;display:block;--progress-bar-height:0px;--progress-bar-color:transparent;"
+      style="background:transparent;width:100%;height:100%;display:block;--progress-bar-height:0px;--progress-bar-color:transparent;filter:drop-shadow(0 0 18px rgba(77,180,255,0.7)) drop-shadow(0 0 40px rgba(77,180,255,0.35));"
     ></model-viewer>
   </div>
 
   <div class="hero__content">
-    <h1 class="hero__title">ЧАС ДЛЯ СЕБЕ</h1>
-    <p class="hero__slogan">Зупинись і знайди час для себе</p>
-    <a href="https://maps.google.com/?q=вул.+Захисників+Миколаєва,+15,+Миколаїв" class="hero__location" target="_blank" rel="noopener">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-      вул. Захисників Миколаєва, 15
-    </a>
+    <div class="hero__card">
+      <h1 class="hero__title">ЧАС ДЛЯ СЕБЕ</h1>
+      <p class="hero__slogan">Зупинись і знайди час для себе</p>
+      <a href="https://maps.google.com/?q=вул.+Захисників+Миколаєва,+15,+Миколаїв" class="hero__location" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        вул. Захисників Миколаєва, 15
+      </a>
+    </div>
   </div>
 </section>
 
@@ -358,9 +360,20 @@
   });
 
   mv.addEventListener('load', () => {
-    console.log('Clips:', mv.availableAnimations);
+    const materials = mv.model.materials;
+    const colors = [
+      [0.30, 0.75, 1.0, 1.0], // голубой
+      [0.15, 0.55, 0.90, 1.0], // чуть темнее голубой
+    ];
+    materials.forEach((mat, i) => {
+      mat.pbrMetallicRoughness.setBaseColorFactor(colors[i % colors.length]);
+      mat.pbrMetallicRoughness.setMetallicFactor(0.0);
+      mat.pbrMetallicRoughness.setRoughnessFactor(0.6);
+    });
+
     if (mv.availableAnimations.length) {
       mv.animationName = mv.availableAnimations[0];
+      mv.timeScale = 0.25;
       mv.play({ repetitions: Infinity });
     }
     requestAnimationFrame(tick);
