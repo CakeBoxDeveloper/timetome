@@ -149,70 +149,94 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
 }
 
 /* ══════════════════════════════════════════════
-   CERT 3D CAROUSEL
-   Uses JS to set --carousel-h on the container.
-   Slides are position:absolute centered.
+   CERT 3D CAROUSEL — ClassicClub pattern
 ══════════════════════════════════════════════ */
+
+/* Section clips horizontal bleed */
+#certificates { overflow-x: hidden; }
+
+.cert-carousel-wrap {
+  width: 100%;
+  max-width: var(--col);
+  margin-inline: auto;
+  padding: 16px 0 8px;
+}
+
 .cert-carousel {
-  position:relative;
-  width:100%;
-  max-width:var(--col);
-  margin-inline:auto;
-  height:var(--carousel-h, 280px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  perspective:900px;
-  overflow:visible;
-  padding:16px 0;
+  position: relative;
+  height: 340px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
 }
 
 .cert-slide {
-  position:absolute;
-  width:62%;
-  max-width:296px;
+  position: absolute;
+  width: 60vw;
+  max-width: 240px;
   border-radius: 10px;
-  overflow:hidden;
-  cursor:pointer;
-  background:transparent;
-  /* NO CSS transition — JS animates via Web Animations API */
-  will-change: transform, opacity, filter;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: none;
+  background: transparent;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Natural-proportion image */
 .cert-slide img {
-  width:100%;
-  height:auto;
-  display:block;
-  pointer-events:none;
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
 }
 
-/* ── Shimmer overlay on active slide ── */
-.cert-slide.is-active::after {
-  content:'';
-  position:absolute;
-  inset:0;
-  background:linear-gradient(
+/* Positions — exact same logic as ClassicClub */
+.cert-slide[data-position="0"] {
+  transform: translateX(0) scale(1.1);
+  z-index: 10;
+  opacity: 1;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 30px var(--accent-glow);
+}
+.cert-slide[data-position="1"] {
+  transform: translateX(55%) scale(0.8);
+  z-index: 5;
+  opacity: 0.6;
+  filter: blur(3px);
+}
+.cert-slide[data-position="-1"] {
+  transform: translateX(-55%) scale(0.8);
+  z-index: 5;
+  opacity: 0.6;
+  filter: blur(3px);
+}
+.cert-slide[data-position="hide"] {
+  opacity: 0;
+  transform: scale(0.5);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Shimmer on active only */
+.cert-slide[data-position="0"]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
     115deg,
     rgba(255,255,255,0)    20%,
-    rgba(255,255,255,0.28) 48%,
+    rgba(255,255,255,0.22) 48%,
     rgba(255,255,255,0)    70%
   );
-  background-size:200% 200%;
-  animation:certShimmer 3s linear infinite;
-  pointer-events:none;
-  border-radius:inherit;
+  background-size: 200% 100%;
+  animation: certShimmer 3s linear infinite;
+  pointer-events: none;
+  border-radius: inherit;
 }
 @keyframes certShimmer {
   0%   { background-position: 200% 0; }
   100% { background-position: -100% 0; }
 }
-
-/* z-index layers only — transforms set by JS */
-.cert-slide[data-pos="0"]    { z-index:10; }
-.cert-slide[data-pos="-1"]   { z-index:5; }
-.cert-slide[data-pos="1"]    { z-index:5; }
-.cert-slide[data-pos="hide"] { z-index:1; pointer-events:none; }
 
 /* ── Cert gift block ── */
 .cert-gift-block {
@@ -383,101 +407,88 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
 .price-note svg { flex-shrink:0; margin-top:1px; color:var(--accent); }
 
 /* ══════════════════════════════════════════════
-   SCRATCH LOTTERY CARD
-   Colors: bg=#f5e6ad (Sunshine), accent=#f13c77 (Peach)
+   LOT CARD — SVG as background image, canvas over dashed zone
 ══════════════════════════════════════════════ */
-.lottery-card {
-  display:flex;
-  flex-direction:column;
-  gap:0;
-  border-radius:var(--r);
-  overflow:hidden;
-  border:1px solid var(--border-accent);
-  box-shadow:0 0 24px rgba(77,140,255,0.10);
+.lot-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.lottery-card__top {
-  background:#f5e6ad;
-  padding:14px 18px 12px;
-  display:flex;
-  flex-direction:column;
-  gap:3px;
-}
-.lottery-card__label {
-  font-family:var(--font-title);
-  font-size:15px;
-  font-weight:900;
-  color:#f13c77;
-  text-transform:uppercase;
-  letter-spacing:0.06em;
-}
-.lottery-card__sub {
-  font-size:12px;
-  color:rgba(241,60,119,0.75);
-  font-weight:600;
+.lot-card__img-wrap {
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  /* SVG has its own aspect ratio — let it drive the height */
+  line-height: 0;
 }
 
-.lottery-card__scratch-area {
-  position:relative;
-  background:#f5e6ad;
-  height:100px;
-  overflow:hidden;
-  border-top:2px dashed rgba(241,60,119,0.4);
-  border-bottom:2px dashed rgba(241,60,119,0.4);
+.lot-card__bg {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
 }
 
-.lottery-card__prize {
-  position:absolute;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:2px;
+/* Prize text — absolute, centered over the dashed rectangle in the SVG.
+   Based on mockup: dashed zone is roughly 30%–70% from top, 10%–90% wide */
+.lot-card__prize-layer {
+  position: absolute;
+  /* These percentages match the SVG dashed rectangle position */
+  top: 52%;
+  left: 8%;
+  right: 8%;
+  bottom: 12%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  pointer-events: none;
 }
-.lottery-card__prize-value {
-  font-family:var(--font-title);
-  font-size:42px;
-  font-weight:900;
-  color:#f13c77;
-  line-height:1;
+.lot-card__prize-val {
+  font-family: var(--font-title);
+  font-size: clamp(32px, 10vw, 48px);
+  font-weight: 900;
+  color: #f13c77;
+  line-height: 1;
+  letter-spacing: -0.02em;
 }
-.lottery-card__prize-label {
-  font-size:12px;
-  font-weight:700;
-  color:rgba(241,60,119,0.7);
-  text-transform:uppercase;
-  letter-spacing:0.08em;
-}
-
-/* Canvas sits on top, erases to reveal prize */
-.lottery-card__canvas {
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  cursor:crosshair;
-  touch-action:none;
+.lot-card__prize-lbl {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(241,60,119,0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
-.lottery-card__bottom {
-  background:#f5e6ad;
-  padding:10px 18px 14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.lottery-card__hint {
-  font-size:12px;
-  color:rgba(241,60,119,0.65);
-  font-weight:600;
-  letter-spacing:0.04em;
-}
-.lottery-card__hint.is-done {
-  color:#f13c77;
-  font-weight:700;
+/* Canvas — exact same area as prize layer */
+.lot-card__canvas {
+  position: absolute;
+  top: 52%;
+  left: 8%;
+  right: 8%;
+  bottom: 12%;
+  width: calc(100% - 16%);
+  height: auto;
+  cursor: crosshair;
+  touch-action: none;
+  border-radius: 6px;
 }
 
+.lot-card__hint {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(241,60,119,0.65);
+  text-align: center;
+  letter-spacing: 0.04em;
+  padding: 0 4px;
+}
+.lot-card__hint.is-done {
+  color: #f13c77;
+  font-weight: 700;
+}
 /* ══════════════════════════════════════════════
    CONTACTS
 ══════════════════════════════════════════════ */
@@ -521,6 +532,12 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
 }
 .contact-btn--ig:hover  { filter:brightness(1.12); }
 .contact-btn--ig:active { transform:scale(0.98); }
+
+/* Social buttons img — white tint since backgrounds are colored */
+.contact-btn img {
+  filter: brightness(0) invert(1);
+  flex-shrink: 0;
+}
 
 /* Side-by-side social buttons */
 .social-row {
