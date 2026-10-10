@@ -10,6 +10,7 @@
   <style>
     @font-face { font-family:'TTNooks'; src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/TTNooks-Black.ttf') format('truetype'); font-weight:900; font-display:swap; }
     @font-face { font-family:'TTNooks'; src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/TTNooks-Bold.ttf') format('truetype'); font-weight:700; font-display:swap; }
+    @font-face { font-family:'TTNooks'; src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/TTNooks-Light.ttf') format('truetype'); font-weight:300; font-display:swap; }
     @font-face { font-family:'TTNooks'; src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/TTNooks-Regular.ttf') format('truetype'); font-weight:400; font-display:swap; }
   </style>
   <link rel="stylesheet" href="style.css" />
@@ -116,12 +117,69 @@
   </div>
 </div>
 
-<!-- CTA -->
-<div class="svc-cta">
-  <p class="svc-cta-slogan">Зупинись і знайди <span class="svc-cta-badge">час для себе</span></p>
-  <a href="https://t.me/pro_telo_niko" class="btn btn--accent btn--full" target="_blank" rel="noopener">Записатись у Telegram</a>
-  <a href="https://www.instagram.com/pro_telo_niko" class="btn btn--outline btn--full" target="_blank" rel="noopener">Написати в Instagram</a>
-</div>
+<!-- CONTACTS — full section, same as index.html -->
+<section class="section section--alt">
+  <div class="col">
+    <h2 class="section-title">Контакти <svg class="section-title__ico" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></h2>
+    <p class="section-sub">Фізіотерапевт з мед. освітою · Миколаїв</p>
+
+    <div class="contacts-block">
+
+      <!-- Map -->
+      <div class="map-wrap">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2735.5!2d31.9950!3d46.9750!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40c5c8f0!2z0LLRg9C7LiDQl9Cw0YXQuNGB0L3QuNC60ZbQstCh0LXQsdC1LCAxNSwg0JzQuNC60L7Qu9Cw0ZfQsg!5e0!3m2!1suk!2sua!4v1234567890"
+          allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          title="Час для себе на карті">
+        </iframe>
+      </div>
+
+      <!-- Address chip -->
+      <a href="https://maps.google.com/?q=вул.+Захисників+Миколаєва,+15,+Миколаїв" class="map-chip" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        вул. Захисників Миколаєва, 15
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="map-chip__arrow"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+
+      <!-- Social CTAs row -->
+      <div class="social-row">
+        <a href="https://t.me/pro_telo_niko" class="contact-btn contact-btn--tg" target="_blank" rel="noopener">
+          <img src="https://www.svgrepo.com/show/388724/telegram.svg" alt="Telegram" width="22" height="22" />
+          Telegram
+        </a>
+        <a href="https://www.instagram.com/pro_telo_niko" class="contact-btn contact-btn--ig" target="_blank" rel="noopener">
+          <img src="https://www.svgrepo.com/show/521711/instagram.svg" alt="Instagram" width="22" height="22" />
+          Instagram
+        </a>
+      </div>
+
+      <!-- Perks -->
+      <div class="perks-list">
+        <div class="perk-item">
+          <div class="perk-item__ico"><img src="https://unpkg.com/lucide-static@latest/icons/hand.svg" alt="" /></div>
+          <div class="perk-item__text"><strong>Авторські методики</strong><span>Стоун · Dry Needling · Перкусія · Класика</span></div>
+        </div>
+        <div class="perk-item">
+          <div class="perk-item__ico"><img src="https://unpkg.com/lucide-static@latest/icons/graduation-cap.svg" alt="" /></div>
+          <div class="perk-item__text"><strong>Медична освіта</strong><span>Фізіотерапевт з офіційною кваліфікацією</span></div>
+        </div>
+        <div class="perk-item">
+          <div class="perk-item__ico"><img src="https://unpkg.com/lucide-static@latest/icons/user-check.svg" alt="" /></div>
+          <div class="perk-item__text"><strong>Індивідуальний підхід</strong><span>Кожен сеанс адаптований під вас</span></div>
+        </div>
+        <div class="perk-item">
+          <div class="perk-item__ico"><img src="https://unpkg.com/lucide-static@latest/icons/sun.svg" alt="" /></div>
+          <div class="perk-item__text"><strong>Терапія червоним світлом</strong><span>Фотобіомодуляція для відновлення тканин</span></div>
+        </div>
+        <div class="perk-item">
+          <div class="perk-item__ico"><img src="https://unpkg.com/lucide-static@latest/icons/syringe.svg" alt="" /></div>
+          <div class="perk-item__text"><strong>Акупунктура (Dry Needling)</strong><span>Точкова робота з тригерними зонами</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
 
 </body>
 </html>

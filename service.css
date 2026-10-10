@@ -352,11 +352,8 @@
 .svc-cta-slogan {
   font-family: var(--font-title);
   font-size: clamp(16px, 5vw, 22px);
-  font-weight: 900;
+  font-weight: 400;
   color: var(--accent);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   margin-bottom: 4px;
 }
 .svc-cta-badge {
@@ -366,8 +363,14 @@
   -webkit-text-fill-color: #08090f;
   padding: 2px 8px;
   border-radius: 4px;
-  font-weight: 900;
+  font-weight: 400;
   font-family: var(--font-title);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
+}
+
+/* ── hero__card inside svc-cta — full width, no extra margin ── */
+.svc-cta .hero__card {
+  width: 100%;
+  box-sizing: border-box;
 }

@@ -160,27 +160,33 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
 }
 
 .hero__slogan {
-  font-family: var(--font-title);
-  font-size: clamp(16px, 5vw, 22px);
-  font-weight: 300;
+  font-family: var(--font);
+  font-size: clamp(15px, 4.5vw, 20px);
+  font-weight: 500;
   color: var(--accent);
   opacity: 1;
   margin-bottom: 0;
   line-height: 1.4;
   width: 100%;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  box-sizing: border-box;
 }
 .hero__slogan-badge {
-  display: inline;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--accent);
   color: #08090f;
   -webkit-text-fill-color: #08090f;
-  padding: 2px 8px;
+  padding: 3px 14px;
   border-radius: 4px;
-  font-weight: 900;
-  font-family: var(--font-title);
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
+  font-weight: 500;
+  font-family: var(--font);
+  white-space: nowrap;
+  flex: 1;
 }
 
 /* ── Ticker ── */
