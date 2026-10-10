@@ -1,5 +1,97 @@
 'use strict';
 
+/* ══════════════════════════════════════
+   LOADER + PROGRESS BAR
+   Apple-style: fast start → slow crawl → instant finish
+══════════════════════════════════════ */
+(function () {
+  const loader = document.getElementById('siteLoader');
+  const bar    = document.getElementById('loaderBar');
+  if (!loader || !bar) return;
+
+  const MIN_SHOW_MS = 900; // минимальное время показа лоадера
+  const startTime   = Date.now();
+  let   progress    = 0;
+  let   rafId       = null;
+  let   pageReady   = false;
+
+  /* Плавно анимируем прогресс к target */
+  function setProgress(target) {
+    if (target <= progress) return;
+    progress = target;
+    bar.style.width = progress + '%';
+  }
+
+  /* Фаза 1 — быстрый старт: 0→30% за ~400мс тиками каждые 60мс */
+  let phase1Done = false;
+  let phase1Val  = 0;
+  function phase1() {
+    phase1Val += 2.5;
+    setProgress(phase1Val);
+    if (phase1Val < 30) {
+      setTimeout(phase1, 60);
+    } else {
+      phase1Done = true;
+      phase2();
+    }
+  }
+
+  /* Фаза 2 — медленный крауl: 30→80% за ~3с, замедляется по мере роста */
+  let phase2Val = 30;
+  function phase2() {
+    const step = Math.max(0.3, (80 - phase2Val) * 0.04);
+    phase2Val += step;
+    setProgress(phase2Val);
+    if (phase2Val < 80 && !pageReady) {
+      setTimeout(phase2, 120);
+    } else if (!pageReady) {
+      // Зависаем на 80%, ждём реальной загрузки
+    } else {
+      finish();
+    }
+  }
+
+  /* Финал: 80(или где зависли) → 100%, потом hide */
+  function finish() {
+    setProgress(100);
+    const elapsed = Date.now() - startTime;
+    const delay   = Math.max(0, MIN_SHOW_MS - elapsed) + 280; // 280мс на анимацию до 100%
+    setTimeout(() => {
+      loader.classList.add('is-hidden');
+      // Убираем из DOM через 600мс (после fade)
+      setTimeout(() => { if (loader.parentNode) loader.parentNode.removeChild(loader); }, 600);
+    }, delay);
+  }
+
+  /* Сигнал от страницы */
+  function onPageLoad() {
+    if (pageReady) return;
+    pageReady = true;
+
+    if (phase1Done) {
+      // Фаза 2 уже запущена — прыгаем к финишу
+      finish();
+    }
+    // Если фаза 1 ещё идёт — finish() вызовется в конце phase2
+  }
+
+  /* Прослушиваем реальные события загрузки */
+  if (document.readyState === 'complete') {
+    onPageLoad();
+  } else {
+    window.addEventListener('load', onPageLoad, { once: true });
+  }
+
+  // Дополнительно — ловим load model-viewer
+  const mv = document.querySelector('.loader__model-wrap model-viewer');
+  if (mv) {
+    mv.addEventListener('load', () => setProgress(Math.max(progress, 70)), { once: true });
+  }
+
+  // Старт фазы 1
+  phase1();
+})();
+
 /* ══════════════════════════════════════════════
    CERT CAROUSEL — exact ClassicClub pattern, no tilt
 ══════════════════════════════════════════════ */

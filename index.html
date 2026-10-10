@@ -21,6 +21,11 @@
     }
     @font-face {
       font-family: 'TTNooks';
+      src: url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/TTNooks-Light.ttf') format('truetype');
+      font-weight: 300; font-display: swap;
+    }
+    @font-face {
+      font-family: 'TTNooks';
       src: url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/TTNooks-Regular.ttf') format('truetype');
       font-weight: 400; font-display: swap;
     }
@@ -36,6 +41,34 @@
 <body>
 
 <div class="noise" aria-hidden="true"></div>
+
+<!-- LOADER -->
+<div class="loader" id="siteLoader" aria-hidden="true">
+  <div class="loader__hero">
+    <div class="loader__model-wrap">
+      <model-viewer
+        src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/3D%20Logo.glb?v=4"
+        autoplay
+        animation-name="Empty.002Action"
+        camera-orbit="0deg 105deg 90%"
+        orientation="0deg 90deg 0deg"
+        field-of-view="28deg"
+        environment-image="neutral"
+        exposure="3.0"
+        shadow-intensity="0"
+        interaction-prompt="none"
+        tone-mapping="commerce"
+        style="background:transparent;width:100%;height:100%;display:block;--progress-bar-height:0px;--progress-bar-color:transparent;filter:drop-shadow(0 0 18px rgba(77,180,255,0.7)) drop-shadow(0 0 40px rgba(77,180,255,0.35));"
+      ></model-viewer>
+    </div>
+    <div class="loader__title">ЧАС ДЛЯ СЕБЕ</div>
+  </div>
+  <div class="loader__progress-wrap" aria-hidden="true">
+    <div class="loader__progress-track">
+      <div class="loader__progress-bar" id="loaderBar"></div>
+    </div>
+  </div>
+</div>
 
 <!-- ══════════════════════════════════════
      HERO
@@ -66,17 +99,16 @@
 
   <div class="hero__content">
     <div class="hero__card">
-      <h1 class="hero__title">ЧАС ДЛЯ СЕБЕ</h1>
-      <p class="hero__slogan">Зупинись і знайди час для себе</p>
+      <p class="hero__slogan">Зупинись і знайди <span class="hero__slogan-badge">час для себе</span></p>
       <div class="hero__ticker-wrap">
         <div class="hero__ticker">
           <span class="hero__ticker-inner">
-            іголки <svg class="hero__ticker-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg> масаж <svg class="hero__ticker-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg> світлотерапія <svg class="hero__ticker-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg> спа <svg class="hero__ticker-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg> стоун <svg class="hero__ticker-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg> перкусія <svg class="hero__ticker-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
-            іголки <svg class="hero__ticker-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg> масаж <svg class="hero__ticker-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg> світлотерапія <svg class="hero__ticker-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg> спа <svg class="hero__ticker-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg> стоун <svg class="hero__ticker-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg> перкусія <svg class="hero__ticker-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+            голки <span class="hero__ticker-sep">✦</span> масаж <span class="hero__ticker-sep">✦</span> світлотерапія <span class="hero__ticker-sep">✦</span> спа <span class="hero__ticker-sep">✦</span> стоун <span class="hero__ticker-sep">✦</span> перкусія <span class="hero__ticker-sep">✦</span> антистрес <span class="hero__ticker-sep">✦</span> відновлення <span class="hero__ticker-sep">✦</span>
+            голки <span class="hero__ticker-sep">✦</span> масаж <span class="hero__ticker-sep">✦</span> світлотерапія <span class="hero__ticker-sep">✦</span> спа <span class="hero__ticker-sep">✦</span> стоун <span class="hero__ticker-sep">✦</span> перкусія <span class="hero__ticker-sep">✦</span> антистрес <span class="hero__ticker-sep">✦</span> відновлення <span class="hero__ticker-sep">✦</span>
           </span>
         </div>
       </div>
-      <a href="https://maps.google.com/?q=вул.+Захисників+Миколаєва,+15,+Миколаїв" class="hero__location" target="_blank" rel="noopener">
+      <a href="https://maps.google.com/?q=вул.+Захисників+Миколаєва,+15,+Миколаїв" class="hero__location hero__location--full" target="_blank" rel="noopener">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
         вул. Захисників Миколаєва, 15
       </a>
@@ -99,59 +131,94 @@
       <div class="snap-inner">
 
         <div class="service-card">
-          <div class="service-card__ico"><img src="https://unpkg.com/lucide-static@latest/icons/hand.svg" alt="" /></div>
-          <h3 class="service-card__name">Класичний масаж</h3>
-          <p class="service-card__desc">Авторська методика. Зняття загального напруження та накопиченої втоми. Повертаю тілу легкість, а голові — спокій.</p>
+          <div class="service-card__header">
+            <h3 class="service-card__name">Класичний масаж</h3>
+            <div class="service-card__ico"><img src="https://unpkg.com/lucide-static@latest/icons/hand.svg" alt="" /></div>
+          </div>
           <div class="service-card__tags"><span>Розслаблення</span><span>Втома</span><span>Стрес</span></div>
-          <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+          <p class="service-card__desc">Авторська методика. Зняття загального напруження та накопиченої втоми. Повертаю тілу легкість, а голові — спокій.</p>
+          <div class="service-card__btns">
+            <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+            <a href="classic.html" class="btn btn--outline btn--full">Детальніше</a>
+          </div>
         </div>
 
         <div class="service-card">
-          <div class="service-card__ico"><img src="https://unpkg.com/lucide-static@latest/icons/brain.svg" alt="" /></div>
-          <h3 class="service-card__name">Антистрес</h3>
-          <p class="service-card__desc">Для тих, хто відчуває емоційне та нервове виснаження. Глибока робота з нервовою системою.</p>
+          <div class="service-card__header">
+            <h3 class="service-card__name">Антистрес</h3>
+            <div class="service-card__ico"><img src="https://unpkg.com/lucide-static@latest/icons/brain.svg" alt="" /></div>
+          </div>
           <div class="service-card__tags"><span>Нерви</span><span>Сон</span><span>Тривога</span></div>
-          <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+          <p class="service-card__desc">Для тих, хто відчуває емоційне та нервове виснаження. Глибока робота з нервовою системою.</p>
+          <div class="service-card__btns">
+            <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+            <a href="antistress.html" class="btn btn--outline btn--full">Детальніше</a>
+          </div>
         </div>
 
         <div class="service-card">
-          <div class="service-card__ico"><img src="https://unpkg.com/lucide-static@latest/icons/zap.svg" alt="" /></div>
-          <h3 class="service-card__name">Глибокий тканинний</h3>
-          <p class="service-card__desc">Перкусія та глибокий тканинний масаж. Для спортсменів і людей з хронічним болем у м'язах.</p>
+          <div class="service-card__header">
+            <h3 class="service-card__name">Глибокий тканинний</h3>
+            <div class="service-card__ico"><img src="https://unpkg.com/lucide-static@latest/icons/zap.svg" alt="" /></div>
+          </div>
           <div class="service-card__tags"><span>М'язи</span><span>Спорт</span><span>Перкусія</span></div>
-          <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+          <p class="service-card__desc">Перкусія та глибокий тканинний масаж. Для спортсменів і людей з хронічним болем у м'язах.</p>
+          <div class="service-card__btns">
+            <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+            <a href="deep-tissue.html" class="btn btn--outline btn--full">Детальніше</a>
+          </div>
         </div>
 
         <div class="service-card">
-          <div class="service-card__ico"><img src="https://unpkg.com/lucide-static@latest/icons/flower-2.svg" alt="" /></div>
-          <h3 class="service-card__name">Стоун-масаж</h3>
-          <p class="service-card__desc">Масаж гарячими каменями. Глибоке прогрівання м'язів, зняття спазму, повне розслаблення.</p>
+          <div class="service-card__header">
+            <h3 class="service-card__name">Стоун-масаж</h3>
+            <div class="service-card__ico"><img src="https://unpkg.com/lucide-static@latest/icons/flower-2.svg" alt="" /></div>
+          </div>
           <div class="service-card__tags"><span>Камені</span><span>Тепло</span><span>Спазм</span></div>
-          <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+          <p class="service-card__desc">Масаж гарячими каменями. Глибоке прогрівання м'язів, зняття спазму, повне розслаблення.</p>
+          <div class="service-card__btns">
+            <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+            <a href="stone.html" class="btn btn--outline btn--full">Детальніше</a>
+          </div>
         </div>
 
         <div class="service-card">
-          <div class="service-card__ico"><img src="https://unpkg.com/lucide-static@latest/icons/syringe.svg" alt="" /></div>
-          <h3 class="service-card__name">Dry Needling</h3>
-          <p class="service-card__desc">Суха голкотерапія. Точкова робота з тригерними точками — зняття хронічного болю та м'язового напруження.</p>
+          <div class="service-card__header">
+            <h3 class="service-card__name">Dry Needling</h3>
+            <div class="service-card__ico"><img src="https://unpkg.com/lucide-static@latest/icons/syringe.svg" alt="" /></div>
+          </div>
           <div class="service-card__tags"><span>Акупунктура</span><span>Тригери</span><span>Біль</span></div>
-          <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+          <p class="service-card__desc">Суха голкотерапія. Точкова робота з тригерними точками — зняття хронічного болю та м'язового напруження.</p>
+          <div class="service-card__btns">
+            <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+            <a href="dry-needling.html" class="btn btn--outline btn--full">Детальніше</a>
+          </div>
         </div>
 
         <div class="service-card">
-          <div class="service-card__ico"><img src="https://unpkg.com/lucide-static@latest/icons/sun.svg" alt="" /></div>
-          <h3 class="service-card__name">Терапія червоним світлом</h3>
-          <p class="service-card__desc">Фотобіомодуляція. Прискорює відновлення тканин, зменшує запалення, покращує стан шкіри.</p>
+          <div class="service-card__header">
+            <h3 class="service-card__name">Терапія червоним світлом</h3>
+            <div class="service-card__ico"><img src="https://unpkg.com/lucide-static@latest/icons/sun.svg" alt="" /></div>
+          </div>
           <div class="service-card__tags"><span>Відновлення</span><span>Шкіра</span><span>Запалення</span></div>
-          <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+          <p class="service-card__desc">Фотобіомодуляція. Прискорює відновлення тканин, зменшує запалення, покращує стан шкіри.</p>
+          <div class="service-card__btns">
+            <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+            <a href="red-light.html" class="btn btn--outline btn--full">Детальніше</a>
+          </div>
         </div>
 
         <div class="service-card">
-          <div class="service-card__ico"><img src="https://unpkg.com/lucide-static@latest/icons/sparkles.svg" alt="" /></div>
-          <h3 class="service-card__name">СПА-програма</h3>
-          <p class="service-card__desc">Повна програма відновлення: масаж + ароматерапія + стоун. Для глибокого релаксу тіла та розуму.</p>
+          <div class="service-card__header">
+            <h3 class="service-card__name">СПА-програма</h3>
+            <div class="service-card__ico"><img src="https://unpkg.com/lucide-static@latest/icons/sparkles.svg" alt="" /></div>
+          </div>
           <div class="service-card__tags"><span>СПА</span><span>Аромат</span><span>Релакс</span></div>
-          <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+          <p class="service-card__desc">Повна програма відновлення: масаж + ароматерапія + стоун. Для глибокого релаксу тіла та розуму.</p>
+          <div class="service-card__btns">
+            <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
+            <a href="spa.html" class="btn btn--outline btn--full">Детальніше</a>
+          </div>
         </div>
 
       </div>
@@ -335,6 +402,23 @@
 </div>
 
 <script>
+/* Colour loader model same as hero */
+(function () {
+  const lmv = document.querySelector('.loader__model-wrap model-viewer');
+  if (!lmv) return;
+  lmv.addEventListener('load', () => {
+    const colors = [
+      [0.30, 0.75, 1.0, 1.0],
+      [0.15, 0.55, 0.90, 1.0],
+    ];
+    lmv.model.materials.forEach((mat, i) => {
+      mat.pbrMetallicRoughness.setBaseColorFactor(colors[i % colors.length]);
+      mat.pbrMetallicRoughness.setMetallicFactor(0.0);
+      mat.pbrMetallicRoughness.setRoughnessFactor(0.6);
+    });
+  });
+})();
+
 (function () {
   const mv = document.getElementById('heroModel');
   if (!mv) return;
