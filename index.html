@@ -520,13 +520,13 @@
   const ICON = "url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/65757fa20ff65e9e580f742c00c5137ed1e0f445/Icon.svg')";
   const ICON_DARK = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 164.21 110.05'%3E%3Cg style='fill:%23111;stroke:%23111;stroke-width:3'%3E%3Cpath d='M-133.07,98h-58.88s4-44.8,27.11-44.8c-23.1,0-27.11-45.34-27.11-45.34h58.88s-6,45.34-27.77,45.34C-139.07,53.2-133.07,98-133.07,98Z' transform='translate(289.02 2.09)'/%3E%3C/g%3E%3C/svg%3E\")";
 
-  // Col1: 86px (large), closest to content edge → largest offset from screen edge
+  // Col1: 86px (large), closest to content edge
   // Col2: 65px (medium), middle
-  // Col3: 46px (small), farthest from content → smallest offset (closest to screen edge)
+  // Col3: 46px (small), farthest — pushed further out past the gradient
   const cols = [
-    { size: '86px 144px', offsetRight: 362, offsetLeft: 362, yOff: 0,  cls: '1' },
-    { size: '65px 120px', offsetRight: 216, offsetLeft: 216, yOff: 60, cls: '2' },
-    { size: '46px 96px',  offsetRight: 60,  offsetLeft: 60,  yOff: 20, cls: '3' },
+    { size: '86px 144px', offsetRight: 280, offsetLeft: 280, yOff: 0,  cls: '1' },
+    { size: '65px 120px', offsetRight: 150, offsetLeft: 150, yOff: 60, cls: '2' },
+    { size: '46px 96px',  offsetRight: 30,  offsetLeft: 30,  yOff: 20, cls: '3' },
   ];
 
   document.querySelectorAll('.section').forEach(sec => {
@@ -564,7 +564,7 @@
       sec.prepend(r);
     });
 
-    // Fade overlays — one per side over all cols
+    // Fade overlays — edge to col1 (hides cols 2&3 past col1)
     const fl = document.createElement('div');
     fl.className = 'sec-pat-fade sec-pat-fade--left';
     sec.prepend(fl);

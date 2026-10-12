@@ -1012,7 +1012,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 ══════════════════════════════════════════════ */
 .bg-pattern { display: none; }
 
-.noise, .hero, .section, .float-cta {
+.noise, .hero, .section {
   position: relative;
   z-index: 1;
 }
@@ -1023,35 +1023,39 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   /* Three separate column divs injected by JS */
   .sec-pat-col {
     position: absolute;
-    top: 0; bottom: 0;
+    /* 5% indent top+bottom → 90% height, centered */
+    top: 5%; bottom: 5%;
     pointer-events: none;
     z-index: 0;
     background-repeat: repeat-y;
+    /* Soft top+bottom fade on every column */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+    mask-image:         linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
   }
 
-  /* col sizes ×1.2 */
+  /* col sizes */
   .sec-pat-col--1 { background-size: 86px 144px; opacity: 1.0;  }
-  .sec-pat-col--2 { background-size: 65px 120px; opacity: 0.60; }
-  .sec-pat-col--3 { background-size: 46px 96px;  opacity: 0.25; }
+  .sec-pat-col--2 { background-size: 65px 120px; opacity: 0.55; }
+  .sec-pat-col--3 { background-size: 46px 96px;  opacity: 0.12; }
 
-  /* Fade overlays — one per side, covers ALL columns */
+  /* Fade: only hides the hard crop at the very screen edge */
   .sec-pat-fade {
     position: absolute;
-    top: 0; bottom: 0;
-    width: 260px;
+    top: 5%; bottom: 5%;
+    width: 20px;
     pointer-events: none;
     z-index: 2;
   }
   .sec-pat-fade--left {
     left: 0;
-    background: linear-gradient(to right, #08090f 10%, transparent 100%);
+    background: linear-gradient(to left, transparent 0%, #08090f 100%);
   }
   .sec-pat-fade--right {
     right: 0;
-    background: linear-gradient(to left, #08090f 10%, transparent 100%);
+    background: linear-gradient(to right, transparent 0%, #08090f 100%);
   }
-  .section--alt .sec-pat-fade--left  { background: linear-gradient(to right, #0c0e1a 10%, transparent 100%); }
-  .section--alt .sec-pat-fade--right { background: linear-gradient(to left,  #0c0e1a 10%, transparent 100%); }
+  .section--alt .sec-pat-fade--left  { background: linear-gradient(to left,  transparent 0%, #0c0e1a 100%); }
+  .section--alt .sec-pat-fade--right { background: linear-gradient(to right, transparent 0%, #0c0e1a 100%); }
 
   /* Content above pattern */
   .section > *:not(.sec-pat-col):not(.sec-pat-fade) { position: relative; z-index: 3; }
