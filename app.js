@@ -2,98 +2,67 @@
 
 /* ══════════════════════════════════════
    LOADER + PROGRESS BAR
-   Apple-style: fast start → slow crawl → instant finish
 ══════════════════════════════════════ */
 (function () {
   const loader = document.getElementById('siteLoader');
   const bar    = document.getElementById('loaderBar');
   if (!loader || !bar) return;
 
-  const MIN_SHOW_MS = 900; // минимальное время показа лоадера
+  const MIN_SHOW_MS = 900;
   const startTime   = Date.now();
   let   progress    = 0;
-  let   rafId       = null;
   let   pageReady   = false;
 
-  /* Плавно анимируем прогресс к target */
   function setProgress(target) {
     if (target <= progress) return;
     progress = target;
     bar.style.width = progress + '%';
   }
 
-  /* Фаза 1 — быстрый старт: 0→30% за ~400мс тиками каждые 60мс */
-  let phase1Done = false;
-  let phase1Val  = 0;
+  let phase1Done = false, phase1Val = 0;
   function phase1() {
     phase1Val += 2.5;
     setProgress(phase1Val);
-    if (phase1Val < 30) {
-      setTimeout(phase1, 60);
-    } else {
-      phase1Done = true;
-      phase2();
-    }
+    if (phase1Val < 30) { setTimeout(phase1, 60); }
+    else { phase1Done = true; phase2(); }
   }
 
-  /* Фаза 2 — медленный крауl: 30→80% за ~3с, замедляется по мере роста */
   let phase2Val = 30;
   function phase2() {
     const step = Math.max(0.3, (80 - phase2Val) * 0.04);
     phase2Val += step;
     setProgress(phase2Val);
-    if (phase2Val < 80 && !pageReady) {
-      setTimeout(phase2, 120);
-    } else if (!pageReady) {
-      // Зависаем на 80%, ждём реальной загрузки
-    } else {
-      finish();
-    }
+    if (phase2Val < 80 && !pageReady) { setTimeout(phase2, 120); }
+    else if (pageReady) { finish(); }
   }
 
-  /* Финал: 80(или где зависли) → 100%, потом hide */
   function finish() {
     setProgress(100);
     const elapsed = Date.now() - startTime;
-    const delay   = Math.max(0, MIN_SHOW_MS - elapsed) + 280; // 280мс на анимацию до 100%
+    const delay   = Math.max(0, MIN_SHOW_MS - elapsed) + 280;
     setTimeout(() => {
       loader.classList.add('is-hidden');
-      // Убираем из DOM через 600мс (после fade)
       setTimeout(() => { if (loader.parentNode) loader.parentNode.removeChild(loader); }, 600);
     }, delay);
   }
 
-  /* Сигнал от страницы */
   function onPageLoad() {
     if (pageReady) return;
     pageReady = true;
-
-    if (phase1Done) {
-      // Фаза 2 уже запущена — прыгаем к финишу
-      finish();
-    }
-    // Если фаза 1 ещё идёт — finish() вызовется в конце phase2
+    if (phase1Done) finish();
   }
 
-  /* Прослушиваем реальные события загрузки */
-  if (document.readyState === 'complete') {
-    onPageLoad();
-  } else {
-    window.addEventListener('load', onPageLoad, { once: true });
-  }
+  if (document.readyState === 'complete') { onPageLoad(); }
+  else { window.addEventListener('load', onPageLoad, { once: true }); }
 
-  // Дополнительно — ловим load model-viewer
   const mv = document.querySelector('.loader__model-wrap model-viewer');
-  if (mv) {
-    mv.addEventListener('load', () => setProgress(Math.max(progress, 70)), { once: true });
-  }
+  if (mv) { mv.addEventListener('load', () => setProgress(Math.max(progress, 70)), { once: true }); }
 
-  // Старт фазы 1
   phase1();
 })();
 
 /* ══════════════════════════════════════════════
-   CERT CAROUSEL — exact ClassicClub pattern, no tilt
+   CERT CAROUSEL
 ══════════════════════════════════════════════ */
 (function () {
   const container = document.getElementById('certCarousel');
@@ -102,8 +71,6 @@
   if (!container || !slides.length) return;
 
   let activeIndex = 0;
-
-  /* Build dots */
   let dots = [];
   if (dotsEl) {
     dots = slides.map((_, i) => {
@@ -120,33 +87,24 @@
       let diff = i - activeIndex;
       if (diff >  slides.length / 2) diff -= slides.length;
       if (diff < -slides.length / 2) diff += slides.length;
-
       if      (diff ===  0) slide.setAttribute('data-position', '0');
       else if (diff ===  1) slide.setAttribute('data-position', '1');
       else if (diff === -1) slide.setAttribute('data-position', '-1');
       else                  slide.setAttribute('data-position', 'hide');
     });
     dots.forEach((d, i) => d.classList.toggle('is-active', i === activeIndex));
-
     if (!animate) {
-      // Pause tilt on all slides during transition
       slides.forEach(s => s.classList.add('no-tilt'));
-      // Re-enable after transition completes (600ms matches CSS transition duration)
       setTimeout(() => slides.forEach(s => s.classList.remove('no-tilt')), 650);
     }
   }
 
-  /* Click any slide */
   slides.forEach((slide, i) => {
     slide.addEventListener('click', () => { activeIndex = i; update(true); });
   });
 
-  /* Touch swipe */
   let touchStart = 0, touchTime = 0;
-  container.addEventListener('touchstart', e => {
-    touchStart = e.touches[0].clientX;
-    touchTime  = Date.now();
-  }, { passive: true });
+  container.addEventListener('touchstart', e => { touchStart = e.touches[0].clientX; touchTime = Date.now(); }, { passive: true });
   container.addEventListener('touchend', e => {
     const dx = touchStart - e.changedTouches[0].clientX;
     if (Math.abs(dx) > 50 && Date.now() - touchTime < 500) {
@@ -155,7 +113,6 @@
     }
   }, { passive: true });
 
-  /* Mouse drag */
   let mStart = 0, dragging = false;
   container.addEventListener('mousedown',  e => { dragging = true; mStart = e.clientX; });
   container.addEventListener('mouseup',    e => {
@@ -213,74 +170,147 @@
 })();
 
 /* ══════════════════════════════════════
-   SCRATCH CARD
+   LOTTERY — tilt + shimmer border + scratch + bot code
 ══════════════════════════════════════ */
 (function () {
-  const canvas   = document.getElementById('scratchCanvas');
-  const valEl    = document.getElementById('lotValue');
+
+  /* ── Canvas shimmer border ── */
+  (function shimmerBorder() {
+    const wrap   = document.getElementById('lotTiltWrap');
+    const canvas = document.getElementById('lotShimmerCanvas');
+    if (!wrap || !canvas) return;
+    const ctx = canvas.getContext('2d');
+    let shimmerT = 0;
+    const SPEED = 0.04; // ~25s full cycle
+    const R = 16;
+
+    function shimmerPoint(rect, t) {
+      const { x, y, w, h, r } = rect;
+      const sTop = w-2*r, sRight = h-2*r, sBot = w-2*r, sLeft = h-2*r;
+      const arc = (Math.PI/2)*r;
+      const total = sTop+arc+sRight+arc+sBot+arc+sLeft+arc;
+      let dist = (((t%1)+1)%1)*total;
+      let seg;
+      seg=arc;    if(dist<seg){const a=Math.PI+(dist/seg)*(Math.PI/2); return{x:x+r+r*Math.cos(a),y:y+r+r*Math.sin(a)};} dist-=seg;
+      seg=sTop;   if(dist<seg) return{x:x+r+dist,y};                                                                      dist-=seg;
+      seg=arc;    if(dist<seg){const a=-Math.PI/2+(dist/seg)*(Math.PI/2); return{x:x+w-r+r*Math.cos(a),y:y+r+r*Math.sin(a)};} dist-=seg;
+      seg=sRight; if(dist<seg) return{x:x+w,y:y+r+dist};                                                                  dist-=seg;
+      seg=arc;    if(dist<seg){const a=(dist/seg)*(Math.PI/2); return{x:x+w-r+r*Math.cos(a),y:y+h-r+r*Math.sin(a)};}     dist-=seg;
+      seg=sBot;   if(dist<seg) return{x:x+w-r-dist,y:y+h};                                                                dist-=seg;
+      seg=arc;    if(dist<seg){const a=Math.PI/2+(dist/seg)*(Math.PI/2); return{x:x+r+r*Math.cos(a),y:y+h-r+r*Math.sin(a)};} dist-=seg;
+      return{x,y:y+h-r-dist};
+    }
+
+    function rr(c, x, y, w, h, r) {
+      c.beginPath();
+      c.moveTo(x+r,y); c.lineTo(x+w-r,y); c.quadraticCurveTo(x+w,y,x+w,y+r);
+      c.lineTo(x+w,y+h-r); c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+      c.lineTo(x+r,y+h); c.quadraticCurveTo(x,y+h,x,y+h-r);
+      c.lineTo(x,y+r); c.quadraticCurveTo(x,y,x+r,y); c.closePath();
+    }
+
+    let last = 0;
+    function draw(ts) {
+      const delta = Math.min((ts-last)/1000, 0.05); last = ts;
+      shimmerT = (shimmerT + delta*SPEED) % 1;
+
+      const cw = canvas.offsetWidth, ch = canvas.offsetHeight;
+      if (!cw || !ch) { requestAnimationFrame(draw); return; }
+      if (canvas.width !== cw || canvas.height !== ch) { canvas.width = cw; canvas.height = ch; }
+      ctx.clearRect(0, 0, cw, ch);
+
+      const pad = 0;
+      const rect = { x:pad, y:pad, w:cw-pad*2, h:ch-pad*2, r:R };
+
+      // Static base border — gold
+      ctx.strokeStyle = 'rgba(200,160,0,0.35)';
+      ctx.lineWidth = 1.5;
+      rr(ctx, rect.x, rect.y, rect.w, rect.h, rect.r);
+      ctx.stroke();
+
+      // Animated shimmer streak — bright yellow
+      const gLen = 0.20;
+      const pt1 = shimmerPoint(rect, ((shimmerT - gLen/2)+1)%1);
+      const pt2 = shimmerPoint(rect, (shimmerT + gLen/2)%1);
+      const grd = ctx.createLinearGradient(pt1.x, pt1.y, pt2.x, pt2.y);
+      grd.addColorStop(0,    'rgba(255,210,0,0.00)');
+      grd.addColorStop(0.25, 'rgba(255,220,0,0.70)');
+      grd.addColorStop(0.5,  'rgba(255,245,80,1.00)');
+      grd.addColorStop(0.75, 'rgba(255,220,0,0.70)');
+      grd.addColorStop(1,    'rgba(255,210,0,0.00)');
+      ctx.strokeStyle = grd;
+      ctx.lineWidth   = 2.8;
+      rr(ctx, rect.x, rect.y, rect.w, rect.h, rect.r);
+      ctx.stroke();
+
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  })();
+
+  /* ── Tilt ── */
+  (function tilt() {
+    const wrap = document.getElementById('lotTiltWrap');
+    if (!wrap) return;
+    // Passive idle sway: CSS animation handles it, no mouse tracking
+    wrap.style.animation = 'lotSway 4s ease-in-out infinite';
+  })();
+
+  /* ── Scratch card ── */
+  const canvas     = document.getElementById('scratchCanvas');
+  const valEl      = document.getElementById('lotValue');
   const disclaimer = document.getElementById('lotDisclaimer');
   if (!canvas) return;
 
-  const STORAGE_KEY = 'ttm_scratch_date';
-  const today = new Date().toISOString().slice(0, 10);
-  const lastPlayed = localStorage.getItem(STORAGE_KEY);
-  const alreadyPlayed = lastPlayed === today;
+  const STORAGE_KEY   = 'ttm_scratch_date';
+  const today         = new Date().toISOString().slice(0, 10);
+  const alreadyPlayed = localStorage.getItem(STORAGE_KEY) === today;
 
-  const prizes = ['−5%', '−10%', '−15%', '−7%', '−20%', '−10%', '−5%', '−10%'];
-  if (valEl) valEl.textContent = prizes[Math.floor(Math.random() * prizes.length)];
-
-  // Generate discount ID: TTM + encoded date + random suffix
-  function genDiscountId() {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    const prefix = 'TTM';
-    // Encode today as base32-like: month+day
+  // Bot-verifiable code: TTM + day_hex2 + mon_hex2 + checksum + rand5
+  const CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  function genCode() {
     const d = new Date();
-    const datePart = (d.getMonth() + 1).toString(16).toUpperCase().padStart(1,'0') +
-                     d.getDate().toString(16).toUpperCase().padStart(2,'0');
+    const day = d.getDate(), mon = d.getMonth() + 1;
+    const chk = CHARS[(day ^ mon ^ 0x5A) % 32];
     let rand = '';
-    for (let i = 0; i < 9; i++) rand += chars[Math.floor(Math.random() * chars.length)];
-    return prefix + datePart + rand; // e.g. TTM-A1F-XKQM3V2PJ → 16 chars total
+    for (let i = 0; i < 5; i++) rand += CHARS[Math.floor(Math.random() * 32)];
+    return 'TTM' + day.toString(16).toUpperCase().padStart(2,'0') +
+                   mon.toString(16).toUpperCase().padStart(2,'0') + chk + rand;
   }
-  const discountId = genDiscountId();
-  let idShown = false;
+  const botCode = genCode();
+
+  if (valEl) {
+    valEl.textContent         = botCode;
+    valEl.style.fontFamily    = 'monospace';
+    valEl.style.fontSize      = 'clamp(14px, 4vw, 18px)';
+    valEl.style.fontWeight    = '700';
+    valEl.style.letterSpacing = '0.10em';
+  }
 
   const ctx = canvas.getContext('2d');
-  let drawing = false, done = false, total = 1;
+  let drawing = false, revealed = false;
 
-  /* ── Fingerprint-like pattern ── */
   function drawLayer() {
     const W = canvas.width, H = canvas.height;
     ctx.fillStyle = '#9a9aaa';
     ctx.fillRect(0, 0, W, H);
-
-    /* Concentric arc "fingerprint" lines */
     ctx.strokeStyle = 'rgba(255,255,255,0.22)';
     ctx.lineWidth = 1;
-    const cx = W * 0.5, cy = H * 0.5;
-    const steps = 14;
-    for (let i = 1; i <= steps; i++) {
-      const r = (i / steps) * Math.max(W, H) * 0.7;
-      /* Slightly deform each arc for organic feel */
+    const cx2 = W*0.5, cy2 = H*0.5;
+    for (let i = 1; i <= 14; i++) {
+      const r = (i/14)*Math.max(W,H)*0.7;
       ctx.beginPath();
-      for (let a = 0; a <= Math.PI * 2; a += 0.06) {
-        const wobble = 1 + 0.04 * Math.sin(a * 6 + i * 1.3);
-        const x = cx + Math.cos(a) * r * wobble;
-        const y = cy + Math.sin(a) * r * wobble * 0.55; /* flatten vertically */
-        a === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      for (let a = 0; a <= Math.PI*2; a += 0.06) {
+        const wb = 1 + 0.04*Math.sin(a*6+i*1.3);
+        const x = cx2 + Math.cos(a)*r*wb, y = cy2 + Math.sin(a)*r*wb*0.55;
+        a === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
       }
-      ctx.closePath();
-      ctx.stroke();
+      ctx.closePath(); ctx.stroke();
     }
-
-    /* Extra fine horizontal ridges */
-    ctx.strokeStyle = 'rgba(255,255,255,0.10)';
-    ctx.lineWidth = 0.5;
+    ctx.strokeStyle = 'rgba(255,255,255,0.10)'; ctx.lineWidth = 0.5;
     for (let y = 2; y < H; y += 4) {
-      ctx.beginPath();
-      ctx.moveTo(0, y + Math.sin(y * 0.4) * 1.5);
-      for (let x = 0; x <= W; x += 3) {
-        ctx.lineTo(x, y + Math.sin(y * 0.4 + x * 0.05) * 1.5);
-      }
+      ctx.beginPath(); ctx.moveTo(0, y+Math.sin(y*0.4)*1.5);
+      for (let x = 0; x <= W; x += 3) ctx.lineTo(x, y+Math.sin(y*0.4+x*0.05)*1.5);
       ctx.stroke();
     }
   }
@@ -288,100 +318,71 @@
   function resize() {
     const r = canvas.getBoundingClientRect();
     if (!r.width || !r.height) return;
-    canvas.width  = r.width;
-    canvas.height = r.height;
-    if (!done) drawLayer();
-    total = canvas.width * canvas.height || 1;
-    // Make prize visible only after canvas is drawn
+    canvas.width = r.width; canvas.height = r.height;
+    if (!revealed) drawLayer();
     const prize = document.getElementById('lotPrize');
     if (prize) prize.style.visibility = 'visible';
   }
 
-  /* ── Uneven brush: smaller, more natural ── */
   function erase(x, y) {
-    if (done) return;
     ctx.globalCompositeOperation = 'destination-out';
-
-    /* Main blob — smaller */
-    const rx = 8 + Math.random() * 6;
-    const ry = 5 + Math.random() * 4;
-    const rot = Math.random() * Math.PI;
     ctx.beginPath();
-    ctx.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2);
+    ctx.ellipse(x, y, 10+Math.random()*6, 6+Math.random()*4, Math.random()*Math.PI, 0, Math.PI*2);
     ctx.fill();
-
-    /* 1–2 small satellite blobs */
-    const n = 1 + Math.floor(Math.random() * 2);
-    for (let i = 0; i < n; i++) {
-      const ox = x + (Math.random() - 0.5) * 14;
-      const oy = y + (Math.random() - 0.5) * 8;
-      const sr = 2 + Math.random() * 5;
+    for (let i = 0; i < 2; i++) {
       ctx.beginPath();
-      ctx.arc(ox, oy, sr, 0, Math.PI * 2);
+      ctx.arc(x+(Math.random()-0.5)*14, y+(Math.random()-0.5)*8, 2+Math.random()*5, 0, Math.PI*2);
       ctx.fill();
     }
-
     ctx.globalCompositeOperation = 'source-over';
-
-    // Check if 50%+ scratched — show discount ID
-    if (!idShown && disclaimer) {
-      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      let transparent = 0;
-      for (let i = 3; i < imgData.data.length; i += 4) {
-        if (imgData.data[i] < 128) transparent++;
-      }
-      const pct = transparent / (canvas.width * canvas.height);
-      if (pct > 0.5) {
-        idShown = true;
-        disclaimer.textContent = 'ID знижки: ' + discountId;
-        disclaimer.style.fontWeight = '700';
-        disclaimer.style.color = '#c0234e';
-        disclaimer.style.letterSpacing = '0.08em';
-      }
-    }
+    checkReveal();
   }
 
-  function pos(e, src) {
-    const r = canvas.getBoundingClientRect();
-    const s = e.touches ? e.touches[0] : e;
+  function checkReveal() {
+    if (revealed) return;
+    const d = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    let t = 0;
+    for (let i = 3; i < d.length; i += 4) if (d[i] < 128) t++;
+    if (t / (canvas.width * canvas.height) > 0.65) { revealed = true; showBotLink(); }
+  }
+
+  function showBotLink() {
+    if (!disclaimer) return;
+    const botUsername = 'pro_telo_niko_bot'; // ← замінити на username бота
+    const url = `https://t.me/${botUsername}?start=${botCode}`;
+    disclaimer.innerHTML =
+      `<a href="${url}" target="_blank" rel="noopener" class="lot-bot-link">` +
+      `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>` +
+      `Отримай бонус у боті</a>`;
+  }
+
+  function pos(e) {
+    const r = canvas.getBoundingClientRect(), s = e.touches ? e.touches[0] : e;
     return [s.clientX - r.left, s.clientY - r.top];
   }
 
-  /* ── pointer events on document so stroke continues outside canvas ── */
   canvas.addEventListener('mousedown', e => {
-    if (alreadyPlayed) return;
-    drawing = true; erase(...pos(e));
+    if (alreadyPlayed) return; drawing = true; erase(...pos(e));
     localStorage.setItem(STORAGE_KEY, today);
   });
   canvas.addEventListener('touchstart', e => {
-    if (alreadyPlayed) return;
-    e.preventDefault(); drawing = true; erase(...pos(e));
+    if (alreadyPlayed) return; e.preventDefault(); drawing = true; erase(...pos(e));
     localStorage.setItem(STORAGE_KEY, today);
   }, { passive: false });
-
   document.addEventListener('mousemove', e => { if (drawing) erase(...pos(e)); });
-  document.addEventListener('touchmove', e => {
-    if (!drawing) return;
-    e.preventDefault();
-    erase(...pos(e));
-  }, { passive: false });
-
+  document.addEventListener('touchmove', e => { if (!drawing) return; e.preventDefault(); erase(...pos(e)); }, { passive: false });
   document.addEventListener('mouseup',  () => drawing = false);
   document.addEventListener('touchend', () => drawing = false);
 
-  function applyAlreadyPlayed() {
-    if (disclaimer) {
-      disclaimer.textContent = 'Ви вже спробували сьогодні. Повертайтесь завтра.';
-      disclaimer.style.color = '#c0234e';
-      disclaimer.style.fontWeight = '600';
-    }
+  if (alreadyPlayed && disclaimer) {
+    disclaimer.textContent    = 'Ви вже спробували сьогодні. Повертайтесь завтра.';
+    disclaimer.style.color    = 'rgba(200,134,10,0.85)';
+    disclaimer.style.fontWeight = '600';
   }
-
-  if (alreadyPlayed) applyAlreadyPlayed();
 
   if (document.readyState === 'complete') setTimeout(resize, 100);
   else window.addEventListener('load', () => setTimeout(resize, 100));
-  window.addEventListener('resize', () => { if (!done) resize(); });
+  window.addEventListener('resize', () => { if (!revealed) resize(); });
 })();
 
 /* ══════════════════════════════════════
@@ -405,5 +406,5 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
 });
 
 /* ══════════════════════════════════════
-   HERO MODEL — snap-back disabled (idle animation handles orbit)
+   HERO MODEL — idle orbit animation
 ══════════════════════════════════════ */

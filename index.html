@@ -236,16 +236,16 @@
   <div class="cert-carousel-wrap">
     <div class="cert-carousel" id="certCarousel">
     <div class="cert-slide" data-idx="0">
-      <img src="Chocolate2500.png" alt="Chocolate" />
+      <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/71f997c5504584a302973dfaefc90595d1af8313/Choko.svg" alt="Chocolate" />
     </div>
     <div class="cert-slide" data-idx="1">
-      <img src="Cranberry9000.png" alt="Cranberry" />
+      <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/71f997c5504584a302973dfaefc90595d1af8313/Blue.svg" alt="Blue" />
     </div>
     <div class="cert-slide" data-idx="2">
-      <img src="Matcha5000.png" alt="Matcha" />
+      <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/71f997c5504584a302973dfaefc90595d1af8313/Matcha.svg" alt="Matcha" />
     </div>
     <div class="cert-slide" data-idx="3">
-      <img src="Mustard7500.png" alt="Mustard" />
+      <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/71f997c5504584a302973dfaefc90595d1af8313/Mustard.svg" alt="Mustard" />
     </div>
   </div>
   </div><!-- /.cert-carousel-wrap -->
@@ -297,26 +297,26 @@
       </div>
 
       <!-- SCRATCH LOTTERY CARD -->
-      <div class="lot-card" id="lotCard">
-        <!-- Top 1/3 — pink header -->
-        <div class="lot-card__top">
-          <span class="lot-card__title">ЧАС ДЛЯ СЕБЕ</span>
-        </div>
-        <!-- Bottom 2/3 — yellow body -->
-        <div class="lot-card__body">
-          <div class="lot-card__rules-note">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            Стирай покриття пальцем — знижка діє при записі сьогодні. 1 спроба на 24 години.
+      <div class="lot-tilt-wrap" id="lotTiltWrap">
+        <div class="lot-card" id="lotCard">
+          <!-- Shimmer border canvas — inside card, clipped by overflow:hidden -->
+          <canvas class="lot-shimmer-canvas" id="lotShimmerCanvas"></canvas>
+          <div class="lot-card__top">
+            <span class="lot-card__title">МИТТЄВА ЛОТЕРЕЯ</span>
           </div>
-          <div class="lot-card__scratch-zone">
-            <!-- Prize text underneath -->
-            <div class="lot-card__prize" id="lotPrize">
-              <span id="lotValue">−10%</span>
+          <div class="lot-card__body">
+            <div class="lot-card__rules-note">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Стирай покриття пальцем — код діє при записі сьогодні. 1 спроба на 24 години.
             </div>
-            <!-- Grey scratch canvas on top -->
-            <canvas id="scratchCanvas" class="lot-card__canvas"></canvas>
+            <div class="lot-card__scratch-zone">
+              <div class="lot-card__prize" id="lotPrize">
+                <span id="lotValue">TTM...</span>
+              </div>
+              <canvas id="scratchCanvas" class="lot-card__canvas"></canvas>
+            </div>
+            <p class="lot-card__disclaimer" id="lotDisclaimer"></p>
           </div>
-          <p class="lot-card__disclaimer" id="lotDisclaimer"></p>
         </div>
       </div>
     </div>

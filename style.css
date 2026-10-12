@@ -328,7 +328,12 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
   transform: translateX(0) scale(1.1);
   z-index: 10;
   opacity: 1;
+  filter: none;
   box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 30px var(--accent-glow);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              filter 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.1s ease;
 }
 .cert-slide[data-position="1"] {
   transform: translateX(55%) scale(0.8);
@@ -429,7 +434,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
 
 .snap-inner {
   display:flex;
-  padding-inline:calc(var(--col)*0.06);
+  padding-inline: 48px;
   gap:12px;
   width:max-content;
 }
@@ -452,8 +457,8 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
 
 /* ── Service card ── */
 .service-card {
-  width: min(calc(var(--col) * 0.88), calc(100vw - 48px));
-  max-width: calc(var(--col) * 0.88);
+  width: min(calc(var(--col) * 0.72), calc(100vw - 96px));
+  max-width: calc(var(--col) * 0.72);
   flex-shrink: 0;
   scroll-snap-align: center;
   background: var(--bg-card);
@@ -573,7 +578,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
 /* Top 1/3 — pink */
 .lot-card__top {
   flex: 1;
-  background: #f13c77;
+  background: #c8860a;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -583,7 +588,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
   font-family: var(--font-title);
   font-size: clamp(18px, 6vw, 28px);
   font-weight: 900;
-  color: #f5e6ad;
+  color: #ffe033;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-align: center;
@@ -605,8 +610,8 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
   display: flex;
   flex-direction: column;
   gap: 3px;
-  background: rgba(241,60,119,0.12);
-  border: 1px solid rgba(241,60,119,0.35);
+  background: rgba(200,134,10,0.12);
+  border: 1px solid rgba(200,134,10,0.45);
   border-radius: 6px;
   padding: 8px 12px;
   width: 100%;
@@ -614,35 +619,36 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
 .lot-card__rules span {
   font-size: clamp(10px, 2.8vw, 12px);
   font-weight: 600;
-  color: #c0234e;
+  color: #7a4e00;
   line-height: 1.5;
 }
 .lot-card__rules-note {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  background: rgba(241,60,119,0.12);
-  border: 1px solid rgba(241,60,119,0.35);
+  background: rgba(200,134,10,0.12);
+  border: 1px solid rgba(200,134,10,0.45);
   border-radius: 6px;
   padding: 9px 12px;
   width: 80%;
   font-size: clamp(10px, 2.8vw, 12px);
   font-weight: 600;
-  color: #c0234e;
+  color: #7a4e00;
   line-height: 1.5;
 }
 .lot-card__rules-note svg {
   flex-shrink: 0;
   margin-top: 1px;
-  color: #f13c77;
+  color: #c8860a;
 }
 .lot-card__disclaimer {
   font-size: clamp(9px, 2.5vw, 11px);
-  color: rgba(192,35,78,0.65);
+  color: rgba(200,134,10,0.7);
   text-align: center;
   line-height: 1.4;
   font-family: var(--font);
   letter-spacing: 0.03em;
+  width: 100%;
 }
 
 /* ── Lot card shimmer overlay (over the whole card) ── */
@@ -650,25 +656,67 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
   position: relative;
   overflow: hidden;
 }
-.lot-card::after {
+/* Diagonal metallic sheen — sweeps across the card */
+.lot-card::before {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 9;
+  pointer-events: none;
   background: linear-gradient(
     115deg,
-    transparent        25%,
-    rgba(255,255,255,0.18) 50%,
-    transparent        75%
+    transparent 20%,
+    rgba(255,255,220,0.18) 35%,
+    rgba(255,255,255,0.38) 45%,
+    rgba(255,250,200,0.18) 55%,
+    transparent 70%
   );
   background-size: 300% 100%;
-  animation: lotShimmer 3s linear infinite;
+  animation: lotSheen 5s ease-in-out infinite;
+  border-radius: inherit;
+}
+@keyframes lotSheen {
+  0%   { background-position: 200% center; }
+  60%  { background-position: -100% center; }
+  100% { background-position: -100% center; }
+}
+/* Remove old CSS shimmer — replaced by canvas shimmer border */
+.lot-card::after { display: none; }
+
+/* ── Tilt wrapper ── */
+.lot-tilt-wrap {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  will-change: transform;
+  animation: lotSway 8s ease-in-out infinite;
+}
+
+@keyframes lotSway {
+  0%   { transform: perspective(600px) rotateY(-3deg); }
+  50%  { transform: perspective(600px) rotateY( 3deg); }
+  100% { transform: perspective(600px) rotateY(-3deg); }
+}
+
+/* ── Shimmer border canvas — sits INSIDE lot-card ── */
+.lot-shimmer-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-  z-index: 5;
+  z-index: 10;
   border-radius: 16px;
 }
-@keyframes lotShimmer {
-  0%   { background-position: 200% center; }
-  100% { background-position: -100% center; }
+
+/* ── Axes overlay — hidden ── */
+.lot-axes { display: none; }
+
+/* lot-card overflow clips shimmer canvas */
+.lot-tilt-wrap .lot-card {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
 }
 
 /* Scratch zone — smaller (half previous) */
@@ -734,7 +782,15 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
   border-radius:var(--r); transition:filter var(--ease);
 }
 .map-chip:hover { filter:brightness(1.12); }
-.map-chip__arrow { margin-left:auto; opacity:.8; flex-shrink:0; }
+.map-chip__arrow {
+  margin-left:auto;
+  flex-shrink:0;
+  background: rgba(0,0,0,0.20);
+  border-radius: 4px;
+  padding: 3px;
+  width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+}
 
 .contact-btn {
   display:flex; align-items:center; justify-content:center; gap:10px;
@@ -812,12 +868,6 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
 }
 
 /* Idle tilt — disabled, conflicts with swipe */
-.cert-slide[data-position="0"] {
-  transform: translateX(0) scale(1.1);
-  z-index: 10;
-  opacity: 1;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 30px var(--accent-glow);
-}
 
 /* Float CTA — two separate pill buttons with gap */
 .float-cta {
@@ -867,3 +917,24 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
   filter: brightness(0) invert(1);
   flex-shrink: 0;
 }
+
+/* ── Lottery bot link ── */
+.lot-bot-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 18px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: var(--r);
+  text-decoration: none;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+  margin-top: 4px;
+  transition: filter var(--ease);
+}
+.lot-bot-link:hover { filter: brightness(1.15); }
+.lot-bot-link svg { flex-shrink: 0; stroke: #fff; }
