@@ -109,9 +109,12 @@
           </span>
         </div>
       </div>
-      <a href="https://maps.google.com/?q=вул.+Захисників+Миколаєва,+15,+Миколаїв" class="hero__location hero__location--full" target="_blank" rel="noopener">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+      <a href="https://maps.google.com/?q=вул.+Захисників+Миколаєва,+15,+Миколаїв" class="map-chip hero__location--full" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
         вул. Захисників Миколаєва, 15
+        <span class="map-chip__arrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </span>
       </a>
     </div>
   </div>
@@ -295,7 +298,7 @@
 <!-- ══════════════════════════════════════
      SECTION 3 — ПРАЙС
 ══════════════════════════════════════ -->
-<section class="section" id="price">
+<section class="section section--alt" id="price">
   <div class="col">
     <h2 class="section-title">Прайс <svg class="section-title__ico" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></h2>
 
@@ -320,7 +323,16 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         Точну вартість назве майстер після консультації — але ви завжди можете її знизити, взявши участь у миттєвій лотереї нижче.
       </div>
+    </div>
+  </div>
+</section>
 
+<!-- ══════════════════════════════════════
+     SECTION 3b — ЛОТЕРЕЯ (тёмна)
+══════════════════════════════════════ -->
+<section class="section" id="lottery">
+  <div class="col">
+    <div class="price-list">
       <!-- SCRATCH LOTTERY CARD -->
       <div class="lot-tilt-wrap" id="lotTiltWrap">
         <div class="lot-card" id="lotCard">
@@ -501,5 +513,69 @@
 })();
 </script>
 <script src="app.js"></script>
+<script>
+/* ── Desktop icon pattern ── */
+(function() {
+  if (window.innerWidth < 900) return;
+  const ICON = "url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/65757fa20ff65e9e580f742c00c5137ed1e0f445/Icon.svg')";
+  const ICON_DARK = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 164.21 110.05'%3E%3Cg style='fill:%23111;stroke:%23111;stroke-width:3'%3E%3Cpath d='M-133.07,98h-58.88s4-44.8,27.11-44.8c-23.1,0-27.11-45.34-27.11-45.34h58.88s-6,45.34-27.77,45.34C-139.07,53.2-133.07,98-133.07,98Z' transform='translate(289.02 2.09)'/%3E%3C/g%3E%3C/svg%3E\")";
+
+  // Col1: 86px (large), closest to content edge → largest offset from screen edge
+  // Col2: 65px (medium), middle
+  // Col3: 46px (small), farthest from content → smallest offset (closest to screen edge)
+  const cols = [
+    { size: '86px 144px', offsetRight: 362, offsetLeft: 362, yOff: 0,  cls: '1' },
+    { size: '65px 120px', offsetRight: 216, offsetLeft: 216, yOff: 60, cls: '2' },
+    { size: '46px 96px',  offsetRight: 60,  offsetLeft: 60,  yOff: 20, cls: '3' },
+  ];
+
+  document.querySelectorAll('.section').forEach(sec => {
+    const isAlt = sec.classList.contains('section--alt');
+    const icon = ICON;
+    const filt = isAlt
+      ? 'brightness(0) invert(20%)'
+      : 'brightness(0) saturate(100%) invert(53%) sepia(80%) saturate(500%) hue-rotate(200deg)';
+
+    cols.forEach((c, i) => {
+      // LEFT
+      const l = document.createElement('div');
+      l.className = `sec-pat-col sec-pat-col--${c.cls} sec-pat-col--left-${c.cls}`;
+      l.style.cssText = `
+        right: calc(100% - ${c.offsetRight + parseInt(c.size)}px - 10px);
+        width: calc(50% - 240px - ${c.offsetRight}px + ${parseInt(c.size)}px);
+        background-image: ${icon};
+        background-size: ${c.size};
+        background-position: right 0 top ${c.yOff}px;
+        filter: ${filt};
+      `;
+      sec.prepend(l);
+
+      // RIGHT
+      const r = document.createElement('div');
+      r.className = `sec-pat-col sec-pat-col--${c.cls} sec-pat-col--right-${c.cls}`;
+      r.style.cssText = `
+        left: calc(100% - ${c.offsetRight + parseInt(c.size)}px - 10px);
+        width: calc(50% - 240px - ${c.offsetRight}px + ${parseInt(c.size)}px);
+        background-image: ${icon};
+        background-size: ${c.size};
+        background-position: left 0 top ${c.yOff}px;
+        filter: ${filt};
+      `;
+      sec.prepend(r);
+    });
+
+    // Fade overlays — one per side over all cols
+    const fl = document.createElement('div');
+    fl.className = 'sec-pat-fade sec-pat-fade--left';
+    sec.prepend(fl);
+    const fr = document.createElement('div');
+    fr.className = 'sec-pat-fade sec-pat-fade--right';
+    sec.prepend(fr);
+  });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth < 900) document.querySelectorAll('.sec-pat-col').forEach(e => e.remove());
+  });
+})();
+</script>
 </body>
 </html>

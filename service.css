@@ -169,13 +169,17 @@
 }
 .svc-steps__title {
   font-family: var(--font-title);
-  font-size: 18px;
+  font-size: 13px;
   font-weight: 900;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--accent);
-  opacity: 0.8;
   margin-bottom: 20px;
+  padding: 10px 16px;
+  background: rgba(77,140,255,0.07);
+  border: 1px solid var(--border-accent);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r);
 }
 .svc-step {
   display: flex;
@@ -374,3 +378,8 @@
   width: 100%;
   box-sizing: border-box;
 }
+
+/* ── Remove any top separators ── */
+.svc-steps { border-top: none; }
+.svc-quote { border-top: none; }
+.svc-divider { display: none; }

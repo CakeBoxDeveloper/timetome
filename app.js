@@ -34,6 +34,7 @@
     setProgress(phase2Val);
     if (phase2Val < 80 && !pageReady) { setTimeout(phase2, 120); }
     else if (pageReady) { finish(); }
+    else { setTimeout(phase2, 120); }
   }
 
   function finish() {
@@ -49,7 +50,7 @@
   function onPageLoad() {
     if (pageReady) return;
     pageReady = true;
-    if (phase1Done) finish();
+    finish(); // always finish when page is ready, regardless of phase
   }
 
   if (document.readyState === 'complete') { onPageLoad(); }
@@ -87,10 +88,20 @@
       let diff = i - activeIndex;
       if (diff >  slides.length / 2) diff -= slides.length;
       if (diff < -slides.length / 2) diff += slides.length;
-      if      (diff ===  0) slide.setAttribute('data-position', '0');
-      else if (diff ===  1) slide.setAttribute('data-position', '1');
-      else if (diff === -1) slide.setAttribute('data-position', '-1');
-      else                  slide.setAttribute('data-position', 'hide');
+      const pos = diff === 0 ? '0' : diff === 1 ? '1' : diff === -1 ? '-1' : 'hide';
+      // Set position immediately for non-active slides (they move away)
+      // For the incoming active slide, delay z-index promotion by 200ms
+      if (pos === '0') {
+        // First set to side position so it starts from where it is
+        slide.setAttribute('data-position', slide.getAttribute('data-position') || '1');
+        slide.style.zIndex = ''; // clear inline z-index
+        setTimeout(() => {
+          slide.setAttribute('data-position', '0');
+        }, 200);
+      } else {
+        slide.setAttribute('data-position', pos);
+        slide.style.zIndex = '';
+      }
     });
     dots.forEach((d, i) => d.classList.toggle('is-active', i === activeIndex));
     if (!animate) {
