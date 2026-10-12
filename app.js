@@ -126,6 +126,65 @@
   container.addEventListener('mouseleave', () => { dragging = false; });
 
   update();
+
+  /* ── Shimmer border on each cert card ── */
+  document.querySelectorAll('.cert-shimmer-canvas').forEach(canvas => {
+    const ctx = canvas.getContext('2d');
+    let shimmerT = 0;
+    const SPEED = 0.025;
+    const R = 10;
+    function shimmerPoint(rect, t) {
+      const { x, y, w, h, r } = rect;
+      const sTop=w-2*r, sRight=h-2*r, sBot=w-2*r, sLeft=h-2*r;
+      const arc=(Math.PI/2)*r;
+      const total=sTop+arc+sRight+arc+sBot+arc+sLeft+arc;
+      let dist=(((t%1)+1)%1)*total, seg;
+      seg=arc;    if(dist<seg){const a=Math.PI+(dist/seg)*(Math.PI/2); return{x:x+r+r*Math.cos(a),y:y+r+r*Math.sin(a)};} dist-=seg;
+      seg=sTop;   if(dist<seg) return{x:x+r+dist,y};                                                                      dist-=seg;
+      seg=arc;    if(dist<seg){const a=-Math.PI/2+(dist/seg)*(Math.PI/2); return{x:x+w-r+r*Math.cos(a),y:y+r+r*Math.sin(a)};} dist-=seg;
+      seg=sRight; if(dist<seg) return{x:x+w,y:y+r+dist};                                                                  dist-=seg;
+      seg=arc;    if(dist<seg){const a=(dist/seg)*(Math.PI/2); return{x:x+w-r+r*Math.cos(a),y:y+h-r+r*Math.sin(a)};}     dist-=seg;
+      seg=sBot;   if(dist<seg) return{x:x+w-r-dist,y:y+h};                                                                dist-=seg;
+      seg=arc;    if(dist<seg){const a=Math.PI/2+(dist/seg)*(Math.PI/2); return{x:x+r+r*Math.cos(a),y:y+h-r+r*Math.sin(a)};} dist-=seg;
+      return{x,y:y+h-r-dist};
+    }
+    function rr(c, x, y, w, h, r) {
+      c.beginPath();
+      c.moveTo(x+r,y); c.lineTo(x+w-r,y); c.quadraticCurveTo(x+w,y,x+w,y+r);
+      c.lineTo(x+w,y+h-r); c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+      c.lineTo(x+r,y+h); c.quadraticCurveTo(x,y+h,x,y+h-r);
+      c.lineTo(x,y+r); c.quadraticCurveTo(x,y,x+r,y); c.closePath();
+    }
+    let last = 0;
+    function draw(ts) {
+      const delta = Math.min((ts-last)/1000, 0.05); last = ts;
+      shimmerT = (shimmerT + delta*SPEED) % 1;
+      const cw = canvas.offsetWidth, ch = canvas.offsetHeight;
+      if (!cw || !ch) { requestAnimationFrame(draw); return; }
+      if (canvas.width !== cw || canvas.height !== ch) { canvas.width = cw; canvas.height = ch; }
+      ctx.clearRect(0, 0, cw, ch);
+      const rect = { x:0, y:0, w:cw, h:ch, r:R };
+      ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+      ctx.lineWidth = 1.5;
+      rr(ctx, rect.x, rect.y, rect.w, rect.h, rect.r);
+      ctx.stroke();
+      const gLen = 0.20;
+      const pt1 = shimmerPoint(rect, ((shimmerT - gLen/2)+1)%1);
+      const pt2 = shimmerPoint(rect, (shimmerT + gLen/2)%1);
+      const grd = ctx.createLinearGradient(pt1.x, pt1.y, pt2.x, pt2.y);
+      grd.addColorStop(0,    'rgba(255,255,255,0.00)');
+      grd.addColorStop(0.25, 'rgba(255,255,255,0.60)');
+      grd.addColorStop(0.5,  'rgba(255,255,255,1.00)');
+      grd.addColorStop(0.75, 'rgba(255,255,255,0.60)');
+      grd.addColorStop(1,    'rgba(255,255,255,0.00)');
+      ctx.strokeStyle = grd;
+      ctx.lineWidth   = 2.8;
+      rr(ctx, rect.x, rect.y, rect.w, rect.h, rect.r);
+      ctx.stroke();
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  });
 })();
 
 /* ══════════════════════════════════════
@@ -259,7 +318,7 @@
   /* ── Scratch card ── */
   const canvas     = document.getElementById('scratchCanvas');
   const valEl      = document.getElementById('lotValue');
-  const disclaimer = document.getElementById('lotDisclaimer');
+  const botAction  = document.getElementById('lotBotAction');
   if (!canvas) return;
 
   const STORAGE_KEY   = 'ttm_scratch_date';
@@ -285,6 +344,7 @@
     valEl.style.fontSize      = 'clamp(14px, 4vw, 18px)';
     valEl.style.fontWeight    = '700';
     valEl.style.letterSpacing = '0.10em';
+    valEl.style.color         = '#7a4e00';
   }
 
   const ctx = canvas.getContext('2d');
@@ -347,12 +407,12 @@
   }
 
   function showBotLink() {
-    if (!disclaimer) return;
-    const botUsername = 'pro_telo_niko_bot'; // ← замінити на username бота
+    if (!botAction) return;
+    const botUsername = 'pro_telo_niko_bot';
     const url = `https://t.me/${botUsername}?start=${botCode}`;
-    disclaimer.innerHTML =
+    botAction.innerHTML =
       `<a href="${url}" target="_blank" rel="noopener" class="lot-bot-link">` +
-      `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>` +
+      `<img src="https://www.svgrepo.com/show/388724/telegram.svg" alt="" style="width:18px;height:18px;filter:brightness(0) invert(1);flex-shrink:0;" />` +
       `Отримай бонус у боті</a>`;
   }
 
@@ -374,10 +434,8 @@
   document.addEventListener('mouseup',  () => drawing = false);
   document.addEventListener('touchend', () => drawing = false);
 
-  if (alreadyPlayed && disclaimer) {
-    disclaimer.textContent    = 'Ви вже спробували сьогодні. Повертайтесь завтра.';
-    disclaimer.style.color    = 'rgba(200,134,10,0.85)';
-    disclaimer.style.fontWeight = '600';
+  if (alreadyPlayed && botAction) {
+    botAction.innerHTML = `<p style="font-size:clamp(9px,2.5vw,11px);color:rgba(200,134,10,0.85);text-align:center;line-height:1.4;font-weight:600;margin-top:6px;">Ви вже спробували сьогодні. Повертайтесь завтра.</p>`;
   }
 
   if (document.readyState === 'complete') setTimeout(resize, 100);

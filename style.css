@@ -39,11 +39,12 @@ body {
   line-height:1.55;
   overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color: transparent;
 }
-img { display:block; max-width:100%; }
-a { color:inherit; text-decoration:none; }
+img { display:block; max-width:100%; user-select:none; -webkit-user-select:none; }
+a { color:inherit; text-decoration:none; -webkit-tap-highlight-color: transparent; }
 ul { list-style:none; }
-button { font:inherit; color:inherit; cursor:pointer; border:none; }
+button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-highlight-color: transparent; }
 ::selection { background:var(--accent); color:#fff; }
 
 .noise {
@@ -354,6 +355,59 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
   z-index: 1;
 }
 
+/* ── Cert slide ticker ── */
+.cert-slide__ticker-wrap {
+  position: absolute;
+  top: 28px;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  overflow: hidden;
+  height: 22px;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+}
+.cert-slide__ticker {
+  overflow: hidden;
+  white-space: nowrap;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.cert-slide__ticker-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  animation: certTicker 18s linear infinite;
+  font-family: var(--font-title);
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--ticker-color, rgba(255,255,255,0.9));
+  letter-spacing: 0.05em;
+  text-transform: lowercase;
+  white-space: nowrap;
+  padding: 3px 0;
+}
+.cert-slide__ticker-sep {
+  font-size: 9px;
+  opacity: 0.7;
+}
+@keyframes certTicker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── Cert shimmer canvas ── */
+.cert-shimmer-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+  border-radius: 10px;
+}
+
 /* Shimmer on active only */
 .cert-slide[data-position="0"]::after {
   content: '';
@@ -362,11 +416,11 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
   background: linear-gradient(
     105deg,
     transparent 30%,
-    rgba(255,255,255,0.22) 50%,
+    rgba(255,255,255,0.08) 50%,
     transparent 70%
   );
   background-size: 300% 100%;
-  animation: certShimmer 2.5s linear infinite;
+  animation: certShimmer 7.5s linear infinite;
   pointer-events: none;
   border-radius: inherit;
 }
@@ -785,10 +839,11 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
 .map-chip__arrow {
   margin-left:auto;
   flex-shrink:0;
-  background: rgba(0,0,0,0.20);
+  opacity: 1;
+  color: #fff;
+  background: rgba(255,255,255,0.25);
   border-radius: 4px;
-  padding: 3px;
-  width: 22px; height: 22px;
+  padding: 2px;
   display: flex; align-items: center; justify-content: center;
 }
 
@@ -916,6 +971,12 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; }
   height: 18px;
   filter: brightness(0) invert(1);
   flex-shrink: 0;
+}
+
+/* ── Lottery bot action — below card ── */
+#lotBotAction {
+  margin-top: 10px;
+  width: 100%;
 }
 
 /* ── Lottery bot link ── */

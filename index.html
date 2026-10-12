@@ -35,6 +35,7 @@
       font-weight: 700; font-display: swap;
     }
   </style>
+  <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Icon.svg" />
   <link rel="stylesheet" href="style.css" />
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
@@ -236,16 +237,40 @@
   <div class="cert-carousel-wrap">
     <div class="cert-carousel" id="certCarousel">
     <div class="cert-slide" data-idx="0">
-      <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/71f997c5504584a302973dfaefc90595d1af8313/Choko.svg" alt="Chocolate" />
+      <canvas class="cert-shimmer-canvas"></canvas>
+      <img src="https://github.com/CakeBoxDeveloper/timetome/blob/main/Choko.webp?raw=true" alt="Chocolate" />
+      <div class="cert-slide__ticker-wrap" aria-hidden="true" style="--ticker-color:#7d5c5b;">
+        <div class="cert-slide__ticker">
+          <span class="cert-slide__ticker-inner">масаж <span class="cert-slide__ticker-sep">✦</span> стоун <span class="cert-slide__ticker-sep">✦</span> антистрес <span class="cert-slide__ticker-sep">✦</span> відновлення <span class="cert-slide__ticker-sep">✦</span> масаж <span class="cert-slide__ticker-sep">✦</span> стоун <span class="cert-slide__ticker-sep">✦</span> антистрес <span class="cert-slide__ticker-sep">✦</span> відновлення <span class="cert-slide__ticker-sep">✦</span></span>
+        </div>
+      </div>
     </div>
     <div class="cert-slide" data-idx="1">
-      <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/71f997c5504584a302973dfaefc90595d1af8313/Blue.svg" alt="Blue" />
+      <canvas class="cert-shimmer-canvas"></canvas>
+      <img src="https://github.com/CakeBoxDeveloper/timetome/blob/main/Blue.webp?raw=true" alt="Blue" />
+      <div class="cert-slide__ticker-wrap" aria-hidden="true" style="--ticker-color:#343d90;">
+        <div class="cert-slide__ticker">
+          <span class="cert-slide__ticker-inner">масаж <span class="cert-slide__ticker-sep">✦</span> стоун <span class="cert-slide__ticker-sep">✦</span> антистрес <span class="cert-slide__ticker-sep">✦</span> відновлення <span class="cert-slide__ticker-sep">✦</span> масаж <span class="cert-slide__ticker-sep">✦</span> стоун <span class="cert-slide__ticker-sep">✦</span> антистрес <span class="cert-slide__ticker-sep">✦</span> відновлення <span class="cert-slide__ticker-sep">✦</span></span>
+        </div>
+      </div>
     </div>
     <div class="cert-slide" data-idx="2">
-      <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/71f997c5504584a302973dfaefc90595d1af8313/Matcha.svg" alt="Matcha" />
+      <canvas class="cert-shimmer-canvas"></canvas>
+      <img src="https://github.com/CakeBoxDeveloper/timetome/blob/main/Matcha.webp?raw=true" alt="Matcha" />
+      <div class="cert-slide__ticker-wrap" aria-hidden="true" style="--ticker-color:#393f1d;">
+        <div class="cert-slide__ticker">
+          <span class="cert-slide__ticker-inner">масаж <span class="cert-slide__ticker-sep">✦</span> стоун <span class="cert-slide__ticker-sep">✦</span> антистрес <span class="cert-slide__ticker-sep">✦</span> відновлення <span class="cert-slide__ticker-sep">✦</span> масаж <span class="cert-slide__ticker-sep">✦</span> стоун <span class="cert-slide__ticker-sep">✦</span> антистрес <span class="cert-slide__ticker-sep">✦</span> відновлення <span class="cert-slide__ticker-sep">✦</span></span>
+        </div>
+      </div>
     </div>
     <div class="cert-slide" data-idx="3">
-      <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/71f997c5504584a302973dfaefc90595d1af8313/Mustard.svg" alt="Mustard" />
+      <canvas class="cert-shimmer-canvas"></canvas>
+      <img src="https://github.com/CakeBoxDeveloper/timetome/blob/main/Mustard.webp?raw=true" alt="Mustard" />
+      <div class="cert-slide__ticker-wrap" aria-hidden="true" style="--ticker-color:#791519;">
+        <div class="cert-slide__ticker">
+          <span class="cert-slide__ticker-inner">масаж <span class="cert-slide__ticker-sep">✦</span> стоун <span class="cert-slide__ticker-sep">✦</span> антистрес <span class="cert-slide__ticker-sep">✦</span> відновлення <span class="cert-slide__ticker-sep">✦</span> масаж <span class="cert-slide__ticker-sep">✦</span> стоун <span class="cert-slide__ticker-sep">✦</span> антистрес <span class="cert-slide__ticker-sep">✦</span> відновлення <span class="cert-slide__ticker-sep">✦</span></span>
+        </div>
+      </div>
     </div>
   </div>
   </div><!-- /.cert-carousel-wrap -->
@@ -315,10 +340,11 @@
               </div>
               <canvas id="scratchCanvas" class="lot-card__canvas"></canvas>
             </div>
-            <p class="lot-card__disclaimer" id="lotDisclaimer"></p>
           </div>
         </div>
       </div>
+      <!-- Bot action — outside card, appears below it -->
+      <div id="lotBotAction"></div>
     </div>
   </div>
 </section>
@@ -346,7 +372,9 @@
       <a href="https://maps.google.com/?q=вул.+Захисників+Миколаєва,+15,+Миколаїв" class="map-chip" target="_blank" rel="noopener">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
         вул. Захисників Миколаєва, 15
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="map-chip__arrow"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        <span class="map-chip__arrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </span>
       </a>
 
       <!-- Social CTAs row -->
