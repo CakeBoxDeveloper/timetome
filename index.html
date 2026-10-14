@@ -388,10 +388,13 @@
         <div class="lot-card" id="lotCard">
           <!-- Shimmer border canvas — inside card, clipped by overflow:hidden -->
           <canvas class="lot-shimmer-canvas" id="lotShimmerCanvas"></canvas>
+          <!-- SVG icon pattern wrap — positioned relative to lot-card -->
+          <div class="lot-card__pattern-wrap" id="lotPatternWrap"></div>
           <div class="lot-card__top">
             <span class="lot-card__title">МИТТЄВА ЛОТЕРЕЯ</span>
           </div>
-          <div class="lot-card__body">
+          <div class="lot-card__body" id="lotCardBody">
+            
             <div class="lot-card__rules-note">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
               Стирай покриття пальцем — код діє при записі сьогодні. 1 спроба на 24 години.
@@ -402,11 +405,10 @@
               </div>
               <canvas id="scratchCanvas" class="lot-card__canvas"></canvas>
             </div>
+            <div id="lotBotAction"></div>
           </div>
         </div>
       </div>
-      <!-- Bot action — outside card, appears below it -->
-      <div id="lotBotAction"></div>
     </div>
   </div>
 </section>
@@ -627,7 +629,76 @@
 </script>
 
 <script>
-/* ── Material on cert model-viewers: no specular ── */
+/* ── Lot card icon pattern — SVG imgs, crisp vector ── */
+(function() {
+  const wrap = document.getElementById('lotPatternWrap');
+  const body = document.getElementById('lotCardBody');
+  if (!wrap || !body) return;
+
+  const ICON = 'https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/65757fa20ff65e9e580f742c00c5137ed1e0f445/Icon.svg';
+  // dark yellow via CSS filter: brightness(0) sepia(1) saturate(3) hue-rotate(5deg) brightness(0.5)
+  const FILTER = 'brightness(0) sepia(1) saturate(4) hue-rotate(5deg) brightness(0.45)';
+
+  // rings: [radius, size, opacity, angles[]]
+  const rings = [
+    { r: 40,  s: 46, o: 0.60, angles: [45] },
+    { r: 87,  s: 32, o: 0.38, angles: [0, 45, 90] },
+    { r: 122, s: 22, o: 0.22, angles: [0, 22.5, 45, 67.5, 90] },
+  ];
+
+  function place() {
+    wrap.innerHTML = '';
+    const bw = body.offsetWidth;
+    const bh = body.offsetHeight;
+    const card = document.getElementById('lotCard');
+    if (!bw || !bh || !card) return;
+
+    // body's top offset within the card
+    const bodyTop = body.offsetTop;
+
+    // br = bottom-right of card body, tl = top-left of card body
+    const corners = [
+      { ox: bw, oy: bodyTop + bh, dir: -1 },  // br
+      { ox: 0,  oy: bodyTop,      dir:  1 },  // tl
+    ];
+
+    corners.forEach(({ ox, oy, dir }) => {
+      rings.forEach(({ r, s, o, angles }) => {
+        angles.forEach(deg => {
+          const a = deg * Math.PI / 180;
+          const cx = ox + dir * r * Math.cos(a);
+          const cy = oy + dir * r * Math.sin(a);
+          const el = document.createElement('img');
+          el.src = ICON;
+          el.style.cssText = `
+            position:absolute;
+            width:${s}px; height:${s}px;
+            left:${cx - s/2}px; top:${cy - s/2}px;
+            opacity:${o};
+            filter:${FILTER};
+            pointer-events:none;
+          `;
+          wrap.appendChild(el);
+        });
+      });
+    });
+  }
+
+  // Wait for body to have dimensions
+  if (body.offsetWidth) place();
+  else window.addEventListener('load', place);
+  window.addEventListener('resize', place);
+})();
+
+/* ── Scroll to #lottery anchor with 500ms delay ── */
+(function() {
+  if (window.location.hash === '#lottery') {
+    setTimeout(() => {
+      const el = document.getElementById('lottery');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 500);
+  }
+})();
 document.querySelectorAll('.cert-model-viewer').forEach(mv => {
   mv.addEventListener('load', () => {
     mv.model.materials.forEach(mat => {

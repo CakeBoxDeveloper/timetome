@@ -79,14 +79,16 @@
     const slide = slides[activeIndex];
     const price = slide.dataset.price || '—';
     const hue   = slide.dataset.hue   || '0';
+    const bg    = `hsl(${hue}deg 25% 22%)`;
+    const border= `hsl(${hue}deg 30% 35% / 0.6)`;
+    const btn   = `hsl(${hue}deg 55% 45%)`;
 
     if (giftBlock) {
-      giftBlock.style.setProperty('--cert-hue', hue + 'deg');
-      // shift border accent
-      giftBlock.style.borderColor = `hsl(${hue}deg 60% 55% / 0.4)`;
+      giftBlock.style.background   = bg;
+      giftBlock.style.borderColor  = border;
     }
     if (priceEl) priceEl.textContent = price;
-    if (buyBtn)  buyBtn.style.background = `hsl(${hue}deg 60% 45%)`;
+    if (buyBtn)  buyBtn.style.background = btn;
   }
 
   function update() {
