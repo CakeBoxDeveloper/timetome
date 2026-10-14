@@ -63,64 +63,57 @@
 })();
 
 /* ══════════════════════════════════════════════
-   CERT CAROUSEL
+   CERT CAROUSEL — ClassicClub pattern
 ══════════════════════════════════════════════ */
 (function () {
   const container = document.getElementById('certCarousel');
   const slides    = Array.from(document.querySelectorAll('.cert-slide'));
-  const dotsEl    = document.getElementById('certDots');
+  const giftBlock = document.getElementById('certGiftBlock');
+  const priceEl   = document.getElementById('certPrice');
+  const buyBtn    = document.getElementById('certBuyBtn');
   if (!container || !slides.length) return;
 
   let activeIndex = 0;
-  let dots = [];
-  if (dotsEl) {
-    dots = slides.map((_, i) => {
-      const d = document.createElement('span');
-      d.className = 'snap-dot' + (i === 0 ? ' is-active' : '');
-      d.addEventListener('click', () => { activeIndex = i; update(); });
-      dotsEl.appendChild(d);
-      return d;
-    });
+
+  function updateGiftBlock() {
+    const slide = slides[activeIndex];
+    const price = slide.dataset.price || '—';
+    const hue   = slide.dataset.hue   || '0';
+
+    if (giftBlock) {
+      giftBlock.style.setProperty('--cert-hue', hue + 'deg');
+      // shift border accent
+      giftBlock.style.borderColor = `hsl(${hue}deg 60% 55% / 0.4)`;
+    }
+    if (priceEl) priceEl.textContent = price;
+    if (buyBtn)  buyBtn.style.background = `hsl(${hue}deg 60% 45%)`;
   }
 
-  function update(animate = true) {
+  function update() {
     slides.forEach((slide, i) => {
       let diff = i - activeIndex;
       if (diff >  slides.length / 2) diff -= slides.length;
       if (diff < -slides.length / 2) diff += slides.length;
       const pos = diff === 0 ? '0' : diff === 1 ? '1' : diff === -1 ? '-1' : 'hide';
-      // Set position immediately for non-active slides (they move away)
-      // For the incoming active slide, delay z-index promotion by 200ms
-      if (pos === '0') {
-        // First set to side position so it starts from where it is
-        slide.setAttribute('data-position', slide.getAttribute('data-position') || '1');
-        slide.style.zIndex = ''; // clear inline z-index
-        setTimeout(() => {
-          slide.setAttribute('data-position', '0');
-        }, 200);
-      } else {
-        slide.setAttribute('data-position', pos);
-        slide.style.zIndex = '';
-      }
+      slide.setAttribute('data-position', pos);
     });
-    dots.forEach((d, i) => d.classList.toggle('is-active', i === activeIndex));
-    if (!animate) {
-      slides.forEach(s => s.classList.add('no-tilt'));
-      setTimeout(() => slides.forEach(s => s.classList.remove('no-tilt')), 650);
-    }
+    updateGiftBlock();
   }
 
   slides.forEach((slide, i) => {
-    slide.addEventListener('click', () => { activeIndex = i; update(true); });
+    slide.addEventListener('click', () => { activeIndex = i; update(); });
   });
 
   let touchStart = 0, touchTime = 0;
-  container.addEventListener('touchstart', e => { touchStart = e.touches[0].clientX; touchTime = Date.now(); }, { passive: true });
+  container.addEventListener('touchstart', e => {
+    touchStart = e.touches[0].clientX;
+    touchTime = Date.now();
+  }, { passive: true });
   container.addEventListener('touchend', e => {
     const dx = touchStart - e.changedTouches[0].clientX;
     if (Math.abs(dx) > 50 && Date.now() - touchTime < 500) {
       activeIndex = (activeIndex + (dx > 0 ? 1 : -1) + slides.length) % slides.length;
-      update(false);
+      update();
     }
   }, { passive: true });
 
@@ -131,71 +124,12 @@
     const dx = mStart - e.clientX;
     if (Math.abs(dx) > 60) {
       activeIndex = (activeIndex + (dx > 0 ? 1 : -1) + slides.length) % slides.length;
-      update(false);
+      update();
     }
   });
   container.addEventListener('mouseleave', () => { dragging = false; });
 
   update();
-
-  /* ── Shimmer border on each cert card ── */
-  document.querySelectorAll('.cert-shimmer-canvas').forEach(canvas => {
-    const ctx = canvas.getContext('2d');
-    let shimmerT = 0;
-    const SPEED = 0.025;
-    const R = 10;
-    function shimmerPoint(rect, t) {
-      const { x, y, w, h, r } = rect;
-      const sTop=w-2*r, sRight=h-2*r, sBot=w-2*r, sLeft=h-2*r;
-      const arc=(Math.PI/2)*r;
-      const total=sTop+arc+sRight+arc+sBot+arc+sLeft+arc;
-      let dist=(((t%1)+1)%1)*total, seg;
-      seg=arc;    if(dist<seg){const a=Math.PI+(dist/seg)*(Math.PI/2); return{x:x+r+r*Math.cos(a),y:y+r+r*Math.sin(a)};} dist-=seg;
-      seg=sTop;   if(dist<seg) return{x:x+r+dist,y};                                                                      dist-=seg;
-      seg=arc;    if(dist<seg){const a=-Math.PI/2+(dist/seg)*(Math.PI/2); return{x:x+w-r+r*Math.cos(a),y:y+r+r*Math.sin(a)};} dist-=seg;
-      seg=sRight; if(dist<seg) return{x:x+w,y:y+r+dist};                                                                  dist-=seg;
-      seg=arc;    if(dist<seg){const a=(dist/seg)*(Math.PI/2); return{x:x+w-r+r*Math.cos(a),y:y+h-r+r*Math.sin(a)};}     dist-=seg;
-      seg=sBot;   if(dist<seg) return{x:x+w-r-dist,y:y+h};                                                                dist-=seg;
-      seg=arc;    if(dist<seg){const a=Math.PI/2+(dist/seg)*(Math.PI/2); return{x:x+r+r*Math.cos(a),y:y+h-r+r*Math.sin(a)};} dist-=seg;
-      return{x,y:y+h-r-dist};
-    }
-    function rr(c, x, y, w, h, r) {
-      c.beginPath();
-      c.moveTo(x+r,y); c.lineTo(x+w-r,y); c.quadraticCurveTo(x+w,y,x+w,y+r);
-      c.lineTo(x+w,y+h-r); c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
-      c.lineTo(x+r,y+h); c.quadraticCurveTo(x,y+h,x,y+h-r);
-      c.lineTo(x,y+r); c.quadraticCurveTo(x,y,x+r,y); c.closePath();
-    }
-    let last = 0;
-    function draw(ts) {
-      const delta = Math.min((ts-last)/1000, 0.05); last = ts;
-      shimmerT = (shimmerT + delta*SPEED) % 1;
-      const cw = canvas.offsetWidth, ch = canvas.offsetHeight;
-      if (!cw || !ch) { requestAnimationFrame(draw); return; }
-      if (canvas.width !== cw || canvas.height !== ch) { canvas.width = cw; canvas.height = ch; }
-      ctx.clearRect(0, 0, cw, ch);
-      const rect = { x:0, y:0, w:cw, h:ch, r:R };
-      ctx.strokeStyle = 'rgba(255,255,255,0.18)';
-      ctx.lineWidth = 1.5;
-      rr(ctx, rect.x, rect.y, rect.w, rect.h, rect.r);
-      ctx.stroke();
-      const gLen = 0.20;
-      const pt1 = shimmerPoint(rect, ((shimmerT - gLen/2)+1)%1);
-      const pt2 = shimmerPoint(rect, (shimmerT + gLen/2)%1);
-      const grd = ctx.createLinearGradient(pt1.x, pt1.y, pt2.x, pt2.y);
-      grd.addColorStop(0,    'rgba(255,255,255,0.00)');
-      grd.addColorStop(0.25, 'rgba(255,255,255,0.60)');
-      grd.addColorStop(0.5,  'rgba(255,255,255,1.00)');
-      grd.addColorStop(0.75, 'rgba(255,255,255,0.60)');
-      grd.addColorStop(1,    'rgba(255,255,255,0.00)');
-      ctx.strokeStyle = grd;
-      ctx.lineWidth   = 2.8;
-      rr(ctx, rect.x, rect.y, rect.w, rect.h, rect.r);
-      ctx.stroke();
-      requestAnimationFrame(draw);
-    }
-    requestAnimationFrame(draw);
-  });
 })();
 
 /* ══════════════════════════════════════

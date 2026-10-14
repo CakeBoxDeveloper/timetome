@@ -282,10 +282,9 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 }
 
 /* ══════════════════════════════════════════════
-   CERT 3D CAROUSEL — ClassicClub pattern
+   CERT CAROUSEL — ClassicClub pattern adapted for model-viewer
 ══════════════════════════════════════════════ */
 
-/* Section clips horizontal bleed */
 #certificates { overflow-x: hidden; }
 
 .cert-carousel-wrap {
@@ -297,7 +296,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 
 .cert-carousel {
   position: relative;
-  height: 340px;
+  height: 400px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -307,157 +306,121 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 
 .cert-slide {
   position: absolute;
-  width: 60vw;
-  max-width: 240px;
+  width: 55vw;
+  max-width: 220px;
   border-radius: 10px;
-  cursor: pointer;
-  box-shadow: none;
   background: transparent;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-              filter 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+              filter 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+              z-index 0s 0.22s;
+  filter: blur(6px);
+  will-change: transform, filter;
 }
 
-.cert-slide img {
-  width: 100%;
-  height: auto;
-  display: block;
-  pointer-events: none;
+/* Active — front */
+.cert-slide[data-position="0"] {
+  transform: translateX(0) scale(1.1);
+  z-index: 10;
+  filter: blur(0px);
 }
+/* Right */
+.cert-slide[data-position="1"] {
+  transform: translateX(62%) scale(0.8);
+  z-index: 5;
+  filter: blur(6px);
+}
+/* Left */
+.cert-slide[data-position="-1"] {
+  transform: translateX(-62%) scale(0.8);
+  z-index: 5;
+  filter: blur(6px);
+}
+/* Hidden — delay visibility so transition plays out first */
+.cert-slide[data-position="hide"] {
+  transform: translateX(0) scale(0.5);
+  z-index: 1;
+  pointer-events: none;
+  visibility: hidden;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+              filter 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 0s 0.45s;
+}
+
+/* Remove overlay — using filter directly now */
+.cert-slide::after { display: none; }
 
 .cert-model-viewer {
   width: 100%;
-  height: 320px;
+  height: 360px;
   display: block;
   background: transparent;
   --progress-bar-height: 0px;
   --progress-bar-color: transparent;
 }
 
-/* Positions — exact same logic as ClassicClub */
-.cert-slide[data-position="0"] {
-  transform: translateX(0) scale(1.1);
-  z-index: 10;
-  opacity: 1;
-  filter: none;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 30px var(--accent-glow);
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-              filter 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 0.1s ease;
-}
-.cert-slide[data-position="1"] {
-  transform: translateX(55%) scale(0.8);
-  z-index: 5;
-  opacity: 0.6;
-  filter: blur(3px);
-}
-.cert-slide[data-position="-1"] {
-  transform: translateX(-55%) scale(0.8);
-  z-index: 5;
-  opacity: 0.6;
-  filter: blur(3px);
-}
-.cert-slide[data-position="hide"] {
-  opacity: 0;
-  transform: scale(0.5);
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* ── Cert slide ticker ── */
-.cert-slide__ticker-wrap {
-  position: absolute;
-  top: 36px;
-  left: 0;
-  right: 0;
-  z-index: 10;
-  overflow: hidden;
-  height: 20px;
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
-}
-.cert-slide__ticker {
-  overflow: hidden;
-  white-space: nowrap;
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
-.cert-slide__ticker-inner {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  animation: certTicker 22s linear infinite;
-  font-family: var(--font-title);
-  font-size: 11.7px;
-  font-weight: 900;
-  color: var(--ticker-color, rgba(255,255,255,0.9));
-  letter-spacing: 0.05em;
-  text-transform: lowercase;
-  white-space: nowrap;
-  padding: 3px 0;
-}
-.cert-slide__ticker-sep {
-  font-size: 9px;
-  opacity: 0.7;
-}
-@keyframes certTicker {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
 /* ── Cert shimmer canvas ── */
-.cert-shimmer-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 5;
-  border-radius: 10px;
-}
-
-/* Shimmer on active only */
-.cert-slide[data-position="0"]::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 30%,
-    rgba(255,255,255,0.08) 50%,
-    transparent 70%
-  );
-  background-size: 300% 100%;
-  animation: certShimmer 7.5s linear infinite;
-  pointer-events: none;
-  border-radius: inherit;
-}
-@keyframes certShimmer {
-  0%   { background-position: 200% center; }
-  100% { background-position: -100% center; }
-}
+.cert-shimmer-canvas { display: none; }
 
 /* ── Cert gift block ── */
 .cert-gift-block {
-  margin-top:20px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  padding:18px;
-  background:var(--bg-card);
-  border:1px solid var(--border);
-  border-radius:var(--r);
+  margin-top: -120px;
+  position: relative;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  background: rgba(16, 20, 34, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: var(--r);
+  --cert-hue: 0deg;
+  transition: border-color 0.45s ease;
+}
+.cert-gift-block__top {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  justify-content: space-between;
+}
+.cert-gift-block__texts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+.cert-gift-block__title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+.cert-gift-block__sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.55;
 }
 .cert-gift-block__icon-img {
-  width:28px; height:28px;
-  filter:brightness(0) saturate(100%) invert(53%) sepia(80%) saturate(500%) hue-rotate(200deg);
+  width: 22px; height: 22px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  filter: brightness(0) saturate(100%) invert(53%) sepia(80%) saturate(500%) hue-rotate(calc(200deg + var(--cert-hue)));
 }
-.cert-gift-block__text { display:flex; flex-direction:column; gap:4px; }
-.cert-gift-block__text strong { font-size:15px; font-weight:700; }
-.cert-gift-block__text span   { font-size:13px; color:var(--text-muted); line-height:1.55; }
+.cert-buy-btn {
+  display: block;
+  text-align: center;
+  padding: 13px 16px;
+  border-radius: var(--r);
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  background: var(--accent);
+  transition: background 0.45s ease, filter 0.2s ease;
+}
+.cert-buy-btn:hover { filter: brightness(1.12); }
+.cert-buy-btn strong { font-weight: 800; }
 
 /* ══════════════════════════════════════════════
    SNAP DOTS
