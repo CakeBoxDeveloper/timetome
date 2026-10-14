@@ -240,8 +240,22 @@
   <div class="cert-carousel-wrap">
     <div class="cert-carousel" id="certCarousel">
     <div class="cert-slide" data-idx="0">
-      <canvas class="cert-shimmer-canvas"></canvas>
-      <img src="https://github.com/CakeBoxDeveloper/timetome/blob/main/Choko.webp?raw=true" alt="Chocolate" />
+      <model-viewer
+        class="cert-model-viewer"
+        src=""
+        alt="Сертифікат Chocolate"
+        autoplay
+        disable-zoom
+        disable-pan
+        camera-controls
+        touch-action="none"
+        environment-image="neutral"
+        exposure="1.5"
+        shadow-intensity="0"
+        interaction-prompt="none"
+        tone-mapping="commerce"
+        style="width:100%;height:100%;background:transparent;--progress-bar-height:0px;--progress-bar-color:transparent;"
+      ></model-viewer>
       <div class="cert-slide__ticker-wrap" aria-hidden="true" style="--ticker-color:#7d5c5b;">
         <div class="cert-slide__ticker">
           <span class="cert-slide__ticker-inner">масаж <span class="cert-slide__ticker-sep">✦</span> стоун <span class="cert-slide__ticker-sep">✦</span> антистрес <span class="cert-slide__ticker-sep">✦</span> відновлення <span class="cert-slide__ticker-sep">✦</span> масаж <span class="cert-slide__ticker-sep">✦</span> стоун <span class="cert-slide__ticker-sep">✦</span> антистрес <span class="cert-slide__ticker-sep">✦</span> відновлення <span class="cert-slide__ticker-sep">✦</span></span>
@@ -249,8 +263,22 @@
       </div>
     </div>
     <div class="cert-slide" data-idx="1">
-      <canvas class="cert-shimmer-canvas"></canvas>
-      <img src="https://github.com/CakeBoxDeveloper/timetome/blob/main/Blue.webp?raw=true" alt="Blue" />
+      <model-viewer
+        class="cert-model-viewer"
+        src="Blue.glb"
+        alt="Сертифікат Blue"
+        autoplay
+        disable-zoom
+        disable-pan
+        camera-controls
+        touch-action="none"
+        environment-image="neutral"
+        exposure="1.5"
+        shadow-intensity="0"
+        interaction-prompt="none"
+        tone-mapping="commerce"
+        style="width:100%;height:100%;background:transparent;--progress-bar-height:0px;--progress-bar-color:transparent;"
+      ></model-viewer>
       <div class="cert-slide__ticker-wrap" aria-hidden="true" style="--ticker-color:#343d90;">
         <div class="cert-slide__ticker">
           <span class="cert-slide__ticker-inner">масаж <span class="cert-slide__ticker-sep">✦</span> стоун <span class="cert-slide__ticker-sep">✦</span> антистрес <span class="cert-slide__ticker-sep">✦</span> відновлення <span class="cert-slide__ticker-sep">✦</span> масаж <span class="cert-slide__ticker-sep">✦</span> стоун <span class="cert-slide__ticker-sep">✦</span> антистрес <span class="cert-slide__ticker-sep">✦</span> відновлення <span class="cert-slide__ticker-sep">✦</span></span>
@@ -258,8 +286,22 @@
       </div>
     </div>
     <div class="cert-slide" data-idx="2">
-      <canvas class="cert-shimmer-canvas"></canvas>
-      <img src="https://github.com/CakeBoxDeveloper/timetome/blob/main/Matcha.webp?raw=true" alt="Matcha" />
+      <model-viewer
+        class="cert-model-viewer"
+        src=""
+        alt="Сертифікат Matcha"
+        autoplay
+        disable-zoom
+        disable-pan
+        camera-controls
+        touch-action="none"
+        environment-image="neutral"
+        exposure="1.5"
+        shadow-intensity="0"
+        interaction-prompt="none"
+        tone-mapping="commerce"
+        style="width:100%;height:100%;background:transparent;--progress-bar-height:0px;--progress-bar-color:transparent;"
+      ></model-viewer>
       <div class="cert-slide__ticker-wrap" aria-hidden="true" style="--ticker-color:#393f1d;">
         <div class="cert-slide__ticker">
           <span class="cert-slide__ticker-inner">масаж <span class="cert-slide__ticker-sep">✦</span> стоун <span class="cert-slide__ticker-sep">✦</span> антистрес <span class="cert-slide__ticker-sep">✦</span> відновлення <span class="cert-slide__ticker-sep">✦</span> масаж <span class="cert-slide__ticker-sep">✦</span> стоун <span class="cert-slide__ticker-sep">✦</span> антистрес <span class="cert-slide__ticker-sep">✦</span> відновлення <span class="cert-slide__ticker-sep">✦</span></span>
@@ -267,8 +309,22 @@
       </div>
     </div>
     <div class="cert-slide" data-idx="3">
-      <canvas class="cert-shimmer-canvas"></canvas>
-      <img src="https://github.com/CakeBoxDeveloper/timetome/blob/main/Mustard.webp?raw=true" alt="Mustard" />
+      <model-viewer
+        class="cert-model-viewer"
+        src=""
+        alt="Сертифікат Mustard"
+        autoplay
+        disable-zoom
+        disable-pan
+        camera-controls
+        touch-action="none"
+        environment-image="neutral"
+        exposure="1.5"
+        shadow-intensity="0"
+        interaction-prompt="none"
+        tone-mapping="commerce"
+        style="width:100%;height:100%;background:transparent;--progress-bar-height:0px;--progress-bar-color:transparent;"
+      ></model-viewer>
       <div class="cert-slide__ticker-wrap" aria-hidden="true" style="--ticker-color:#791519;">
         <div class="cert-slide__ticker">
           <span class="cert-slide__ticker-inner">масаж <span class="cert-slide__ticker-sep">✦</span> стоун <span class="cert-slide__ticker-sep">✦</span> антистрес <span class="cert-slide__ticker-sep">✦</span> відновлення <span class="cert-slide__ticker-sep">✦</span> масаж <span class="cert-slide__ticker-sep">✦</span> стоун <span class="cert-slide__ticker-sep">✦</span> антистрес <span class="cert-slide__ticker-sep">✦</span> відновлення <span class="cert-slide__ticker-sep">✦</span></span>
@@ -532,9 +588,7 @@
   document.querySelectorAll('.section').forEach(sec => {
     const isAlt = sec.classList.contains('section--alt');
     const icon = ICON;
-    const filt = isAlt
-      ? 'brightness(0) invert(20%)'
-      : 'brightness(0) saturate(100%) invert(53%) sepia(80%) saturate(500%) hue-rotate(200deg)';
+    const filt = 'brightness(0) saturate(100%) invert(12%) sepia(50%) hue-rotate(202deg) saturate(300%) brightness(120%)';
 
     cols.forEach((c, i) => {
       // LEFT
