@@ -648,18 +648,23 @@
 
   function place() {
     wrap.innerHTML = '';
-    const bw = body.offsetWidth;
-    const bh = body.offsetHeight;
     const card = document.getElementById('lotCard');
-    if (!bw || !bh || !card) return;
+    const body = document.getElementById('lotCardBody');
+    if (!card || !body) return;
+    const cw = card.offsetWidth;
+    const ch = card.offsetHeight;
+    const bodyTop = body.offsetTop; // real px measured from card top
+    if (!cw || !ch || !bodyTop) return;
 
-    // body's top offset within the card
-    const bodyTop = body.offsetTop;
+    // Constrain wrap to body area only
+    wrap.style.top    = bodyTop + 'px';
+    wrap.style.height = (ch - bodyTop) + 'px';
+    const wh = ch - bodyTop;
 
-    // br = bottom-right of card body, tl = top-left of card body
+    // Corners relative to wrap
     const corners = [
-      { ox: bw, oy: bodyTop + bh, dir: -1 },  // br
-      { ox: 0,  oy: bodyTop,      dir:  1 },  // tl
+      { ox: cw,  oy: wh,  dir: -1 },  // bottom-right → fan left+up
+      { ox: 0,   oy: 0,   dir:  1 },  // top-left → fan right+down
     ];
 
     corners.forEach(({ ox, oy, dir }) => {
@@ -684,9 +689,8 @@
     });
   }
 
-  // Wait for body to have dimensions
-  if (body.offsetWidth) place();
-  else window.addEventListener('load', place);
+  // Wait for layout to settle, then place
+  window.addEventListener('load', () => setTimeout(place, 100));
   window.addEventListener('resize', place);
 })();
 
