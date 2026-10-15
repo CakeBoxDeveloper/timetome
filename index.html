@@ -237,20 +237,30 @@
 ══════════════════════════════════════ -->
 <section class="section" id="certificates">
 
-  <div class="cert-carousel-wrap">
-    <div class="cert-carousel" id="certCarousel">
-    <div class="cert-slide" data-idx="0" data-price="2 500 ₴" data-hue="1">
+  <!-- Preload all cert models -->
+  <div style="display:none" aria-hidden="true">
+    <model-viewer src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Choco.glb" preload></model-viewer>
+    <model-viewer src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Matcha.glb" preload></model-viewer>
+    <model-viewer src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Mustadr.glb" preload></model-viewer>
+    <model-viewer src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Blue.glb" preload></model-viewer>
+  </div>
+
+  <div class="cert-carousel-wrap" style="position:relative;">
+    <!-- Glow + particles — behind card, covers full wrap -->
+    <canvas id="certParticleCanvas" class="cert-particle-canvas"></canvas>
+    <div class="cert-flip-wrap" id="certFlipWrap">
       <model-viewer
+        id="certModelViewer"
         class="cert-model-viewer"
         src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Choco.glb"
-        alt="Сертифікат Chocolate"
+        alt="Сертифікат"
         autoplay
         disable-zoom
         disable-pan
         touch-action="none"
         camera-orbit="0deg 90deg 105%"
         orientation="0deg 90deg 0deg"
-        field-of-view="25deg"
+        field-of-view="18deg"
         environment-image="neutral"
         exposure="1.0"
         shadow-intensity="0"
@@ -259,88 +269,56 @@
         style="width:100%;background:transparent;--progress-bar-height:0px;--progress-bar-color:transparent;"
       ></model-viewer>
     </div>
-    <div class="cert-slide" data-idx="1" data-price="2 500 ₴" data-hue="234">
-      <model-viewer
-        id="certModelBlue"
-        class="cert-model-viewer"
-        src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Blue.glb"
-        alt="Сертифікат Blue"
-        autoplay
-        disable-zoom
-        disable-pan
-        touch-action="none"
-        camera-orbit="0deg 90deg 105%"
-        orientation="0deg 90deg 0deg"
-        field-of-view="25deg"
-        environment-image="neutral"
-        exposure="1.0"
-        shadow-intensity="0"
-        interaction-prompt="none"
-        tone-mapping="neutral"
-        style="width:100%;background:transparent;--progress-bar-height:0px;--progress-bar-color:transparent;"
-      ></model-viewer>
-    </div>
-    <div class="cert-slide" data-idx="2" data-price="2 500 ₴" data-hue="72">
-      <model-viewer
-        class="cert-model-viewer"
-        src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Matcha.glb"
-        alt="Сертифікат Matcha"
-        autoplay
-        disable-zoom
-        disable-pan
-        touch-action="none"
-        camera-orbit="0deg 90deg 105%"
-        orientation="0deg 90deg 0deg"
-        field-of-view="25deg"
-        environment-image="neutral"
-        exposure="1.0"
-        shadow-intensity="0"
-        interaction-prompt="none"
-        tone-mapping="neutral"
-        style="width:100%;background:transparent;--progress-bar-height:0px;--progress-bar-color:transparent;"
-      ></model-viewer>
-    </div>
-    <div class="cert-slide" data-idx="3" data-price="2 500 ₴" data-hue="356">
-      <model-viewer
-        class="cert-model-viewer"
-        src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Mustadr.glb"
-        alt="Сертифікат Mustard"
-        autoplay
-        disable-zoom
-        disable-pan
-        touch-action="none"
-        camera-orbit="0deg 90deg 105%"
-        orientation="0deg 90deg 0deg"
-        field-of-view="25deg"
-        environment-image="neutral"
-        exposure="1.0"
-        shadow-intensity="0"
-        interaction-prompt="none"
-        tone-mapping="neutral"
-        style="width:100%;background:transparent;--progress-bar-height:0px;--progress-bar-color:transparent;"
-      ></model-viewer>
-    </div>
-        </div>
-      </div>
-    </div>
-  </div>
   </div><!-- /.cert-carousel-wrap -->
 
   <div class="snap-dots col" id="certDots"></div>
 
-  <!-- Gift CTA block — glass overlay below carousel -->
+  <!-- Folder tabs + Gift CTA block -->
   <div class="col">
+    <div class="cert-tabs-wrap">
+      <div class="cert-tabs" id="certTabs">
+        <button class="cert-tab is-active" data-idx="0">2 500 ₴</button>
+        <button class="cert-tab" data-idx="1">5 000 ₴</button>
+        <button class="cert-tab" data-idx="2">7 500 ₴</button>
+        <button class="cert-tab" data-idx="3">9 000 ₴</button>
+      </div>
+    </div>
     <div class="cert-gift-block" id="certGiftBlock">
       <div class="cert-gift-block__top">
         <div class="cert-gift-block__texts">
-          <strong class="cert-gift-block__title">Подаруй близькій людині</strong>
-          <span class="cert-gift-block__sub">Сертифікат на масаж — найкращий подарунок для тих, хто забуває піклуватися про себе</span>
+          <strong class="cert-gift-block__title" id="certName">RELAX</strong>
+          <span class="cert-gift-block__sub" id="certDesc">3 відвідування · аромарелакс, масаж голови та ніг</span>
         </div>
-        <img src="https://unpkg.com/lucide-static@latest/icons/gift.svg" alt="" class="cert-gift-block__icon-img" />
+        <svg id="certGiftIcon" class="cert-gift-block__icon-img" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
       </div>
-      <a href="https://t.me/pro_telo_niko" class="btn btn--full cert-buy-btn" id="certBuyBtn" target="_blank" rel="noopener">
-        Придбати сертифікат за <strong id="certPrice">2 500 ₴</strong>
-      </a>
+
+      <!-- Toggle program -->
+      <button class="cert-program-toggle" id="certProgramToggle" aria-expanded="false">
+        <span>Рекомендована програма</span>
+        <svg class="cert-program-toggle__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="cert-program-table" id="certProgramTable" aria-hidden="true">
+        <div class="cert-program-table__inner">
+          <table id="certTable">
+            <thead>
+              <tr>
+                <th>День</th>
+                <th>Процедура</th>
+                <th>Час</th>
+                <th>Сума</th>
+              </tr>
+            </thead>
+            <tbody id="certTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="cert-buy-wrap">
+        <a href="https://t.me/pro_telo_niko" class="btn btn--full cert-buy-btn" id="certBuyBtn" target="_blank" rel="noopener">
+          Придбати сертифікат за <strong id="certPrice">2 500 ₴</strong>
+        </a>
+        <canvas class="cert-buy-shimmer" id="certBuyShimmer"></canvas>
+      </div>
     </div>
   </div>
 </section>
@@ -690,7 +668,8 @@
   }
 
   // Wait for layout to settle, then place
-  window.addEventListener('load', () => setTimeout(place, 100));
+  window.addEventListener('load', () => setTimeout(place, 200));
+  setTimeout(place, 500); // fallback if load already fired
   window.addEventListener('resize', place);
 })();
 
@@ -703,6 +682,139 @@
     }, 500);
   }
 })();
+/* ── Cert glow + particles ── */
+(function() {
+  const canvas = document.getElementById('certParticleCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const ICON_SRC = 'https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/65757fa20ff65e9e580f742c00c5137ed1e0f445/Icon.svg';
+  const iconImg = new Image();
+  iconImg.crossOrigin = 'anonymous';
+  iconImg.src = ICON_SRC;
+
+  let glowColor = '#7d5c5b';
+  let fgColor   = '#f5d9d5';
+  let tintedCanvas = null; // pre-tinted icon, rebuilt on color change
+
+  function buildTinted() {
+    if (!iconImg.complete) return;
+    tintedCanvas = document.createElement('canvas');
+    tintedCanvas.width = 64; tintedCanvas.height = 64;
+    const tc = tintedCanvas.getContext('2d');
+    tc.drawImage(iconImg, 0, 0, 64, 64);
+    tc.globalCompositeOperation = 'source-in';
+    tc.fillStyle = fgColor;
+    tc.fillRect(0, 0, 64, 64);
+  }
+  iconImg.onload = buildTinted;
+
+  let dying = false; // true = fade all out fast on flip
+
+  window.setCertGlowColor = (bg, fg) => {
+    glowColor = bg;
+    fgColor   = fg;
+    // Rebuild tinted canvas for existing particles — they change color instantly
+    buildTinted();
+  };
+
+  const PARTICLE_COUNT = 28;
+  const particles = [];
+
+  function randomParticle(w, h) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 0.07 + Math.random() * 0.10;
+    const size  = 22 + Math.random() * 28;
+    return {
+      x: w / 2 + (Math.random() - 0.5) * 40,
+      y: h / 2 + (Math.random() - 0.5) * 40,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      size,
+      alpha: 0.75 * (0.5 + Math.random() * 0.4),
+      life: 0,
+      maxLife: 1200 + Math.random() * 800,
+      rotation: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 0.012,
+      dying: false,
+    };
+  }
+
+  function init(w, h) {
+    particles.length = 0;
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      const p = randomParticle(w, h);
+      p.life = Math.random() * p.maxLife;
+      p.x += p.vx * p.life;
+      p.y += p.vy * p.life;
+      particles.push(p);
+    }
+  }
+
+  // Draw standard radial glow
+  function drawGlow(w, h) {
+    const cx = w / 2, cy = h / 2;
+    const r  = Math.min(w, h) * 0.45;
+    const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+    grd.addColorStop(0,   glowColor + 'cc'); // 80%
+    grd.addColorStop(0.5, glowColor + '55');
+    grd.addColorStop(1,   glowColor + '00');
+    ctx.save();
+    ctx.filter = 'blur(20px)';
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, w, h);
+    ctx.restore();
+  }
+
+  let lastTs = 0;
+  function draw(ts) {
+    const dt = Math.min(ts - lastTs, 50);
+    lastTs = ts;
+
+    const w = canvas.offsetWidth;
+    const h = canvas.offsetHeight;
+    if (!w || !h) { requestAnimationFrame(draw); return; }
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w; canvas.height = h;
+      init(w, h);
+    }
+
+    ctx.clearRect(0, 0, w, h);
+    drawGlow(w, h);
+
+    if (tintedCanvas) {
+      particles.forEach(p => {
+        p.life += dt * 0.14;
+        p.x    += p.vx * dt * 0.14;
+        p.y    += p.vy * dt * 0.14;
+        p.rotation += p.rotSpeed * dt * 0.14;
+
+        // Fast fadeout during flip — removed, color changes instantly now
+        if (p.life >= p.maxLife) {
+          Object.assign(p, randomParticle(w, h));
+          p.life = 0;
+        }
+
+        const t = p.life / p.maxLife;
+        const fade = t < 0.12 ? t / 0.12 : t > 0.4 ? 1 - (t - 0.4) / 0.6 : 1;
+        const alpha = p.alpha * fade;
+        if (alpha <= 0.01) return;
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.drawImage(tintedCanvas, -p.size/2, -p.size/2, p.size, p.size);
+        ctx.restore();
+      });
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  requestAnimationFrame(draw);
+})();
+
 document.querySelectorAll('.cert-model-viewer').forEach(mv => {
   mv.addEventListener('load', () => {
     mv.model.materials.forEach(mat => {

@@ -63,75 +63,163 @@
 })();
 
 /* ══════════════════════════════════════════════
-   CERT CAROUSEL — ClassicClub pattern
+   CERT CAROUSEL — single card flip
 ══════════════════════════════════════════════ */
 (function () {
-  const container = document.getElementById('certCarousel');
-  const slides    = Array.from(document.querySelectorAll('.cert-slide'));
+  const flipWrap = document.getElementById('certFlipWrap');
+  const mv       = document.getElementById('certModelViewer');
   const giftBlock = document.getElementById('certGiftBlock');
   const priceEl   = document.getElementById('certPrice');
   const buyBtn    = document.getElementById('certBuyBtn');
-  if (!container || !slides.length) return;
+  const tabsEl    = document.getElementById('certTabs');
+  if (!mv) return;
 
   let activeIndex = 0;
+  let flipping = false;
 
-  function updateGiftBlock() {
-    const slide = slides[activeIndex];
-    const price = slide.dataset.price || '—';
-    const hue   = slide.dataset.hue   || '0';
-    const bg    = `hsl(${hue}deg 25% 22%)`;
-    const border= `hsl(${hue}deg 30% 35% / 0.6)`;
-    const btn   = `hsl(${hue}deg 55% 45%)`;
+  // Cert data
+  const certData = [
+    {
+      price: '2 500 ₴', bg: '#7d5c5b', fg: '#f5d9d5', border: '#d4a9a6',
+      name: 'Какао',
+      src: 'https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Choco.glb',
+      desc: 'М\'який старт — зняти напругу, відпочити та відчути перші результати від комплексного догляду.',
+      rows: [
+        ['1', 'Aroma Relax + терапія червоним світлом',        '90 хв', '900 ₴'],
+        ['2', 'Масаж голови + дарсонваль з насадкою-гребінцем','60 хв', '750 ₴'],
+        ['3', 'Масаж ніг + масаж стоп з гарячими камінням',   '75 хв', '850 ₴'],
+      ],
+    },
+    {
+      price: '5 000 ₴', bg: '#383f0c', fg: '#c4d18b', border: '#8fa055',
+      name: 'Матча',
+      src: 'https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Matcha.glb',
+      desc: 'Повноцінний курс для тіла — відновлення м\'язів, зняття хронічної втоми та покращення кровообігу.',
+      rows: [
+        ['1', 'Загальний класичний масаж + масаж голови',      '90 хв', '1 100 ₴'],
+        ['2', 'Масаж спини + терапія червоним світлом',        '75 хв', '1 150 ₴'],
+        ['3', 'Масаж спини + баночний масаж',                  '75 хв', '1 200 ₴'],
+        ['4', 'Масаж ніг + масаж стоп з гарячими камінням',   '75 хв',   '850 ₴'],
+      ],
+    },
+    {
+      price: '7 500 ₴', bg: '#780115', fg: '#f7b638', border: '#c88020',
+      name: 'Бамбл',
+      src: 'https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Mustadr.glb',
+      desc: 'Глибока робота з тілом — вогняне відновлення, стоун і сухі голки для тих, хто хоче відчути реальний результат.',
+      rows: [
+        ['1', 'Вогняне відновлення',                           '90 хв', '1 500 ₴'],
+        ['2', 'Загальний масаж + масаж голови',                '90 хв', '1 100 ₴'],
+        ['3', 'Stone Massage всього тіла',                     '90 хв', '1 800 ₴'],
+        ['4', 'Масаж спини + сухі голки',                     '75 хв', '1 350 ₴'],
+        ['5', 'Aroma Relax + терапія червоним світлом',        '90 хв',   '900 ₴'],
+      ],
+    },
+    {
+      price: '9 000 ₴', bg: '#3730a2', fg: '#c8bbe7', border: '#8a7fc4',
+      name: 'Айс-латте',
+      src: 'https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Blue.glb',
+      desc: 'Максимальна програма відновлення — від вогняного масажу до стретчингу та аромарелаксу.',
+      rows: [
+        ['1', 'Вогняне відновлення',                           '90 хв', '1 500 ₴'],
+        ['2', 'Загальний масаж + масаж голови',                '90 хв', '1 100 ₴'],
+        ['3', 'Stone Massage всього тіла',                     '90 хв', '1 800 ₴'],
+        ['4', 'Stretch Release Massage',                       '75 хв', '1 200 ₴'],
+        ['5', 'Масаж спини + баночний масаж',                  '75 хв', '1 200 ₴'],
+        ['6', 'Aroma Relax + терапія червоним світлом',        '90 хв',   '900 ₴'],
+      ],
+    },
+  ];
 
-    if (giftBlock) {
-      giftBlock.style.background   = bg;
-      giftBlock.style.borderColor  = border;
-    }
-    if (priceEl) priceEl.textContent = price;
-    if (buyBtn)  buyBtn.style.background = btn;
-  }
+  const tabs      = tabsEl ? Array.from(tabsEl.querySelectorAll('.cert-tab')) : [];
+  const nameEl    = document.getElementById('certName');
+  const descEl    = document.getElementById('certDesc');
+  const tableBody = document.getElementById('certTableBody');
+  const toggle    = document.getElementById('certProgramToggle');
+  const tableWrap = document.getElementById('certProgramTable');
 
-  function update() {
-    slides.forEach((slide, i) => {
-      let diff = i - activeIndex;
-      if (diff >  slides.length / 2) diff -= slides.length;
-      if (diff < -slides.length / 2) diff += slides.length;
-      const pos = diff === 0 ? '0' : diff === 1 ? '1' : diff === -1 ? '-1' : 'hide';
-      slide.setAttribute('data-position', pos);
+  if (toggle && tableWrap) {
+    toggle.addEventListener('click', () => {
+      const open = tableWrap.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', String(open));
     });
-    updateGiftBlock();
   }
 
-  slides.forEach((slide, i) => {
-    slide.addEventListener('click', () => { activeIndex = i; update(); });
+  function applyData(i) {
+    const d = certData[i];
+    // gift-block always flat top
+    if (giftBlock) giftBlock.style.borderRadius = '0 0 var(--r) var(--r)';
+    // Update glow color
+    if (window.setCertGlowColor) window.setCertGlowColor(d.bg, d.fg);
+    // Model
+    mv.setAttribute('src', d.src);
+    // Info block
+    if (giftBlock) {
+      giftBlock.style.background  = d.bg;
+      giftBlock.style.borderColor = d.bg;
+      giftBlock.style.color       = d.fg;
+    }
+    if (nameEl)  nameEl.textContent  = d.name;
+    if (descEl)  descEl.textContent  = d.desc;
+    if (priceEl) priceEl.textContent = d.price;
+    if (buyBtn) {
+      buyBtn.style.background    = d.fg;
+      buyBtn.style.color         = d.bg;
+    }
+    if (tableBody) {
+      tableBody.innerHTML = d.rows.map(([day, proc, time, sum]) =>
+        `<tr><td>${day}</td><td>${proc}</td><td>${time}</td><td>${sum}</td></tr>`
+      ).join('');
+    }
+    // Tabs
+    tabs.forEach((t, ti) => {
+      t.classList.toggle('is-active', ti === i);
+      t.style.background = ti === i ? d.bg : 'rgba(255,255,255,0.08)';
+      t.style.color      = ti === i ? d.fg : 'rgba(255,255,255,0.45)';
+      if (ti === i) t.style.setProperty('--active-bg', d.bg);
+    });
+  }
+
+  function switchTo(i) {
+    if (i === activeIndex || flipping) return;
+    flipping = true;
+
+    if (tableWrap && tableWrap.classList.contains('is-open')) {
+      tableWrap.classList.remove('is-open');
+      toggle?.setAttribute('aria-expanded', 'false');
+    }
+
+    // Phase 1: flip out
+    flipWrap.classList.add('is-flipping-out');
+
+    // Swap exactly at scaleX=0 (halfway = duration/2)
+    setTimeout(() => {
+      activeIndex = i;
+      applyData(i);
+    }, 75); // half of 150ms
+
+    // Phase 2: flip in — start after full out
+    setTimeout(() => {
+      flipWrap.classList.remove('is-flipping-out');
+      flipWrap.classList.add('is-flipping-in');
+      setTimeout(() => {
+        flipWrap.classList.remove('is-flipping-in');
+        flipping = false;
+      }, 150);
+    }, 150);
+  }
+
+  // Prefetch all GLBs into browser cache
+  ['Choco','Matcha','Mustadr','Blue'].forEach(name => {
+    fetch(`https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/${name}.glb`)
+      .catch(() => {});
   });
 
-  let touchStart = 0, touchTime = 0;
-  container.addEventListener('touchstart', e => {
-    touchStart = e.touches[0].clientX;
-    touchTime = Date.now();
-  }, { passive: true });
-  container.addEventListener('touchend', e => {
-    const dx = touchStart - e.changedTouches[0].clientX;
-    if (Math.abs(dx) > 50 && Date.now() - touchTime < 500) {
-      activeIndex = (activeIndex + (dx > 0 ? 1 : -1) + slides.length) % slides.length;
-      update();
-    }
-  }, { passive: true });
+  // Tab clicks
+  tabs.forEach((tab, i) => tab.addEventListener('click', () => switchTo(i)));
 
-  let mStart = 0, dragging = false;
-  container.addEventListener('mousedown',  e => { dragging = true; mStart = e.clientX; });
-  container.addEventListener('mouseup',    e => {
-    if (!dragging) return; dragging = false;
-    const dx = mStart - e.clientX;
-    if (Math.abs(dx) > 60) {
-      activeIndex = (activeIndex + (dx > 0 ? 1 : -1) + slides.length) % slides.length;
-      update();
-    }
-  });
-  container.addEventListener('mouseleave', () => { dragging = false; });
-
-  update();
+  // Init
+  applyData(0);
 })();
 
 /* ══════════════════════════════════════
