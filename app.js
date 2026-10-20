@@ -66,13 +66,13 @@
    CERT CAROUSEL — single card flip
 ══════════════════════════════════════════════ */
 (function () {
-  const flipWrap = document.getElementById('certFlipWrap');
-  const mv       = document.getElementById('certModelViewer');
+  const flipWrap  = document.getElementById('certFlipWrap');
   const giftBlock = document.getElementById('certGiftBlock');
   const priceEl   = document.getElementById('certPrice');
   const buyBtn    = document.getElementById('certBuyBtn');
   const tabsEl    = document.getElementById('certTabs');
-  if (!mv) return;
+  if (!flipWrap) return;
+  const mv = null; // all certs are now PNG images, no model-viewer
 
   let activeIndex = 0;
   let flipping = false;
@@ -82,7 +82,8 @@
     {
       price: '2 500 ₴', bg: '#7d5c5b', fg: '#f5d9d5', border: '#d4a9a6',
       name: 'Какао',
-      src: 'https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Choco.glb',
+      src: null,
+      img: 'https://github.com/CakeBoxDeveloper/timetome/blob/main/ChockoMin_1.png?raw=true',
       desc: 'М\'який старт — зняти напругу, відпочити та відчути перші результати від комплексного догляду.',
       rows: [
         ['1', 'Aroma Relax + терапія червоним світлом',        '90 хв', '900 ₴'],
@@ -91,9 +92,10 @@
       ],
     },
     {
-      price: '5 000 ₴', bg: '#383f0c', fg: '#c4d18b', border: '#8fa055',
-      name: 'Матча',
-      src: 'https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Matcha.glb',
+      price: '5 000 ₴', bg: '#780115', fg: '#f7b638', border: '#c88020',
+      name: 'Бамбл',
+      src: null,
+      img: 'https://github.com/CakeBoxDeveloper/timetome/blob/main/MustMin_1.png?raw=true',
       desc: 'Повноцінний курс для тіла — відновлення м\'язів, зняття хронічної втоми та покращення кровообігу.',
       rows: [
         ['1', 'Загальний класичний масаж + масаж голови',      '90 хв', '1 100 ₴'],
@@ -103,9 +105,10 @@
       ],
     },
     {
-      price: '7 500 ₴', bg: '#780115', fg: '#f7b638', border: '#c88020',
-      name: 'Бамбл',
-      src: 'https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Mustadr.glb',
+      price: '7 500 ₴', bg: '#383f0c', fg: '#c4d18b', border: '#8fa055',
+      name: 'Матча',
+      src: null,
+      img: 'https://github.com/CakeBoxDeveloper/timetome/blob/main/MatchaMin_1.png?raw=true',
       desc: 'Глибока робота з тілом — вогняне відновлення, стоун і сухі голки для тих, хто хоче відчути реальний результат.',
       rows: [
         ['1', 'Вогняне відновлення',                           '90 хв', '1 500 ₴'],
@@ -118,7 +121,8 @@
     {
       price: '9 000 ₴', bg: '#3730a2', fg: '#c8bbe7', border: '#8a7fc4',
       name: 'Айс-латте',
-      src: 'https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Blue.glb',
+      src: null,
+      img: 'https://github.com/CakeBoxDeveloper/timetome/blob/main/BlueMin_1.png?raw=true',
       desc: 'Максимальна програма відновлення — від вогняного масажу до стретчингу та аромарелаксу.',
       rows: [
         ['1', 'Вогняне відновлення',                           '90 хв', '1 500 ₴'],
@@ -145,14 +149,120 @@
     });
   }
 
+  // ── PNG cert shimmer border ──
+  let _certImgShimmerRaf = null;
+  function _certImgShimmer(canvas) {
+    if (!canvas) return;
+    if (_certImgShimmerRaf) cancelAnimationFrame(_certImgShimmerRaf);
+    const ctx = canvas.getContext('2d');
+    let t = 0;
+    const R = 20;
+    const SPEED = 0.018;
+
+    function point(rect, pct) {
+      const {x,y,w,h,r} = rect;
+      const arc = (Math.PI/2)*r;
+      const segs = [w-2*r, arc, h-2*r, arc, w-2*r, arc, h-2*r, arc];
+      const total = segs.reduce((a,b)=>a+b,0);
+      let dist = (((pct%1)+1)%1)*total;
+      // top-left arc
+      let s=arc; if(dist<s){const a=Math.PI+(dist/s)*(Math.PI/2);return{x:x+r+r*Math.cos(a),y:y+r+r*Math.sin(a)};} dist-=s;
+      // top
+      s=w-2*r; if(dist<s) return{x:x+r+dist,y:y}; dist-=s;
+      // top-right arc
+      s=arc; if(dist<s){const a=-Math.PI/2+(dist/s)*(Math.PI/2);return{x:x+w-r+r*Math.cos(a),y:y+r+r*Math.sin(a)};} dist-=s;
+      // right
+      s=h-2*r; if(dist<s) return{x:x+w,y:y+r+dist}; dist-=s;
+      // bottom-right arc
+      s=arc; if(dist<s){const a=(dist/s)*(Math.PI/2);return{x:x+w-r+r*Math.cos(a),y:y+h-r+r*Math.sin(a)};} dist-=s;
+      // bottom
+      s=w-2*r; if(dist<s) return{x:x+w-r-dist,y:y+h}; dist-=s;
+      // bottom-left arc
+      s=arc; if(dist<s){const a=Math.PI/2+(dist/s)*(Math.PI/2);return{x:x+r+r*Math.cos(a),y:y+h-r+r*Math.sin(a)};} dist-=s;
+      return{x:x,y:y+h-r-dist};
+    }
+
+    function rr(c,x,y,w,h,r){
+      c.beginPath();
+      c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.quadraticCurveTo(x+w,y,x+w,y+r);
+      c.lineTo(x+w,y+h-r);c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+      c.lineTo(x+r,y+h);c.quadraticCurveTo(x,y+h,x,y+h-r);
+      c.lineTo(x,y+r);c.quadraticCurveTo(x,y,x+r,y);c.closePath();
+    }
+
+    let last = 0;
+    function draw(ts) {
+      if (!canvas.isConnected) return; // stop if removed from DOM
+      const dt = Math.min((ts-last)/1000, 0.05); last = ts;
+      t = (t + dt*SPEED) % 1;
+      const cw = canvas.offsetWidth, ch = canvas.offsetHeight;
+      if (!cw||!ch){_certImgShimmerRaf=requestAnimationFrame(draw);return;}
+      if (canvas.width!==cw||canvas.height!==ch){canvas.width=cw;canvas.height=ch;}
+      ctx.clearRect(0,0,cw,ch);
+      const pad=1, rect={x:pad,y:pad,w:cw-pad*2,h:ch-pad*2,r:R};
+      // static border
+      ctx.strokeStyle='rgba(160,130,255,0.3)';ctx.lineWidth=1.5;
+      rr(ctx,rect.x,rect.y,rect.w,rect.h,rect.r);ctx.stroke();
+      // shimmer streak
+      const gLen=0.18;
+      const pt1=point(rect,((t-gLen/2)+1)%1);
+      const pt2=point(rect,(t+gLen/2)%1);
+      const grd=ctx.createLinearGradient(pt1.x,pt1.y,pt2.x,pt2.y);
+      grd.addColorStop(0,'rgba(180,140,255,0)');
+      grd.addColorStop(0.3,'rgba(200,160,255,0.7)');
+      grd.addColorStop(0.5,'rgba(220,190,255,1)');
+      grd.addColorStop(0.7,'rgba(200,160,255,0.7)');
+      grd.addColorStop(1,'rgba(180,140,255,0)');
+      ctx.strokeStyle=grd;ctx.lineWidth=2.5;
+      rr(ctx,rect.x,rect.y,rect.w,rect.h,rect.r);ctx.stroke();
+      _certImgShimmerRaf=requestAnimationFrame(draw);
+    }
+    _certImgShimmerRaf=requestAnimationFrame(draw);
+  }
+
   function applyData(i) {
     const d = certData[i];
-    // gift-block always flat top
     if (giftBlock) giftBlock.style.borderRadius = '0 0 var(--r) var(--r)';
-    // Update glow color
     if (window.setCertGlowColor) window.setCertGlowColor(d.bg, d.fg);
-    // Model
-    mv.setAttribute('src', d.src);
+
+    // All certs are now PNG — always build img card
+    const wrap = flipWrap;
+
+    // Remove old card if exists
+    const old = document.getElementById('certImgCard');
+    if (old) old.remove();
+
+    // Build card
+    const card = document.createElement('div');
+    card.id = 'certImgCard';
+    card.className = 'cert-img-card';
+    card.innerHTML =
+      `<div class="cert-img-card__inner" id="certImgInner">` +
+      `<img src="${d.img}" class="cert-img-card__img" id="certImgEl" alt="Сертифікат" />` +
+      `<div class="cert-img-card__sheen"></div>` +
+      `<canvas class="cert-img-card__shimmer" id="certImgShimmer"></canvas>` +
+      `</div>`;
+    wrap.style.position = 'relative';
+    wrap.appendChild(card);
+
+    // Sync inner size to actual rendered img size
+    const imgEl = document.getElementById('certImgEl');
+    const inner = document.getElementById('certImgInner');
+    function syncSize() {
+      const w = imgEl.naturalWidth, h = imgEl.naturalHeight;
+      if (!w || !h) return;
+      const maxH = 360;
+      const ratio = w / h;
+      const finalH = maxH;
+      const finalW = finalH * ratio;
+      inner.style.width  = finalW + 'px';
+      inner.style.height = finalH + 'px';
+    }
+    if (imgEl.complete && imgEl.naturalWidth) syncSize();
+    else imgEl.addEventListener('load', syncSize, { once: true });
+
+    // Start shimmer border animation
+    requestAnimationFrame(() => _certImgShimmer(document.getElementById('certImgShimmer')));
     // Info block
     if (giftBlock) {
       giftBlock.style.background  = d.bg;
@@ -244,7 +354,14 @@
       return d;
     });
     let raf;
+    let userScrolled = false;
+
     track.addEventListener('scroll', () => {
+      // Stop hint animation on first user scroll
+      if (!userScrolled) {
+        userScrolled = true;
+        inner.style.animation = 'none';
+      }
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         const center = track.scrollLeft + track.clientWidth / 2;
@@ -256,8 +373,17 @@
         dots.forEach((d, i) => d.classList.toggle('is-active', i === closest));
       });
     }, { passive: true });
+
     requestAnimationFrame(() => {
-      track.scrollTo({ left: cards[0].offsetLeft - (track.clientWidth - cards[0].offsetWidth) / 2, behavior: 'instant' });
+      const mid = Math.floor(cards.length / 2);
+      const midCard = cards[mid];
+      track.scrollTo({ left: midCard.offsetLeft - (track.clientWidth - midCard.offsetWidth) / 2, behavior: 'instant' });
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === mid));
+
+      // Start hint sway animation after short delay
+      setTimeout(() => {
+        if (!userScrolled) inner.classList.add('snap-hint');
+      }, 1200);
     });
   }
   initSnapDots('servicesTrack', 'servicesDots');
@@ -445,10 +571,25 @@
     if (!botAction) return;
     const botUsername = 'pro_telo_niko_bot';
     const url = `https://t.me/${botUsername}?start=${botCode}`;
+
+    // Telegram icon — img with white filter, same as contacts block
+    const tgSvg =
+      `<img src="https://www.svgrepo.com/show/388724/telegram.svg" alt="" ` +
+      `style="width:20px;height:20px;filter:brightness(0) invert(1);flex-shrink:0;" />`;
+
     botAction.innerHTML =
-      `<a href="${url}" target="_blank" rel="noopener" class="lot-bot-link">` +
-      `<img src="https://www.svgrepo.com/show/388724/telegram.svg" alt="" style="width:18px;height:18px;filter:brightness(0) invert(1);flex-shrink:0;" />` +
-      `Отримай бонус у боті</a>`;
+      `<a href="${url}" target="_blank" rel="noopener" class="lot-door-flap">` +
+      `<span>Дізнайся бонус у нашому Telegram-боті</span>` +
+      tgSvg +
+      `</a>`;
+
+    // Trigger animation on next frame so CSS transition kicks in
+    requestAnimationFrame(() => {
+      const flap = botAction.querySelector('.lot-door-flap');
+      if (flap) {
+        requestAnimationFrame(() => flap.classList.add('is-open'));
+      }
+    });
   }
 
   function pos(e) {
@@ -470,7 +611,9 @@
   document.addEventListener('touchend', () => drawing = false);
 
   if (alreadyPlayed && botAction) {
-    botAction.innerHTML = `<p style="font-size:clamp(9px,2.5vw,11px);color:rgba(200,134,10,0.85);text-align:center;line-height:1.4;font-weight:600;margin-top:6px;">Ви вже спробували сьогодні. Повертайтесь завтра.</p>`;
+    // Show "already played" note inside card
+    const playedNote = document.getElementById('lotPlayedNote');
+    if (playedNote) playedNote.style.display = 'block';
   }
 
   if (document.readyState === 'complete') setTimeout(resize, 100);
@@ -479,18 +622,263 @@
 })();
 
 /* ══════════════════════════════════════
-   FLOATING CTA
+   FLOATING NAVBAR — vertical ad carousel + book btn
 ══════════════════════════════════════ */
 (function () {
-  const floatCta = document.getElementById('floatCta');
-  if (!floatCta) return;
-  function update() {
-    const hero = document.querySelector('.hero');
-    if (!hero) return;
-    floatCta.classList.toggle('is-visible', window.scrollY > hero.offsetHeight * 0.6);
+  const fnav    = document.getElementById('floatCta');
+  const track   = document.getElementById('fnavTrack');
+  const indEl   = document.getElementById('fnavIndicator');
+  const bookBtn = document.getElementById('fnavBook');
+  if (!fnav || !track) return;
+
+  // Detect if we're on the main page
+  const isMain = !window.location.pathname.split('/').pop().includes('.html')
+              || window.location.pathname.endsWith('index.html')
+              || window.location.pathname.endsWith('/');
+
+  // ── Scroll helpers ──
+
+  // Smoothly scroll element into view with optional offset
+  function scrollTo(el, block) {
+    el.scrollIntoView({ behavior: 'smooth', block: block || 'start' });
   }
-  window.addEventListener('scroll', update, { passive: true });
-  update();
+
+  // Center a specific service card in the snap-track and optionally click its CTA
+  function openServiceCard(cardIndex, clickDetailBtn) {
+    const svcSection = document.getElementById('services');
+    if (!svcSection) return;
+    scrollTo(svcSection, 'start');
+
+    setTimeout(() => {
+      const track = document.getElementById('servicesTrack');
+      if (!track) return;
+      const inner = track.querySelector('.snap-inner');
+      if (!inner) return;
+      const cards = Array.from(inner.children);
+      const card  = cards[cardIndex];
+      if (!card) return;
+
+      // Scroll card to center
+      const left = card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2;
+      track.scrollTo({ left, behavior: 'smooth' });
+
+      if (clickDetailBtn) {
+        // Wait for scroll animation to finish, then navigate
+        setTimeout(() => {
+          const detailLink = card.querySelector('a.btn--outline');
+          if (detailLink) detailLink.click();
+        }, 1000);
+      }
+    }, 900);
+  }
+
+  // Scroll to cert section and open toggle for given cert tab index
+  function openCertificate(tabIndex) {
+    const certSection = document.getElementById('certificates');
+    if (!certSection) return;
+    scrollTo(certSection, 'start');
+    setTimeout(() => {
+      // Switch cert tab if needed
+      if (tabIndex != null) {
+        const tabs = document.querySelectorAll('#certTabs .cert-tab');
+        if (tabs[tabIndex]) tabs[tabIndex].click();
+      }
+      // Open program toggle after tab flip animation settles
+      setTimeout(() => {
+        const toggle    = document.getElementById('certProgramToggle');
+        const tableWrap = document.getElementById('certProgramTable');
+        if (toggle && tableWrap && !tableWrap.classList.contains('is-open')) {
+          tableWrap.classList.add('is-open');
+          toggle.setAttribute('aria-expanded', 'true');
+        }
+        // Scroll again to show toggle content
+        const certSection2 = document.getElementById('certificates');
+        if (certSection2) scrollTo(certSection2, 'start');
+      }, 700);
+    }, 900);
+  }
+
+  // Navigate away from a service page, passing action as hash
+  function gotoMain(hash) {
+    window.location.href = 'index.html' + hash;
+  }
+
+  // ── Actions per slide (0-indexed, matches HTML slide order) ──
+  // 0: Cert, 1: Вогняний, 2: Lottery, 3: Dry Needling, 4: Stone
+  const SERVICE_CARD_IDX = {
+    fire:    6,  // СПА — closest to "вогняне" spirit; or use 2 (Глибокий)
+    needle:  4,  // Dry Needling
+    stone:   3,  // Стоун
+  };
+
+  function handleSlide(slideKey) {
+    switch (slideKey) {
+
+      // ── СЕРТИФІКАТ ──
+      case 'cert':
+        if (isMain) {
+          openCertificate(0); // tab 0 = Какао 2500
+        } else {
+          gotoMain('#action=cert');
+        }
+        break;
+
+      // ── ВОГНЯНИЙ МАСАЖ → СПА-програма ──
+      case 'fire':
+        if (isMain) {
+          openServiceCard(SERVICE_CARD_IDX.fire, true);
+        } else {
+          gotoMain('#action=svc&card=' + SERVICE_CARD_IDX.fire);
+        }
+        break;
+
+      // ── ЛОТЕРЕЯ ──
+      case 'lottery':
+        if (isMain) {
+          const lot = document.getElementById('lottery');
+          if (lot) scrollTo(lot, 'center');
+        } else {
+          gotoMain('#action=lottery');
+        }
+        break;
+
+      // ── DRY NEEDLING ──
+      case 'needle':
+        if (isMain) {
+          openServiceCard(SERVICE_CARD_IDX.needle, true);
+        } else {
+          gotoMain('#action=svc&card=' + SERVICE_CARD_IDX.needle);
+        }
+        break;
+
+      // ── STONE MASSAGE ──
+      case 'stone':
+        if (isMain) {
+          openServiceCard(SERVICE_CARD_IDX.stone, true);
+        } else {
+          gotoMain('#action=svc&card=' + SERVICE_CARD_IDX.stone);
+        }
+        break;
+    }
+  }
+
+  // Map slide elements to their keys (must match slide order in HTML)
+  const slideKeys = ['cert', 'fire', 'lottery', 'needle', 'stone'];
+
+  // Attach click handlers
+  track.querySelectorAll('.fnav__slide').forEach((slide, i) => {
+    slide.style.cursor = 'pointer';
+    slide.addEventListener('click', () => handleSlide(slideKeys[i]));
+  });
+
+  // Show/hide on scroll — on service pages show after any scroll, on main after hero
+  function updateVisibility() {
+    const hero = document.querySelector('.hero');
+    if (hero) {
+      fnav.classList.toggle('is-visible', window.scrollY > hero.offsetHeight * 0.6);
+    } else {
+      // Service pages — show after scrolling 80px
+      fnav.classList.toggle('is-visible', window.scrollY > 80);
+    }
+  }
+  window.addEventListener('scroll', updateVisibility, { passive: true });
+  updateVisibility();
+
+  // Book button → scroll to contacts (main) or open Telegram (service pages)
+  if (bookBtn) {
+    bookBtn.addEventListener('click', () => {
+      const contacts = document.getElementById('contacts');
+      if (contacts) {
+        contacts.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        window.open('https://t.me/pro_telo_niko', '_blank', 'noopener');
+      }
+    });
+  }
+
+  // Build indicator dots
+  const slides  = Array.from(track.querySelectorAll('.fnav__slide'));
+  const total   = slides.length;
+  const dots    = [];
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'fnav__indicator-dot' + (i === 0 ? ' is-active' : '');
+    indEl.appendChild(d);
+    dots.push(d);
+  });
+
+  let current   = 0;
+  let autoTimer = null;
+  const SLIDE_H = 58;
+  const AUTO_MS = 3200;
+
+  function goTo(idx, animated) {
+    if (animated === undefined) animated = true;
+    current = ((idx % total) + total) % total;
+    track.style.transition = animated
+      ? 'transform 0.42s cubic-bezier(0.4,0,0.2,1)'
+      : 'none';
+    track.style.transform = `translateY(-${current * SLIDE_H}px)`;
+    dots.forEach((d, i) => d.classList.toggle('is-active', i === current));
+  }
+
+  function startAuto() {
+    stopAuto();
+    autoTimer = setInterval(() => goTo(current + 1), AUTO_MS);
+  }
+  function stopAuto() {
+    if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+  }
+
+  goTo(0, false);
+  startAuto();
+
+  // ── Touch swipe vertical ──
+  let touchStartY = null, touchStartTime = null;
+  const adsEl = document.getElementById('fnavAds');
+  if (adsEl) {
+    adsEl.addEventListener('touchstart', e => {
+      touchStartY    = e.touches[0].clientY;
+      touchStartTime = Date.now();
+      stopAuto();
+    }, { passive: true });
+
+    adsEl.addEventListener('touchend', e => {
+      if (touchStartY === null) return;
+      const dy = touchStartY - e.changedTouches[0].clientY;
+      const dt = Date.now() - touchStartTime;
+      if (Math.abs(dy) > 16 && dt < 400) {
+        goTo(dy > 0 ? current + 1 : current - 1);
+      }
+      touchStartY = null;
+      startAuto();
+    }, { passive: true });
+  }
+
+  // Pause on hover (desktop)
+  fnav.addEventListener('mouseenter', stopAuto);
+  fnav.addEventListener('mouseleave', startAuto);
+})();
+
+/* ══════════════════════════════════════
+   PRICE ACCORDION
+══════════════════════════════════════ */
+(function () {
+  document.querySelectorAll('.price-acc__group').forEach(group => {
+    const head = group.querySelector('.price-acc__head');
+    const body = group.querySelector('.price-acc__body');
+    const more = group.querySelector('.price-acc__more');
+    if (!head || !body) return;
+
+    function toggle() {
+      const open = body.classList.toggle('is-open');
+      head.setAttribute('aria-expanded', String(open));
+      if (more) more.textContent = open ? 'Згорнути ↑' : 'Показати більше ↓';
+    }
+
+    head.addEventListener('click', toggle);
+    if (more) more.addEventListener('click', toggle);
+  });
 })();
 
 /* All booking buttons → Telegram */

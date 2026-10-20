@@ -31,13 +31,13 @@
 }
 
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; overflow-x:hidden; }
+html { scroll-behavior:smooth; overflow-x:clip; }
 body {
   font-family:var(--font);
   background:var(--bg);
   color:var(--text);
   line-height:1.55;
-  overflow-x:hidden;
+  overflow-x:clip;
   -webkit-font-smoothing:antialiased;
   -webkit-tap-highlight-color: transparent;
 }
@@ -195,12 +195,16 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   position: relative;
   width: 100%;
   overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: hidden;
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
   mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
 }
 .hero__ticker {
   overflow: hidden;
   white-space: nowrap;
+  display: block;
+  width: 100%;
 }
 .hero__ticker-inner {
   display: inline-flex;
@@ -306,11 +310,13 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 .cert-flip-wrap.is-flipping-out {
   transform: scaleX(0);
   transition: transform 0.15s ease-in;
+  filter: blur(8px);
 }
 
 .cert-flip-wrap.is-flipping-in {
   transform: scaleX(1);
   transition: transform 0.15s ease-out;
+  filter: blur(0px);
 }
 
 .cert-model-viewer {
@@ -325,6 +331,84 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 }
 
 /* ── Cert shimmer canvas ── */
+/* ── PNG cert card — pseudo-3D sway + shimmer ── */
+.cert-img-card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: certImgSway 6s ease-in-out infinite;
+  will-change: transform;
+  /* inner wrapper for shimmer alignment */
+  pointer-events: none;
+}
+
+@keyframes certImgSway {
+  0%   { transform: perspective(600px) rotateY(-4deg) rotateX(1.5deg); }
+  50%  { transform: perspective(600px) rotateY( 4deg) rotateX(-1.5deg); }
+  100% { transform: perspective(600px) rotateY(-4deg) rotateX(1.5deg); }
+}
+
+/* Inner wrapper — let PNG define its own proportions */
+.cert-img-card__inner {
+  position: relative;
+  /* fit within the 460px slot, PNG scales naturally */
+  max-height: 360px;
+  width: auto;
+  /* prevent overflow of parent */
+  max-width: 90%;
+  flex-shrink: 0;
+}
+
+.cert-img-card__img {
+  width: auto;
+  height: 360px;
+  max-width: 100%;
+  display: block;
+  border-radius: 18px;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.6);
+  object-fit: contain;
+  position: relative;
+  z-index: 1;
+}
+
+/* Surface sheen sweep — covers exactly the img */
+.cert-img-card__sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(255,255,255,0.04) 35%,
+    rgba(255,255,255,0.16) 45%,
+    rgba(255,255,255,0.04) 55%,
+    transparent 70%
+  );
+  background-size: 300% 100%;
+  animation: certImgSheen 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes certImgSheen {
+  0%   { background-position: 200% center; }
+  60%  { background-position: -100% center; }
+  100% { background-position: -100% center; }
+}
+
+/* Shimmer border canvas — exactly over the inner wrapper */
+.cert-img-card__shimmer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+  border-radius: 18px;
+}
+
 .cert-shimmer-canvas { display: none; }
 .cert-particle-canvas {
   position: absolute;
@@ -473,6 +557,25 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .cert-program-table.is-open { max-height: 500px; }
+.cert-program-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 1;
+  line-height: 1.5;
+  color: inherit;
+}
+.cert-program-disclaimer svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  opacity: 0.7;
+}
 .cert-program-table__inner {
   margin-top: 6px;
   border: 1.5px solid rgba(255,255,255,0.22);
@@ -537,11 +640,13 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 
 .snap-track {
   width:100%;
-  overflow-x:auto; overflow-y:visible;
+  overflow-x:auto; overflow-y:hidden;
   scrollbar-width:none;
   -webkit-overflow-scrolling:touch;
   scroll-snap-type:x mandatory;
   scroll-behavior:smooth;
+  /* Show edges of adjacent cards */
+  scroll-padding-inline: 48px;
 }
 .snap-track::-webkit-scrollbar { display:none; }
 
@@ -552,12 +657,27 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   width:max-content;
 }
 
+/* Hint sway — nudges left then right to show scrollability */
+@keyframes snapHint {
+  0%   { transform: translateX(0); }
+  20%  { transform: translateX(-28px); }
+  45%  { transform: translateX(14px); }
+  65%  { transform: translateX(-10px); }
+  80%  { transform: translateX(5px); }
+  100% { transform: translateX(0); }
+}
+.snap-inner.snap-hint {
+  animation: snapHint 1.6s cubic-bezier(0.4, 0, 0.2, 1) 1 forwards;
+}
+
 .services-scroll-wrap {
   position:relative;
   width:100%;
   max-width:var(--col);
   margin-inline:auto;
-  overflow:hidden;
+  /* clip horizontal fades without cutting card shadows vertically */
+  overflow-x:hidden;
+  overflow-y:visible;
 }
 .services-fade {
   position:absolute;
@@ -566,7 +686,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 }
 .services-fade--left  { left:0;  background:linear-gradient(to right, var(--bg-alt) 0%, transparent 100%); }
 .services-fade--right { right:0; background:linear-gradient(to left,  var(--bg-alt) 0%, transparent 100%); }
-.services-scroll-wrap .snap-track { overflow-x:auto; overflow-y:visible; }
+.services-scroll-wrap .snap-track { overflow-x:auto; overflow-y:hidden; }
 
 /* ── Service card ── */
 .service-card {
@@ -642,10 +762,111 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 .btn--full { width:100%; }
 
 /* ══════════════════════════════════════════════
-   PRICE LIST
+   PRICE ACCORDION
 ══════════════════════════════════════════════ */
-.price-list { display:flex; flex-direction:column; gap:20px; }
+.price-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
+.price-acc__group {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+.price-acc__head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(77,140,255,0.07);
+  border: none;
+  border-left: 3px solid var(--accent);
+  cursor: pointer;
+  font-family: var(--font);
+  text-align: left;
+}
+.price-acc__head:hover { background: rgba(77,140,255,0.12); }
+
+.price-acc__title {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.price-acc__arrow {
+  color: var(--accent);
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+.price-acc__head[aria-expanded="true"] .price-acc__arrow {
+  transform: rotate(180deg);
+}
+
+/* collapsed: show ~3 rows then fade */
+.price-acc__body {
+  position: relative;
+  max-height: 132px; /* ~3 rows × 44px */
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.price-acc__body.is-open {
+  max-height: 800px;
+}
+.price-acc__body.is-open .price-acc__fade {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.price-acc__fade {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 56px;
+  background: linear-gradient(to bottom, transparent 0%, var(--bg-card) 100%);
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+.price-acc__more {
+  display: block;
+  width: 100%;
+  padding: 9px 16px;
+  background: none;
+  border: none;
+  border-top: 1px solid var(--border);
+  color: var(--accent);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: background var(--ease);
+}
+.price-acc__more:hover { background: rgba(77,140,255,0.06); }
+
+.price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+.price-row:last-child { border-bottom: none; }
+.price-row span:first-child { color: var(--text); font-weight: 500; }
+.price-row span:last-child  { font-weight: 700; flex-shrink: 0; white-space: nowrap; }
+.price-row em { font-style: normal; color: var(--accent); }
+
+/* Legacy price-list — kept for compat */
+.price-list { display:flex; flex-direction:column; gap:20px; }
 .price-group {
   background:var(--bg-card);
   border:1px solid var(--border);
@@ -659,6 +880,36 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   border-bottom:1px solid var(--border);
   border-left:3px solid var(--accent);
 }
+.price-more-wrap {
+  position: relative;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+.price-more-wrap.is-open { max-height: 300px; }
+.price-more-wrap.is-open .price-more-fade { display: none; }
+.price-more-fade {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 40px;
+  background: linear-gradient(to bottom, transparent, var(--bg-alt));
+  pointer-events: none;
+  z-index: 2;
+}
+.price-more-btn {
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+}
+.price-more-btn:hover { opacity: 0.8; }
+
+/* ── Price item ── */
 .price-item {
   display:flex; align-items:center; gap:8px;
   padding:12px 16px; border-bottom:1px solid var(--border);
@@ -814,12 +1065,91 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 .lot-card::after { display: none; }
 
 /* ── Tilt wrapper ── */
+.lot-scene {
+  width: 100%;
+  overflow: visible;
+}
+
 .lot-tilt-wrap {
   position: relative;
   width: 100%;
-  transform-style: preserve-3d;
   will-change: transform;
   animation: lotSway 8s ease-in-out infinite;
+  /* no overflow — door flap must not be clipped */
+}
+
+/* will-change on the wrapper, not the card */
+.lot-tilt-wrap .lot-card {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* ── Already played note — inside card, below scratch ── */
+.lot-card__played-note {
+  font-size: 13px;
+  font-weight: 700;
+  color: #6b7280;
+  text-align: center;
+  line-height: 1.4;
+  padding: 0 4px 2px;
+}
+
+/* ── Bot link door flap ── */
+.lot-door-wrap {
+  margin: 3px auto 0;
+  isolation: isolate;
+}
+
+.lot-door-flap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 9px;
+  width: 90%;
+  margin-inline: auto;
+  padding: 13px 18px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 16px;
+  box-sizing: border-box;
+
+  transform-origin: top center;
+  transform: perspective(800px) rotateX(90deg);
+  opacity: 0;
+  transition: filter var(--ease);
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
+}
+.lot-door-flap:hover { filter: brightness(1.15); }
+.lot-door-flap svg { flex-shrink: 0; }
+
+.lot-door-flap.is-open {
+  animation: doorSwing 1.15s cubic-bezier(0.22, 1.4, 0.55, 1) forwards,
+             doorWobble 2.7s ease-in-out 1.05s 1 forwards;
+}
+
+/* starts folded under card (rotateX 90deg = hidden below),
+   swings down and bounces to flat (0deg) */
+@keyframes doorSwing {
+  0%   { transform: perspective(800px) rotateX(90deg);   opacity: 0; }
+  15%  { opacity: 1; }
+  60%  { transform: perspective(800px) rotateX(-12deg); }
+  78%  { transform: perspective(800px) rotateX(6deg);  }
+  90%  { transform: perspective(800px) rotateX(-3deg);  }
+  100% { transform: perspective(800px) rotateX(0deg);   opacity: 1; }
+}
+
+@keyframes doorWobble {
+  0%   { transform: perspective(800px) rotateX(0deg); }
+  20%  { transform: perspective(800px) rotateX(-5deg); }
+  45%  { transform: perspective(800px) rotateX(3deg); }
+  65%  { transform: perspective(800px) rotateX(-2deg); }
+  82%  { transform: perspective(800px) rotateX(1deg); }
+  100% { transform: perspective(800px) rotateX(0deg); }
 }
 
 @keyframes lotSway {
@@ -841,13 +1171,6 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 
 /* ── Axes overlay — hidden ── */
 .lot-axes { display: none; }
-
-/* lot-card overflow clips shimmer canvas */
-.lot-tilt-wrap .lot-card {
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-}
 
 /* Scratch zone — smaller (half previous) */
 .lot-card__scratch-zone {
@@ -1000,59 +1323,179 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 
 /* Idle tilt — disabled, conflicts with swipe */
 
-/* Float CTA — two separate pill buttons with gap */
-.float-cta {
+/* ══════════════════════════════════════════════
+   FLOATING NAVBAR (Trust Wallet style)
+══════════════════════════════════════════════ */
+.fnav {
   position: fixed;
-  bottom: 28px;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%) translateY(20px);
   z-index: 80;
   opacity: 0;
   pointer-events: none;
   transition: opacity .4s ease, transform .4s ease;
+
+  /* pill container */
   display: flex;
-  gap: 10px;
-  max-width: calc(100vw - 32px);
+  align-items: stretch;
+  width: min(calc(var(--col) - 32px), calc(100vw - 32px));
+  height: 58px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(10, 11, 20, 0.72);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.06) inset;
+  overflow: hidden;
 }
-.float-cta.is-visible {
+.fnav.is-visible {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
   pointer-events: all;
 }
-.float-cta__btn {
-  display: inline-flex;
+
+/* ── LEFT: ads (65%) ── */
+.fnav__ads {
+  flex: 0 0 65%;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  min-width: 0;
+  position: relative;
+  padding-left: 4px;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+/* vertical slide indicator (левый край) */
+.fnav__indicator {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 13px 20px;
-  border-radius: 40px;
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-  text-decoration: none;
-  white-space: nowrap;
-  border: 2px solid rgba(255,255,255,0.55);
-  background: rgba(14, 12, 10, 0.60);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  backdrop-filter: blur(20px) saturate(160%);
-  box-shadow: 0 6px 24px rgba(0,0,0,0.4);
-  cursor: pointer;
-  transition: background var(--ease), border-color var(--ease), transform var(--ease);
+  width: 14px;
+  padding: 6px 0;
 }
-.float-cta__btn:active { transform: scale(0.97); background: rgba(255,255,255,0.12); }
-.float-cta__btn--tg:hover { background: rgba(255,255,255,0.1); }
-.float-cta__btn--ig:hover { background: rgba(255,255,255,0.1); }
-.float-cta__ico {
-  width: 18px;
-  height: 18px;
-  filter: brightness(0) invert(1);
+.fnav__indicator-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.22);
+  transition: background 0.3s ease, transform 0.3s ease;
   flex-shrink: 0;
 }
+.fnav__indicator-dot.is-active {
+  background: var(--accent);
+  transform: scaleY(2.5);
+  border-radius: 2px;
+}
+
+/* slides viewport */
+.fnav__track-wrap {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+}
+.fnav__track {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  /* touch */
+  touch-action: pan-y;
+}
+.fnav__slide {
+  flex: 0 0 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px 0 6px;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--text);
+  min-width: 0;
+}
+.fnav__slide:active { opacity: 0.75; }
+
+.fnav__slide-ico {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  line-height: 1;
+}
+.fnav__slide-ico--cert   { background: rgba(124, 94, 93, 0.35); }
+.fnav__slide-ico--fire   { background: rgba(200, 80, 30, 0.35); }
+.fnav__slide-ico--lot    { background: rgba(200, 134, 10, 0.35); }
+.fnav__slide-ico--needle { background: rgba(77, 140, 255, 0.22); }
+.fnav__slide-ico--stone  { background: rgba(90, 110, 90, 0.35); }
+
+.fnav__slide-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  overflow: hidden;
+}
+.fnav__slide-body strong {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fnav__slide-body span {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── RIGHT: book button (35%) ── */
+.fnav__book {
+  flex: 0 0 35%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 0 17px 17px 0;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0 8px;
+  transition: filter var(--ease), transform var(--ease);
+  line-height: 1.2;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+.fnav__book:active { filter: brightness(1.2); transform: scale(0.97); }
+.fnav__book svg { flex-shrink: 0; }
+.fnav__book span { display: block; }
 
 /* ── Lottery bot action — below card ── */
 #lotBotAction {
-  margin-top: 10px;
+  min-height: 0;
   width: 100%;
+  overflow: hidden;
+  transition: min-height 0.3s ease;
 }
 
 /* ── Lottery bot link ── */
@@ -1085,7 +1528,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   position: relative;
   z-index: 1;
 }
-.float-cta { z-index: 80; }
+.fnav { z-index: 80; }
 
 @media (min-width: 900px) {
 

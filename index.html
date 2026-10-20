@@ -36,7 +36,7 @@
     }
   </style>
   <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Icon.svg" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=6" />
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -237,37 +237,12 @@
 ══════════════════════════════════════ -->
 <section class="section" id="certificates">
 
-  <!-- Preload all cert models -->
-  <div style="display:none" aria-hidden="true">
-    <model-viewer src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Choco.glb" preload></model-viewer>
-    <model-viewer src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Matcha.glb" preload></model-viewer>
-    <model-viewer src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Mustadr.glb" preload></model-viewer>
-    <model-viewer src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Blue.glb" preload></model-viewer>
-  </div>
 
   <div class="cert-carousel-wrap" style="position:relative;">
     <!-- Glow + particles — behind card, covers full wrap -->
     <canvas id="certParticleCanvas" class="cert-particle-canvas"></canvas>
     <div class="cert-flip-wrap" id="certFlipWrap">
-      <model-viewer
-        id="certModelViewer"
-        class="cert-model-viewer"
-        src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Choco.glb"
-        alt="Сертифікат"
-        autoplay
-        disable-zoom
-        disable-pan
-        touch-action="none"
-        camera-orbit="0deg 90deg 105%"
-        orientation="0deg 90deg 0deg"
-        field-of-view="18deg"
-        environment-image="neutral"
-        exposure="1.0"
-        shadow-intensity="0"
-        interaction-prompt="none"
-        tone-mapping="neutral"
-        style="width:100%;background:transparent;--progress-bar-height:0px;--progress-bar-color:transparent;"
-      ></model-viewer>
+      <!-- cert image card injected by JS -->
     </div>
   </div><!-- /.cert-carousel-wrap -->
 
@@ -298,6 +273,10 @@
         <svg class="cert-program-toggle__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
       <div class="cert-program-table" id="certProgramTable" aria-hidden="true">
+        <div class="cert-program-disclaimer">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Це приклад програми. Ви можете обрати будь-які процедури на суму сертифіката.
+        </div>
         <div class="cert-program-table__inner">
           <table id="certTable">
             <thead>
@@ -330,27 +309,79 @@
   <div class="col">
     <h2 class="section-title">Прайс <svg class="section-title__ico" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></h2>
 
-    <div class="price-list">
-      <div class="price-group">
-        <div class="price-group__title">Масаж</div>
-        <div class="price-item"><span class="price-item__name">Класичний / загальний</span><span class="price-item__line"></span><span class="price-item__val">від 600 <span class="accent">₴</span></span></div>
-        <div class="price-item"><span class="price-item__name">Антистрес (60 хв)</span><span class="price-item__line"></span><span class="price-item__val">700 <span class="accent">₴</span></span></div>
-        <div class="price-item"><span class="price-item__name">Глибокий тканинний</span><span class="price-item__line"></span><span class="price-item__val">від 800 <span class="accent">₴</span></span></div>
-        <div class="price-item"><span class="price-item__name">Стоун-масаж (90 хв)</span><span class="price-item__line"></span><span class="price-item__val">1 200 <span class="accent">₴</span></span></div>
-        <div class="price-item"><span class="price-item__name">СПА-програма (120 хв)</span><span class="price-item__line"></span><span class="price-item__val">1 800 <span class="accent">₴</span></span></div>
+    <div class="price-accordion" id="priceAccordion">
+
+      <!-- Масаж -->
+      <div class="price-acc__group">
+        <button class="price-acc__head" aria-expanded="false">
+          <span class="price-acc__title">Масаж</span>
+          <svg class="price-acc__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="price-acc__body">
+          <div class="price-acc__inner">
+            <div class="price-row"><span>Класичний масаж (спина + шия)</span><span>від 600 <em>₴</em></span></div>
+            <div class="price-row"><span>Загальний масаж (все тіло)</span><span>від 900 <em>₴</em></span></div>
+            <div class="price-row"><span>Антистрес (60 хв)</span><span>700 <em>₴</em></span></div>
+            <div class="price-row"><span>Антистрес (90 хв)</span><span>1 000 <em>₴</em></span></div>
+            <div class="price-row"><span>Масаж голови + дарсонваль</span><span>750 <em>₴</em></span></div>
+            <div class="price-row"><span>Масаж ніг + стоп (гарячі камені)</span><span>850 <em>₴</em></span></div>
+            <div class="price-row"><span>Aroma Relax (90 хв)</span><span>900 <em>₴</em></span></div>
+            <div class="price-row"><span>Глибокий тканинний (60 хв)</span><span>від 800 <em>₴</em></span></div>
+            <div class="price-row"><span>Глибокий тканинний (90 хв)</span><span>від 1 100 <em>₴</em></span></div>
+            <div class="price-row"><span>Stretch Release Massage (75 хв)</span><span>1 200 <em>₴</em></span></div>
+          </div>
+          <div class="price-acc__fade"></div>
+        </div>
+        <button class="price-acc__more">Показати більше ↓</button>
       </div>
 
-      <div class="price-group">
-        <div class="price-group__title">Фізіотерапія</div>
-        <div class="price-item"><span class="price-item__name">Dry Needling</span><span class="price-item__line"></span><span class="price-item__val">від 500 <span class="accent">₴</span></span></div>
-        <div class="price-item"><span class="price-item__name">Терапія червоним світлом</span><span class="price-item__line"></span><span class="price-item__val">від 400 <span class="accent">₴</span></span></div>
-        <div class="price-item"><span class="price-item__name">Перкусія (локальна)</span><span class="price-item__line"></span><span class="price-item__val">від 300 <span class="accent">₴</span></span></div>
+      <!-- Стоун та СПА -->
+      <div class="price-acc__group">
+        <button class="price-acc__head" aria-expanded="false">
+          <span class="price-acc__title">Стоун та СПА</span>
+          <svg class="price-acc__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="price-acc__body">
+          <div class="price-acc__inner">
+            <div class="price-row"><span>Stone Massage (90 хв)</span><span>1 200 <em>₴</em></span></div>
+            <div class="price-row"><span>Stone Massage всього тіла (90 хв)</span><span>1 800 <em>₴</em></span></div>
+            <div class="price-row"><span>Вогняне відновлення (90 хв)</span><span>1 500 <em>₴</em></span></div>
+            <div class="price-row"><span>СПА-програма (120 хв)</span><span>1 800 <em>₴</em></span></div>
+            <div class="price-row"><span>Баночний масаж (спина)</span><span>від 500 <em>₴</em></span></div>
+            <div class="price-row"><span>Масаж спини + баночний масаж</span><span>1 200 <em>₴</em></span></div>
+          </div>
+          <div class="price-acc__fade"></div>
+        </div>
+        <button class="price-acc__more">Показати більше ↓</button>
       </div>
 
-      <div class="price-note">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        Точну вартість назве майстер після консультації — але ви завжди можете її знизити, взявши участь у миттєвій лотереї нижче.
+      <!-- Фізіотерапія -->
+      <div class="price-acc__group">
+        <button class="price-acc__head" aria-expanded="false">
+          <span class="price-acc__title">Фізіотерапія</span>
+          <svg class="price-acc__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="price-acc__body">
+          <div class="price-acc__inner">
+            <div class="price-row"><span>Dry Needling (локальна зона)</span><span>від 500 <em>₴</em></span></div>
+            <div class="price-row"><span>Dry Needling (кілька зон)</span><span>від 800 <em>₴</em></span></div>
+            <div class="price-row"><span>Масаж спини + сухі голки</span><span>1 350 <em>₴</em></span></div>
+            <div class="price-row"><span>Терапія червоним світлом (30 хв)</span><span>від 400 <em>₴</em></span></div>
+            <div class="price-row"><span>Терапія червоним світлом (60 хв)</span><span>від 700 <em>₴</em></span></div>
+            <div class="price-row"><span>Aroma Relax + червоне світло (90 хв)</span><span>900 <em>₴</em></span></div>
+            <div class="price-row"><span>Перкусія (локальна)</span><span>від 300 <em>₴</em></span></div>
+            <div class="price-row"><span>Перкусія (загальна)</span><span>від 500 <em>₴</em></span></div>
+          </div>
+          <div class="price-acc__fade"></div>
+        </div>
+        <button class="price-acc__more">Показати більше ↓</button>
       </div>
+
+    </div>
+
+    <div class="price-note" style="margin-top:20px;margin-bottom:8px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Точну вартість назве майстер після консультації — але ви завжди можете її знизити, взявши участь у миттєвій лотереї нижче.
     </div>
   </div>
 </section>
@@ -362,7 +393,8 @@
   <div class="col">
     <div class="price-list">
       <!-- SCRATCH LOTTERY CARD -->
-      <div class="lot-tilt-wrap" id="lotTiltWrap">
+      <div class="lot-scene">
+        <div class="lot-tilt-wrap" id="lotTiltWrap">
         <div class="lot-card" id="lotCard">
           <!-- Shimmer border canvas — inside card, clipped by overflow:hidden -->
           <canvas class="lot-shimmer-canvas" id="lotShimmerCanvas"></canvas>
@@ -375,7 +407,7 @@
             
             <div class="lot-card__rules-note">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              Стирай покриття пальцем — код діє при записі сьогодні. 1 спроба на 24 години.
+              Стирай покриття пальцем — код діє при записі сьогодні. Одна спроба на добу. Удачі.
             </div>
             <div class="lot-card__scratch-zone">
               <div class="lot-card__prize" id="lotPrize">
@@ -383,11 +415,31 @@
               </div>
               <canvas id="scratchCanvas" class="lot-card__canvas"></canvas>
             </div>
-            <div id="lotBotAction"></div>
+            <!-- "already played" note — sits below scratch, stays inside card, small -->
+            <p class="lot-card__played-note" id="lotPlayedNote" style="display:none;">
+              Ви вже спробували сьогодні. Повертайтесь завтра.
+            </p>
           </div>
         </div>
-      </div>
+
+        <!-- Telegram door flap — back inside tilt-wrap to inherit sway -->
+        <div class="lot-door-wrap" id="lotBotAction"></div>
+      </div><!-- /.lot-tilt-wrap -->
+      </div><!-- /.lot-scene -->
     </div>
+
+    <!-- ⚙️ DEBUG — видалити перед продакшеном -->
+    <button id="lotDebugBtn" onclick="
+      const a = document.getElementById('lotBotAction');
+      a.innerHTML = '';
+      const el = document.createElement('a');
+      el.href = '#'; el.className = 'lot-door-flap';
+      el.innerHTML = '<span>Дізнайся бонус у нашому Telegram-боті</span><svg width=\'20\' height=\'20\' viewBox=\'0 0 24 24\' fill=\'currentColor\' style=\'flex-shrink:0\'><path d=\'M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z\'/></svg>';
+      a.appendChild(el);
+      requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('is-open')));
+    " style="margin-top:10px;padding:7px 14px;border-radius:8px;border:1px dashed rgba(255,255,255,0.25);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.45);font-size:11px;font-weight:600;cursor:pointer;display:block;width:100%;">
+      ⚙ Тест анімації дверцят
+    </button>
   </div>
 </section>
 
@@ -459,16 +511,73 @@
   </div>
 </section>
 
-<!-- FLOATING CTA -->
-<div class="float-cta" id="floatCta">
-  <a href="https://t.me/pro_telo_niko" class="float-cta__btn float-cta__btn--tg" target="_blank" rel="noopener">
-    <img src="https://www.svgrepo.com/show/388724/telegram.svg" alt="" class="float-cta__ico" />
-    Записатись
-  </a>
-  <a href="https://www.instagram.com/pro_telo_niko" class="float-cta__btn float-cta__btn--ig" target="_blank" rel="noopener">
-    <img src="https://www.svgrepo.com/show/521711/instagram.svg" alt="" class="float-cta__ico" />
-    Записатись
-  </a>
+<!-- FLOATING NAVBAR -->
+<div class="fnav" id="floatCta">
+
+  <!-- LEFT 65% — рекламна карусель -->
+  <div class="fnav__ads" id="fnavAds">
+    <!-- slide indicator stripe -->
+    <div class="fnav__indicator" id="fnavIndicator"></div>
+
+    <!-- slides viewport -->
+    <div class="fnav__track-wrap">
+      <div class="fnav__track" id="fnavTrack">
+
+        <!-- SLIDE 1 — Сертифікат -->
+        <div class="fnav__slide">
+          <div class="fnav__slide-ico fnav__slide-ico--cert">🎁</div>
+          <div class="fnav__slide-body">
+            <strong>Подаруй сеанс близькій людині</strong>
+            <span>Сертифікати від 2 500 ₴ · 4 номінали</span>
+          </div>
+        </div>
+
+        <!-- SLIDE 2 — Вогняний масаж -->
+        <div class="fnav__slide">
+          <div class="fnav__slide-ico fnav__slide-ico--fire">🔥</div>
+          <div class="fnav__slide-body">
+            <strong>Вогняне відновлення</strong>
+            <span>Новий вид масажу · Запис відкрито</span>
+          </div>
+        </div>
+
+        <!-- SLIDE 3 — Лотерея -->
+        <div class="fnav__slide">
+          <div class="fnav__slide-ico fnav__slide-ico--lot">🎰</div>
+          <div class="fnav__slide-body">
+            <strong>Миттєва лотерея — стирай!</strong>
+            <span>Знижка до 30% на сеанс сьогодні</span>
+          </div>
+        </div>
+
+        <!-- SLIDE 4 — Dry Needling -->
+        <div class="fnav__slide">
+          <div class="fnav__slide-ico fnav__slide-ico--needle">💉</div>
+          <div class="fnav__slide-body">
+            <strong>Dry Needling від 500 ₴</strong>
+            <span>Прибираємо хронічний біль точково</span>
+          </div>
+        </div>
+
+        <!-- SLIDE 5 — Stone Massage -->
+        <div class="fnav__slide">
+          <div class="fnav__slide-ico fnav__slide-ico--stone">🪨</div>
+          <div class="fnav__slide-body">
+            <strong>Stone Massage 90 хв</strong>
+            <span>Гарячі камені · Глибокий релакс</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT 35% — кнопка запису -->
+  <button class="fnav__book" id="fnavBook">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+    <span>Записатись</span>
+  </button>
+
 </div>
 
 <script>
@@ -542,7 +651,7 @@
   });
 })();
 </script>
-<script src="app.js"></script>
+<script src="app.js?v=14"></script>
 <script>
 /* ── Desktop icon pattern ── */
 (function() {
@@ -673,13 +782,78 @@
   window.addEventListener('resize', place);
 })();
 
-/* ── Scroll to #lottery anchor with 500ms delay ── */
+/* ── Deep-link actions via URL hash ── */
 (function() {
-  if (window.location.hash === '#lottery') {
-    setTimeout(() => {
+  const hash = window.location.hash; // e.g. #lottery | #action=cert | #action=svc&card=4
+  if (!hash) return;
+
+  // Helper — scroll element into view after page load settles
+  function afterLoad(fn) {
+    if (document.readyState === 'complete') {
+      setTimeout(fn, 500);
+    } else {
+      window.addEventListener('load', () => setTimeout(fn, 500), { once: true });
+    }
+  }
+
+  // Simple lottery anchor
+  if (hash === '#lottery' || hash === '#action=lottery') {
+    afterLoad(() => {
       const el = document.getElementById('lottery');
       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 500);
+    });
+    return;
+  }
+
+  // Parse #action=X or #action=X&card=N
+  const params = {};
+  hash.slice(1).split('&').forEach(p => {
+    const [k, v] = p.split('=');
+    if (k) params[k] = v || '';
+  });
+
+  if (params.action === 'cert') {
+    afterLoad(() => {
+      const certSection = document.getElementById('certificates');
+      if (certSection) {
+        certSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(() => {
+          const toggle    = document.getElementById('certProgramToggle');
+          const tableWrap = document.getElementById('certProgramTable');
+          if (toggle && tableWrap && !tableWrap.classList.contains('is-open')) {
+            tableWrap.classList.add('is-open');
+            toggle.setAttribute('aria-expanded', 'true');
+          }
+        }, 1000);
+      }
+    });
+    return;
+  }
+
+  if (params.action === 'svc') {
+    const cardIndex = parseInt(params.card, 10);
+    if (isNaN(cardIndex)) return;
+    afterLoad(() => {
+      const svcSection = document.getElementById('services');
+      if (!svcSection) return;
+      svcSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => {
+        const track = document.getElementById('servicesTrack');
+        if (!track) return;
+        const inner = track.querySelector('.snap-inner');
+        if (!inner) return;
+        const cards = Array.from(inner.children);
+        const card  = cards[cardIndex];
+        if (!card) return;
+        const left = card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2;
+        track.scrollTo({ left, behavior: 'smooth' });
+        setTimeout(() => {
+          const detailLink = card.querySelector('a.btn--outline');
+          if (detailLink) detailLink.click();
+        }, 1000);
+      }, 900);
+    });
+    return;
   }
 })();
 /* ── Cert glow + particles ── */
@@ -688,7 +862,7 @@
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
-  const ICON_SRC = 'https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/65757fa20ff65e9e580f742c00c5137ed1e0f445/Icon.svg';
+  const ICON_SRC = 'https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/17d548fc0afc9b9d5f73b9705d03aa8e1480a9b1/ClockStraight.svg';
   const iconImg = new Image();
   iconImg.crossOrigin = 'anonymous';
   iconImg.src = ICON_SRC;
@@ -700,12 +874,15 @@
   function buildTinted() {
     if (!iconImg.complete) return;
     tintedCanvas = document.createElement('canvas');
-    tintedCanvas.width = 64; tintedCanvas.height = 64;
+    /* 128px = crisp at all particle sizes (12–30px drawn from 128 source) */
+    tintedCanvas.width = 128; tintedCanvas.height = 128;
     const tc = tintedCanvas.getContext('2d');
-    tc.drawImage(iconImg, 0, 0, 64, 64);
+    tc.imageSmoothingEnabled = true;
+    tc.imageSmoothingQuality = 'high';
+    tc.drawImage(iconImg, 0, 0, 128, 128);
     tc.globalCompositeOperation = 'source-in';
     tc.fillStyle = fgColor;
-    tc.fillRect(0, 0, 64, 64);
+    tc.fillRect(0, 0, 128, 128);
   }
   iconImg.onload = buildTinted;
 
@@ -722,28 +899,40 @@
   const particles = [];
 
   function randomParticle(w, h) {
-    const angle = Math.random() * Math.PI * 2;
-    const speed = 0.07 + Math.random() * 0.10;
-    const size  = 22 + Math.random() * 28;
+    const size = 12 + Math.random() * 18;
     return {
-      x: w / 2 + (Math.random() - 0.5) * 40,
-      y: h / 2 + (Math.random() - 0.5) * 40,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed,
+      x: w * 0.15 + Math.random() * w * 0.70,
+      y: h * 0.70 + Math.random() * h * 0.25,
+      vx: (Math.random() - 0.5) * 0.04,
+      vy: -(0.06 + Math.random() * 0.08),
       size,
-      alpha: 0.75 * (0.5 + Math.random() * 0.4),
+      alpha: 0.6 + Math.random() * 0.35,
       life: 0,
-      maxLife: 1200 + Math.random() * 800,
-      rotation: Math.random() * Math.PI * 2,
-      rotSpeed: (Math.random() - 0.5) * 0.012,
+      maxLife: 1400 + Math.random() * 1000,
+      rotation: 0,
+      rotSpeed: 0,
       dying: false,
     };
+  }
+
+  function spawnParticle(w, h) {
+    // Try up to 10 times to find non-overlapping position
+    for (let attempt = 0; attempt < 10; attempt++) {
+      const p = randomParticle(w, h);
+      const minDist = p.size * 1.5;
+      const ok = particles.every(existing => {
+        const dx = existing.x - p.x, dy = existing.y - p.y;
+        return Math.sqrt(dx*dx + dy*dy) > minDist;
+      });
+      if (ok || attempt === 9) return p;
+    }
+    return randomParticle(w, h);
   }
 
   function init(w, h) {
     particles.length = 0;
     for (let i = 0; i < PARTICLE_COUNT; i++) {
-      const p = randomParticle(w, h);
+      const p = spawnParticle(w, h);
       p.life = Math.random() * p.maxLife;
       p.x += p.vx * p.life;
       p.y += p.vy * p.life;
@@ -771,11 +960,14 @@
     const dt = Math.min(ts - lastTs, 50);
     lastTs = ts;
 
+    const dpr = window.devicePixelRatio || 1;
     const w = canvas.offsetWidth;
     const h = canvas.offsetHeight;
     if (!w || !h) { requestAnimationFrame(draw); return; }
-    if (canvas.width !== w || canvas.height !== h) {
-      canvas.width = w; canvas.height = h;
+    if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
+      canvas.width  = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.scale(dpr, dpr);
       init(w, h);
     }
 
@@ -789,21 +981,28 @@
         p.y    += p.vy * dt * 0.14;
         p.rotation += p.rotSpeed * dt * 0.14;
 
-        // Fast fadeout during flip — removed, color changes instantly now
+        // slight horizontal wobble
+        p.vx += (Math.random() - 0.5) * 0.0008;
+        p.vx *= 0.99; // dampen drift
+
         if (p.life >= p.maxLife) {
-          Object.assign(p, randomParticle(w, h));
+          Object.assign(p, spawnParticle(w, h));
           p.life = 0;
         }
 
         const t = p.life / p.maxLife;
-        const fade = t < 0.12 ? t / 0.12 : t > 0.4 ? 1 - (t - 0.4) / 0.6 : 1;
+        // spawn bottom → peak opacity at 50% life → fade out toward top
+        // fade-in: 0–20%, full: 20–50%, fade-out: 50–100%
+        const fade = t < 0.20 ? t / 0.20
+                   : t > 0.50 ? 1 - (t - 0.50) / 0.50
+                   : 1;
         const alpha = p.alpha * fade;
         if (alpha <= 0.01) return;
 
         ctx.save();
         ctx.globalAlpha = alpha;
         ctx.translate(p.x, p.y);
-        ctx.rotate(p.rotation);
+        /* no rotation — ClockStraight.svg is already upright */
         ctx.drawImage(tintedCanvas, -p.size/2, -p.size/2, p.size, p.size);
         ctx.restore();
       });
