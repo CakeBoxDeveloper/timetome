@@ -1,0 +1,17 @@
+{
+  "name": "ttm-massage-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot for Час для себе massage studio",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js",
+    "dev": "nodemon bot.js"
+  },
+  "dependencies": {
+    "node-telegram-bot-api": "^0.66.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

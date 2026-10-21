@@ -275,9 +275,11 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   gap:10px;
 }
 .section-title__ico {
-  flex-shrink:0;
-  color:var(--accent);
-  opacity:0.8;
+  flex-shrink: 0;
+  opacity: 0.85;
+  display: block;
+  /* tint img icons to --accent */
+  filter: brightness(0) saturate(100%) invert(53%) sepia(60%) saturate(800%) hue-rotate(195deg) brightness(1.1);
 }
 .section-sub {
   font-size:14px;
@@ -309,13 +311,13 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 
 .cert-flip-wrap.is-flipping-out {
   transform: scaleX(0);
-  transition: transform 0.15s ease-in;
+  transition: transform 0.18s ease-in;
   filter: blur(8px);
 }
 
 .cert-flip-wrap.is-flipping-in {
   transform: scaleX(1);
-  transition: transform 0.15s ease-out;
+  transition: transform 0.18s ease-out;
   filter: blur(0px);
 }
 
@@ -716,7 +718,8 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 }
 .service-card__ico img {
   width:24px; height:24px;
-  filter:brightness(0) saturate(100%) invert(53%) sepia(80%) saturate(500%) hue-rotate(200deg);
+  /* tint to --accent (#4d8cff) */
+  filter: brightness(0) saturate(100%) invert(53%) sepia(60%) saturate(800%) hue-rotate(195deg) brightness(1.1);
 }
 .service-card__name { font-size:21px; font-weight:800; line-height:1.2; color: var(--accent); }
 .service-card__header {
@@ -928,7 +931,18 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   border-radius:var(--r);
   font-size:14px; font-weight:500; color:var(--text-muted); line-height:1.65;
 }
+/* иконка в правилах лотереи — серая как текст рядом */
+.lot-card__rules-note img {
+  filter: brightness(0) saturate(0) invert(60%);
+  opacity: 0.75;
+}
+/* иконка в cert-disclaimer — accent */
+.cert-program-disclaimer img {
+  filter: brightness(0) saturate(100%) invert(53%) sepia(60%) saturate(800%) hue-rotate(195deg) brightness(1.1);
+}
+
 .price-note svg { flex-shrink:0; margin-top:2px; color:var(--accent); }
+.price-note img { flex-shrink:0; margin-top:2px; filter: brightness(0) saturate(100%) invert(53%) sepia(60%) saturate(800%) hue-rotate(195deg) brightness(1.1); }
 
 /* ══════════════════════════════════════════════
    LOT CARD — credit card style: 1/3 pink top, 2/3 yellow bottom
@@ -1097,7 +1111,8 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 
 /* ── Bot link door flap ── */
 .lot-door-wrap {
-  margin: 3px auto 0;
+  width: 90%;
+  margin: 6px auto 0;
   isolation: isolate;
 }
 
@@ -1324,7 +1339,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 /* Idle tilt — disabled, conflicts with swipe */
 
 /* ══════════════════════════════════════════════
-   FLOATING NAVBAR (Trust Wallet style)
+   FLOATING NAVBAR — two pill blocks
 ══════════════════════════════════════════════ */
 .fnav {
   position: fixed;
@@ -1336,18 +1351,10 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   pointer-events: none;
   transition: opacity .4s ease, transform .4s ease;
 
-  /* pill container */
   display: flex;
-  align-items: stretch;
+  align-items: center;
+  gap: 8px;
   width: min(calc(var(--col) - 32px), calc(100vw - 32px));
-  height: 58px;
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(10, 11, 20, 0.72);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  backdrop-filter: blur(24px) saturate(180%);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.06) inset;
-  overflow: hidden;
 }
 .fnav.is-visible {
   opacity: 1;
@@ -1355,16 +1362,26 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   pointer-events: all;
 }
 
+/* shared glass style */
+.fnav__ads,
+.fnav__book-wrap {
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(10, 11, 20, 0.72);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.06) inset;
+  height: 58px;
+  overflow: hidden;
+}
+
 /* ── LEFT: ads (65%) ── */
 .fnav__ads {
-  flex: 0 0 65%;
+  flex: 1 1 0;
   display: flex;
   align-items: center;
-  gap: 0;
   min-width: 0;
-  position: relative;
   padding-left: 4px;
-  border-right: 1px solid rgba(255,255,255,0.08);
 }
 
 /* vertical slide indicator (левый край) */
@@ -1464,31 +1481,39 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   text-overflow: ellipsis;
 }
 
-/* ── RIGHT: book button (35%) ── */
-.fnav__book {
-  flex: 0 0 35%;
+/* ── RIGHT: book button block ── */
+.fnav__book-wrap {
+  flex: 0 0 auto;
+  width: calc(35% - 4px);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  background: var(--accent);
+  padding: 0 6px;
+}
+.fnav__book {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: transparent;
   color: #fff;
   border: none;
-  border-radius: 0 17px 17px 0;
+  border-radius: 10px;
   font-family: var(--font);
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
-  padding: 0 8px;
-  transition: filter var(--ease), transform var(--ease);
-  line-height: 1.2;
-  text-align: center;
-  letter-spacing: 0.01em;
+  padding: 9px 12px;
+  transition: background var(--ease), transform var(--ease);
+  line-height: 1;
+  white-space: nowrap;
+  width: 100%;
 }
-.fnav__book:active { filter: brightness(1.2); transform: scale(0.97); }
+.fnav__book:hover { background: rgba(255,255,255,0.08); }
+.fnav__book:active { transform: scale(0.97); }
 .fnav__book svg { flex-shrink: 0; }
-.fnav__book span { display: block; }
+.fnav__book span { display: inline; }
 
 /* ── Lottery bot action — below card ── */
 #lotBotAction {

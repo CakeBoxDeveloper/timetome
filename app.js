@@ -135,6 +135,11 @@
     },
   ];
 
+  // Preload all cert images
+  certData.forEach(d => {
+    if (d.img) { const i = new Image(); i.src = d.img; }
+  });
+
   const tabs      = tabsEl ? Array.from(tabsEl.querySelectorAll('.cert-tab')) : [];
   const nameEl    = document.getElementById('certName');
   const descEl    = document.getElementById('certDesc');
@@ -151,13 +156,14 @@
 
   // ── PNG cert shimmer border ──
   let _certImgShimmerRaf = null;
-  function _certImgShimmer(canvas) {
+  function _certImgShimmer(canvas, streakColor) {
     if (!canvas) return;
     if (_certImgShimmerRaf) cancelAnimationFrame(_certImgShimmerRaf);
     const ctx = canvas.getContext('2d');
     let t = 0;
     const R = 20;
     const SPEED = 0.018;
+    const color = streakColor || '#ffffff';
 
     function point(rect, pct) {
       const {x,y,w,h,r} = rect;
@@ -200,19 +206,19 @@
       if (canvas.width!==cw||canvas.height!==ch){canvas.width=cw;canvas.height=ch;}
       ctx.clearRect(0,0,cw,ch);
       const pad=1, rect={x:pad,y:pad,w:cw-pad*2,h:ch-pad*2,r:R};
-      // static border
-      ctx.strokeStyle='rgba(160,130,255,0.3)';ctx.lineWidth=1.5;
+      // static border — cert fg color
+      ctx.strokeStyle = color + '55'; ctx.lineWidth=1.5;
       rr(ctx,rect.x,rect.y,rect.w,rect.h,rect.r);ctx.stroke();
       // shimmer streak
       const gLen=0.18;
       const pt1=point(rect,((t-gLen/2)+1)%1);
       const pt2=point(rect,(t+gLen/2)%1);
       const grd=ctx.createLinearGradient(pt1.x,pt1.y,pt2.x,pt2.y);
-      grd.addColorStop(0,'rgba(180,140,255,0)');
-      grd.addColorStop(0.3,'rgba(200,160,255,0.7)');
-      grd.addColorStop(0.5,'rgba(220,190,255,1)');
-      grd.addColorStop(0.7,'rgba(200,160,255,0.7)');
-      grd.addColorStop(1,'rgba(180,140,255,0)');
+      grd.addColorStop(0, color + '00');
+      grd.addColorStop(0.3, color + 'bb');
+      grd.addColorStop(0.5, color + 'ff');
+      grd.addColorStop(0.7, color + 'bb');
+      grd.addColorStop(1, color + '00');
       ctx.strokeStyle=grd;ctx.lineWidth=2.5;
       rr(ctx,rect.x,rect.y,rect.w,rect.h,rect.r);ctx.stroke();
       _certImgShimmerRaf=requestAnimationFrame(draw);
@@ -225,44 +231,51 @@
     if (giftBlock) giftBlock.style.borderRadius = '0 0 var(--r) var(--r)';
     if (window.setCertGlowColor) window.setCertGlowColor(d.bg, d.fg);
 
-    // All certs are now PNG — always build img card
     const wrap = flipWrap;
-
-    // Remove old card if exists
-    const old = document.getElementById('certImgCard');
-    if (old) old.remove();
-
-    // Build card
-    const card = document.createElement('div');
-    card.id = 'certImgCard';
-    card.className = 'cert-img-card';
-    card.innerHTML =
-      `<div class="cert-img-card__inner" id="certImgInner">` +
-      `<img src="${d.img}" class="cert-img-card__img" id="certImgEl" alt="Сертифікат" />` +
-      `<div class="cert-img-card__sheen"></div>` +
-      `<canvas class="cert-img-card__shimmer" id="certImgShimmer"></canvas>` +
-      `</div>`;
     wrap.style.position = 'relative';
-    wrap.appendChild(card);
 
-    // Sync inner size to actual rendered img size
-    const imgEl = document.getElementById('certImgEl');
-    const inner = document.getElementById('certImgInner');
+    // Reuse existing card — just swap img src, don't recreate
+    let card  = document.getElementById('certImgCard');
+    let imgEl = document.getElementById('certImgEl');
+    let inner = document.getElementById('certImgInner');
+
+    if (!card) {
+      // First time — create structure
+      card = document.createElement('div');
+      card.id = 'certImgCard';
+      card.className = 'cert-img-card';
+      card.innerHTML =
+        `<div class="cert-img-card__inner" id="certImgInner">` +
+        `<img src="" class="cert-img-card__img" id="certImgEl" alt="Сертифікат" />` +
+        `<div class="cert-img-card__sheen"></div>` +
+        `<canvas class="cert-img-card__shimmer" id="certImgShimmer"></canvas>` +
+        `</div>`;
+      wrap.appendChild(card);
+      imgEl = document.getElementById('certImgEl');
+      inner = document.getElementById('certImgInner');
+
+      // Start shimmer once — it runs continuously
+      requestAnimationFrame(() => _certImgShimmer(document.getElementById('certImgShimmer'), d.fg));
+    } else {
+      // Update shimmer color only
+      _certImgShimmer(document.getElementById('certImgShimmer'), d.fg);
+    }
+
+    // Swap image — if already cached browser shows instantly
+    if (imgEl.src !== d.img) {
+      imgEl.src = d.img;
+    }
+
+    // Sync size
     function syncSize() {
       const w = imgEl.naturalWidth, h = imgEl.naturalHeight;
       if (!w || !h) return;
-      const maxH = 360;
       const ratio = w / h;
-      const finalH = maxH;
-      const finalW = finalH * ratio;
-      inner.style.width  = finalW + 'px';
-      inner.style.height = finalH + 'px';
+      inner.style.width  = (360 * ratio) + 'px';
+      inner.style.height = '360px';
     }
     if (imgEl.complete && imgEl.naturalWidth) syncSize();
     else imgEl.addEventListener('load', syncSize, { once: true });
-
-    // Start shimmer border animation
-    requestAnimationFrame(() => _certImgShimmer(document.getElementById('certImgShimmer')));
     // Info block
     if (giftBlock) {
       giftBlock.style.background  = d.bg;
@@ -299,31 +312,25 @@
       toggle?.setAttribute('aria-expanded', 'false');
     }
 
-    // Phase 1: flip out
+    // Phase 1: flip out (180ms = 150ms × 1.2)
     flipWrap.classList.add('is-flipping-out');
 
-    // Swap exactly at scaleX=0 (halfway = duration/2)
+    // Swap at scaleX=0 — halfway through flip-out
     setTimeout(() => {
       activeIndex = i;
       applyData(i);
-    }, 75); // half of 150ms
+    }, 90); // half of 180ms
 
-    // Phase 2: flip in — start after full out
+    // Phase 2: flip in
     setTimeout(() => {
       flipWrap.classList.remove('is-flipping-out');
       flipWrap.classList.add('is-flipping-in');
       setTimeout(() => {
         flipWrap.classList.remove('is-flipping-in');
         flipping = false;
-      }, 150);
-    }, 150);
+      }, 180);
+    }, 180);
   }
-
-  // Prefetch all GLBs into browser cache
-  ['Choco','Matcha','Mustadr','Blue'].forEach(name => {
-    fetch(`https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/${name}.glb`)
-      .catch(() => {});
-  });
 
   // Tab clicks
   tabs.forEach((tab, i) => tab.addEventListener('click', () => switchTo(i)));
@@ -355,11 +362,14 @@
     });
     let raf;
     let userScrolled = false;
+    let programmaticScroll = false; // flag to ignore our own instant scroll
 
     track.addEventListener('scroll', () => {
+      if (programmaticScroll) return; // ignore initial center scroll
       // Stop hint animation on first user scroll
       if (!userScrolled) {
         userScrolled = true;
+        inner.classList.remove('snap-hint');
         inner.style.animation = 'none';
       }
       cancelAnimationFrame(raf);
@@ -377,8 +387,11 @@
     requestAnimationFrame(() => {
       const mid = Math.floor(cards.length / 2);
       const midCard = cards[mid];
+      programmaticScroll = true;
       track.scrollTo({ left: midCard.offsetLeft - (track.clientWidth - midCard.offsetWidth) / 2, behavior: 'instant' });
       dots.forEach((d, i) => d.classList.toggle('is-active', i === mid));
+      // Allow scroll events again after a tick
+      requestAnimationFrame(() => { programmaticScroll = false; });
 
       // Start hint sway animation after short delay
       setTimeout(() => {
@@ -832,28 +845,6 @@
 
   goTo(0, false);
   startAuto();
-
-  // ── Touch swipe vertical ──
-  let touchStartY = null, touchStartTime = null;
-  const adsEl = document.getElementById('fnavAds');
-  if (adsEl) {
-    adsEl.addEventListener('touchstart', e => {
-      touchStartY    = e.touches[0].clientY;
-      touchStartTime = Date.now();
-      stopAuto();
-    }, { passive: true });
-
-    adsEl.addEventListener('touchend', e => {
-      if (touchStartY === null) return;
-      const dy = touchStartY - e.changedTouches[0].clientY;
-      const dt = Date.now() - touchStartTime;
-      if (Math.abs(dy) > 16 && dt < 400) {
-        goTo(dy > 0 ? current + 1 : current - 1);
-      }
-      touchStartY = null;
-      startAuto();
-    }, { passive: true });
-  }
 
   // Pause on hover (desktop)
   fnav.addEventListener('mouseenter', stopAuto);

@@ -76,12 +76,15 @@
   text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 16px;
+  text-align: center;
+  /* no background — pure text */
 }
 .svc-hero__tags {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 24px;
+  justify-content: center;
 }
 .svc-hero__tag {
   font-size: 12px;
@@ -93,11 +96,17 @@
   letter-spacing: 0.03em;
 }
 .svc-hero__lead {
-  font-size: clamp(15px, 4.5vw, 18px);
+  font-size: clamp(14px, 4vw, 16px);
   font-weight: 500;
   color: var(--text);
   line-height: 1.65;
   opacity: 0.9;
+  /* блок на подложке */
+  background: rgba(77,140,255,0.06);
+  border: 1px solid var(--border-accent);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r);
+  padding: 14px 18px;
 }
 
 /* ── Divider ── */
