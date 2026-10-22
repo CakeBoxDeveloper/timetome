@@ -717,66 +717,59 @@
   }
 
   // ── Actions per slide (0-indexed, matches HTML slide order) ──
-  // 0: Cert, 1: Вогняний, 2: Lottery, 3: Dry Needling, 4: Stone
+  // New order: light, needle, stone, perc, cert, lottery, fire
   const SERVICE_CARD_IDX = {
-    fire:    6,  // СПА — closest to "вогняне" spirit; or use 2 (Глибокий)
-    needle:  4,  // Dry Needling
-    stone:   3,  // Стоун
+    light:  5,  // Терапія червоним світлом
+    needle: 4,  // Dry Needling
+    stone:  3,  // Стоун
+    perc:   2,  // Глибокий тканинний (перкусія)
+    fire:   6,  // СПА-програма (closest to вогняне)
   };
 
   function handleSlide(slideKey) {
     switch (slideKey) {
 
-      // ── СЕРТИФІКАТ ──
+      case 'light':
+        if (isMain) { openServiceCard(SERVICE_CARD_IDX.light, true); }
+        else { gotoMain('#action=svc&card=' + SERVICE_CARD_IDX.light); }
+        break;
+
+      case 'needle':
+        if (isMain) { openServiceCard(SERVICE_CARD_IDX.needle, true); }
+        else { gotoMain('#action=svc&card=' + SERVICE_CARD_IDX.needle); }
+        break;
+
+      case 'stone':
+        if (isMain) { openServiceCard(SERVICE_CARD_IDX.stone, true); }
+        else { gotoMain('#action=svc&card=' + SERVICE_CARD_IDX.stone); }
+        break;
+
+      case 'perc':
+        if (isMain) { openServiceCard(SERVICE_CARD_IDX.perc, true); }
+        else { gotoMain('#action=svc&card=' + SERVICE_CARD_IDX.perc); }
+        break;
+
       case 'cert':
-        if (isMain) {
-          openCertificate(0); // tab 0 = Какао 2500
-        } else {
-          gotoMain('#action=cert');
-        }
+        if (isMain) { openCertificate(0); }
+        else { gotoMain('#action=cert'); }
         break;
 
-      // ── ВОГНЯНИЙ МАСАЖ → СПА-програма ──
-      case 'fire':
-        if (isMain) {
-          openServiceCard(SERVICE_CARD_IDX.fire, true);
-        } else {
-          gotoMain('#action=svc&card=' + SERVICE_CARD_IDX.fire);
-        }
-        break;
-
-      // ── ЛОТЕРЕЯ ──
       case 'lottery':
         if (isMain) {
           const lot = document.getElementById('lottery');
           if (lot) scrollTo(lot, 'center');
-        } else {
-          gotoMain('#action=lottery');
-        }
+        } else { gotoMain('#action=lottery'); }
         break;
 
-      // ── DRY NEEDLING ──
-      case 'needle':
-        if (isMain) {
-          openServiceCard(SERVICE_CARD_IDX.needle, true);
-        } else {
-          gotoMain('#action=svc&card=' + SERVICE_CARD_IDX.needle);
-        }
-        break;
-
-      // ── STONE MASSAGE ──
-      case 'stone':
-        if (isMain) {
-          openServiceCard(SERVICE_CARD_IDX.stone, true);
-        } else {
-          gotoMain('#action=svc&card=' + SERVICE_CARD_IDX.stone);
-        }
+      case 'fire':
+        if (isMain) { openServiceCard(SERVICE_CARD_IDX.fire, true); }
+        else { gotoMain('#action=svc&card=' + SERVICE_CARD_IDX.fire); }
         break;
     }
   }
 
-  // Map slide elements to their keys (must match slide order in HTML)
-  const slideKeys = ['cert', 'fire', 'lottery', 'needle', 'stone'];
+  // Map slide elements to their keys — must match HTML slide order
+  const slideKeys = ['light', 'needle', 'stone', 'perc', 'cert', 'lottery', 'fire'];
 
   // Attach click handlers
   track.querySelectorAll('.fnav__slide').forEach((slide, i) => {
@@ -804,7 +797,7 @@
       if (contacts) {
         contacts.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else {
-        window.open('https://t.me/pro_telo_niko', '_blank', 'noopener');
+        window.open('https://t.me/dailyprize_bot', '_blank', 'noopener');
       }
     });
   }
@@ -872,9 +865,9 @@
   });
 })();
 
-/* All booking buttons → Telegram */
+/* All booking buttons → Telegram Bot */
 document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
-  btn.addEventListener('click', () => window.open('https://t.me/pro_telo_niko', '_blank', 'noopener'));
+  btn.addEventListener('click', () => window.open('https://t.me/dailyprize_bot', '_blank', 'noopener'));
 });
 
 /* ══════════════════════════════════════

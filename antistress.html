@@ -13,28 +13,32 @@
     @font-face { font-family:'TTNooks'; src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/TTNooks-Light.ttf') format('truetype'); font-weight:300; font-display:swap; }
     @font-face { font-family:'TTNooks'; src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/TTNooks-Regular.ttf') format('truetype'); font-weight:400; font-display:swap; }
   </style>
-  <link rel="stylesheet" href="style.css?v=13" />
-  <link rel="stylesheet" href="service.css?v=2" />
+  <link rel="stylesheet" href="style.css?v=16" />
+  <link rel="stylesheet" href="service.css?v=3" />
 </head>
 <body>
 
 <div class="noise" aria-hidden="true"></div>
 
-<!-- NAV -->
+<!-- NAV — переключалка між сторінками -->
 <nav class="svc-nav">
   <div class="svc-nav__inner">
-    <a href="index.html#services" class="svc-nav__back">
+    <a href="classic.html" class="svc-nav__back">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
-      Послуги
+      Класичний
     </a>
-    <span class="svc-nav__logo">Час для себе</span>
+    <a href="index.html#services" class="svc-nav__logo svc-nav__logo--btn">Час для себе</a>
+    <a href="deep-tissue.html" class="svc-nav__next">
+      Глибокий
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
   </div>
 </nav>
 
 <!-- HERO -->
 <div class="svc-hero">
   <h1 class="svc-hero__title">Антистрес</h1>
-  <div class="svc-hero__tags">
+  <div class="svc-hero__tags svc-hero__tags--float" id="svcTags">
     <span class="svc-hero__tag">Нерви</span>
     <span class="svc-hero__tag">Сон</span>
     <span class="svc-hero__tag">Тривога</span>
@@ -86,7 +90,7 @@
 
 <!-- EFFECTS -->
 <div class="svc-steps">
-  <div class="svc-steps__title">Ефекти після процедури</div>
+  <div class="svc-steps__title svc-steps__title--plain">Ефекти після процедури</div>
   <div class="svc-step">
     <div class="svc-step__num">1</div>
     <div class="svc-step__text">
@@ -115,6 +119,11 @@
       <div class="svc-step__sub">Регулярні сеанси (1–2 рази на місяць) підтримують нервову систему в балансі. Стрес стає керованим, а тіло — стійкішим.</div>
     </div>
   </div>
+</div>
+
+<!-- CTA after steps -->
+<div class="svc-cta">
+  <a href="https://t.me/dailyprize_bot" class="btn btn--accent btn--full" target="_blank" rel="noopener" style="max-width:var(--col);margin-inline:auto;">Записатись у Telegram</a>
 </div>
 
 <!-- CONTACTS — full section, same as index.html -->
@@ -187,19 +196,44 @@
     <div class="fnav__indicator" id="fnavIndicator"></div>
     <div class="fnav__track-wrap">
       <div class="fnav__track" id="fnavTrack">
-        <div class="fnav__slide"><div class="fnav__slide-ico fnav__slide-ico--cert">🎁</div><div class="fnav__slide-body"><strong>Подаруй сеанс близькій людині</strong><span>Сертифікати від 2 500 ₴ · 4 номінали</span></div></div>
-        <div class="fnav__slide"><div class="fnav__slide-ico fnav__slide-ico--fire">🔥</div><div class="fnav__slide-body"><strong>Вогняне відновлення</strong><span>Новий вид масажу · Запис відкрито</span></div></div>
-        <div class="fnav__slide"><div class="fnav__slide-ico fnav__slide-ico--lot">🎰</div><div class="fnav__slide-body"><strong>Миттєва лотерея — стирай!</strong><span>Знижка до 30% на сеанс сьогодні</span></div></div>
-        <div class="fnav__slide"><div class="fnav__slide-ico fnav__slide-ico--needle">💉</div><div class="fnav__slide-body"><strong>Dry Needling від 500 ₴</strong><span>Прибираємо хронічний біль точково</span></div></div>
-        <div class="fnav__slide"><div class="fnav__slide-ico fnav__slide-ico--stone">🪨</div><div class="fnav__slide-body"><strong>Stone Massage 90 хв</strong><span>Гарячі камені · Глибокий релакс</span></div></div>
+        <div class="fnav__slide">
+          <div class="fnav__slide-ico fnav__slide-ico--light"><img src="https://unpkg.com/lucide-static@latest/icons/sun.svg" alt="" width="20" height="20" style="filter:brightness(0) invert(1);opacity:0.9;" /></div>
+          <div class="fnav__slide-body"><strong>Терапія червоним світлом</strong><span>Передова технологія відновлення тканин</span></div>
+        </div>
+        <div class="fnav__slide">
+          <div class="fnav__slide-ico fnav__slide-ico--needle"><img src="https://unpkg.com/lucide-static@latest/icons/syringe.svg" alt="" width="20" height="20" style="filter:brightness(0) invert(1);opacity:0.9;" /></div>
+          <div class="fnav__slide-body"><strong>Dry Needling</strong><span>Ефект, якого не дає жоден інший масаж</span></div>
+        </div>
+        <div class="fnav__slide">
+          <div class="fnav__slide-ico fnav__slide-ico--stone"><img src="https://unpkg.com/lucide-static@latest/icons/gem.svg" alt="" width="20" height="20" style="filter:brightness(0) invert(1);opacity:0.9;" /></div>
+          <div class="fnav__slide-body"><strong>Стоун-масаж</strong><span>Рідкісне базальтове каміння з Китаю</span></div>
+        </div>
+        <div class="fnav__slide">
+          <div class="fnav__slide-ico fnav__slide-ico--perc"><img src="https://unpkg.com/lucide-static@latest/icons/zap.svg" alt="" width="20" height="20" style="filter:brightness(0) invert(1);opacity:0.9;" /></div>
+          <div class="fnav__slide-body"><strong>Перкусійний масаж</strong><span>Топове обладнання — глибокий результат</span></div>
+        </div>
+        <div class="fnav__slide">
+          <div class="fnav__slide-ico fnav__slide-ico--cert"><img src="https://unpkg.com/lucide-static@latest/icons/gift.svg" alt="" width="20" height="20" style="filter:brightness(0) invert(1);opacity:0.9;" /></div>
+          <div class="fnav__slide-body"><strong>Подарунковий сертифікат</strong><span>За сертифікатом виходить дешевше</span></div>
+        </div>
+        <div class="fnav__slide">
+          <div class="fnav__slide-ico fnav__slide-ico--lot"><img src="https://unpkg.com/lucide-static@latest/icons/ticket.svg" alt="" width="20" height="20" style="filter:brightness(0) invert(1);opacity:0.9;" /></div>
+          <div class="fnav__slide-body"><strong>Миттєва лотерея</strong><span>Зіграти безкоштовно — просто стирай</span></div>
+        </div>
+        <div class="fnav__slide">
+          <div class="fnav__slide-ico fnav__slide-ico--fire"><img src="https://unpkg.com/lucide-static@latest/icons/flame.svg" alt="" width="20" height="20" style="filter:brightness(0) invert(1);opacity:0.9;" /></div>
+          <div class="fnav__slide-body"><strong>Масаж з вогнем</strong><span>Краще один раз відчути — ніж читати</span></div>
+        </div>
       </div>
     </div>
   </div>
-  <button class="fnav__book" id="fnavBook">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
-    <span>Записатись</span>
-  </button>
+  <div class="fnav__book-wrap">
+    <button class="fnav__book" id="fnavBook">
+      <span>Записатись</span>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+    </button>
+  </div>
 </div>
-<script src="app.js"></script>
+<script src="app.js?v=21"></script>
 </body>
 </html>
