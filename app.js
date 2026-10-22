@@ -135,10 +135,10 @@
     },
   ];
 
-  // Preload all cert images
-  certData.forEach(d => {
-    if (d.img) { const i = new Image(); i.src = d.img; }
-  });
+  // Preload all cert images — keep references to prevent GC
+  const _preloadedImgs = certData
+    .filter(d => d.img)
+    .map(d => { const img = new Image(); img.src = d.img; return img; });
 
   const tabs      = tabsEl ? Array.from(tabsEl.querySelectorAll('.cert-tab')) : [];
   const nameEl    = document.getElementById('certName');
@@ -312,14 +312,20 @@
       toggle?.setAttribute('aria-expanded', 'false');
     }
 
-    // Phase 1: flip out (180ms = 150ms × 1.2)
+    // PRE-LOAD: swap image src BEFORE animation starts so it's ready at scaleX=0
+    const nextImg = document.getElementById('certImgEl');
+    if (nextImg && certData[i].img && nextImg.src !== certData[i].img) {
+      nextImg.src = certData[i].img;
+    }
+
+    // Phase 1: flip out (180ms)
     flipWrap.classList.add('is-flipping-out');
 
-    // Swap at scaleX=0 — halfway through flip-out
+    // Swap metadata at scaleX=0 — img already loaded
     setTimeout(() => {
       activeIndex = i;
       applyData(i);
-    }, 90); // half of 180ms
+    }, 90);
 
     // Phase 2: flip in
     setTimeout(() => {
@@ -576,11 +582,12 @@
   function erase(x, y) {
     ctx.globalCompositeOperation = 'destination-out';
     ctx.beginPath();
-    ctx.ellipse(x, y, 10+Math.random()*6, 6+Math.random()*4, Math.random()*Math.PI, 0, Math.PI*2);
+    // +30% larger erase area
+    ctx.ellipse(x, y, 13+Math.random()*8, 8+Math.random()*5, Math.random()*Math.PI, 0, Math.PI*2);
     ctx.fill();
     for (let i = 0; i < 2; i++) {
       ctx.beginPath();
-      ctx.arc(x+(Math.random()-0.5)*14, y+(Math.random()-0.5)*8, 2+Math.random()*5, 0, Math.PI*2);
+      ctx.arc(x+(Math.random()-0.5)*18, y+(Math.random()-0.5)*10, 3+Math.random()*6, 0, Math.PI*2);
       ctx.fill();
     }
     ctx.globalCompositeOperation = 'source-over';
@@ -805,23 +812,19 @@
   window.addEventListener('scroll', updateVisibility, { passive: true });
   updateVisibility();
 
-  // Book button → scroll to contacts (main) or open Telegram (service pages)
+  // Book button → Telegram bot always
   if (bookBtn) {
     bookBtn.addEventListener('click', () => {
-      const contacts = document.getElementById('contacts');
-      if (contacts) {
-        contacts.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else {
-        window.open('https://t.me/dailyprize_bot', '_blank', 'noopener');
-      }
+      window.open('https://t.me/dailyprize_bot', '_blank', 'noopener');
     });
   }
 
-  // Build indicator dots
+  // Build indicator dots (only if indicator element exists)
   const slides  = Array.from(track.querySelectorAll('.fnav__slide'));
   const total   = slides.length;
   const dots    = [];
   slides.forEach((_, i) => {
+    if (!indEl) return; // indicator commented out — skip
     const d = document.createElement('div');
     d.className = 'fnav__indicator-dot' + (i === 0 ? ' is-active' : '');
     indEl.appendChild(d);
@@ -864,19 +867,17 @@
 ══════════════════════════════════════ */
 (function () {
   document.querySelectorAll('.price-acc__group').forEach(group => {
-    const head = group.querySelector('.price-acc__head');
     const body = group.querySelector('.price-acc__body');
     const more = group.querySelector('.price-acc__more');
-    if (!head || !body) return;
+    if (!body || !more) return;
 
     function toggle() {
       const open = body.classList.toggle('is-open');
-      head.setAttribute('aria-expanded', String(open));
       if (more) more.textContent = open ? 'Згорнути ↑' : 'Показати більше ↓';
     }
 
-    head.addEventListener('click', toggle);
-    if (more) more.addEventListener('click', toggle);
+    // Only "Показати більше" button toggles — NOT the head
+    more.addEventListener('click', toggle);
   });
 })();
 

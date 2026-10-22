@@ -22,7 +22,7 @@
   /* 5px everywhere */
   --r: 5px;
 
-  --font: 'Manrope', system-ui, -apple-system, sans-serif;
+  --font: 'Inter', 'Manrope', system-ui, -apple-system, sans-serif;
   --font-title: 'TTNooks', 'Manrope', system-ui, sans-serif;
   --ease: 0.3s cubic-bezier(0.4,0,0.2,1);
 
@@ -312,7 +312,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 .cert-flip-wrap.is-flipping-out {
   transform: scaleX(0);
   transition: transform 0.18s ease-in;
-  filter: blur(8px);
+  filter: blur(6px);
 }
 
 .cert-flip-wrap.is-flipping-in {
@@ -647,8 +647,9 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   -webkit-overflow-scrolling:touch;
   scroll-snap-type:x mandatory;
   scroll-behavior:smooth;
-  /* Show edges of adjacent cards */
   scroll-padding-inline: 48px;
+  /* allow horizontal swipe on touch without blocking vertical page scroll */
+  touch-action: pan-x;
 }
 .snap-track::-webkit-scrollbar { display:none; }
 
@@ -954,10 +955,11 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   flex-shrink: 0;
 }
 
-/* cert-program-disclaimer: SVG inline, inherits currentColor from giftBlock */
-.cert-program-disclaimer svg {
+/* cert-program-disclaimer: color inherited from giftBlock JS — white tint matches fg */
+.cert-program-disclaimer img {
+  filter: brightness(0) invert(1);
+  opacity: 0.65;
   flex-shrink: 0;
-  opacity: 0.7;
 }
 
 /* price-note: var(--text-muted) = #8891aa — grey-blue */
@@ -1147,10 +1149,10 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   gap: 9px;
   width: 90%;
   margin-inline: auto;
-  padding: 13px 18px;
+  padding: 11px 14px;
   background: var(--accent);
   color: #fff;
-  font-size: 14px;
+  font-size: clamp(11px, 3vw, 14px);
   font-weight: 700;
   text-decoration: none;
   border-radius: 16px;
@@ -1159,8 +1161,9 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 .lot-door-flap span {
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   min-width: 0;
+  flex: 1;
 }
 
   transform-origin: top center;
@@ -1411,7 +1414,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   display: flex;
   align-items: center;
   min-width: 0;
-  padding-left: 4px;
+  padding-left: 0; /* indicator removed — no extra padding */
 }
 
 /* vertical slide indicator (левый край) */
@@ -1430,13 +1433,12 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   height: 3px;
   border-radius: 50%;
   background: rgba(255,255,255,0.22);
-  transition: background 0.3s ease, transform 0.3s ease;
+  transition: background 0.3s ease;
   flex-shrink: 0;
 }
 .fnav__indicator-dot.is-active {
   background: var(--accent);
-  transform: scaleY(2.5);
-  border-radius: 2px;
+  /* no transform — stays same size as inactive dots */
 }
 
 /* slides viewport */
@@ -1461,7 +1463,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 10px 0 6px;
+  padding: 0 10px;
   cursor: pointer;
   text-decoration: none;
   color: var(--text);

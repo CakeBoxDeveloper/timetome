@@ -6,15 +6,15 @@
   <title>Антистрес масаж — Час для себе · Миколаїв</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     @font-face { font-family:'TTNooks'; src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/TTNooks-Black.ttf') format('truetype'); font-weight:900; font-display:swap; }
     @font-face { font-family:'TTNooks'; src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/TTNooks-Bold.ttf') format('truetype'); font-weight:700; font-display:swap; }
     @font-face { font-family:'TTNooks'; src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/TTNooks-Light.ttf') format('truetype'); font-weight:300; font-display:swap; }
     @font-face { font-family:'TTNooks'; src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/TTNooks-Regular.ttf') format('truetype'); font-weight:400; font-display:swap; }
   </style>
-  <link rel="stylesheet" href="style.css?v=16" />
-  <link rel="stylesheet" href="service.css?v=3" />
+  <link rel="stylesheet" href="style.css?v=19" />
+  <link rel="stylesheet" href="service.css?v=4" />
 </head>
 <body>
 
@@ -38,12 +38,6 @@
 <!-- HERO -->
 <div class="svc-hero">
   <h1 class="svc-hero__title">Антистрес</h1>
-  <div class="svc-hero__tags svc-hero__tags--float" id="svcTags">
-    <span class="svc-hero__tag">Нерви</span>
-    <span class="svc-hero__tag">Сон</span>
-    <span class="svc-hero__tag">Тривога</span>
-    <span class="svc-hero__tag">Виснаження</span>
-  </div>
   <p class="svc-hero__lead">Для тих, хто на межі. Емоційне та нервове виснаження, порушення сну, відчуття постійної напруги — це сигнали тіла. Я працюю з нервовою системою через тіло.</p>
 </div>
 
@@ -90,7 +84,7 @@
 
 <!-- EFFECTS -->
 <div class="svc-steps">
-  <div class="svc-steps__title svc-steps__title--plain">Ефекти після процедури</div>
+  <div class="svc-steps__title svc-steps__title--section">Ефекти після процедури</div>
   <div class="svc-step">
     <div class="svc-step__num">1</div>
     <div class="svc-step__text">
@@ -123,7 +117,10 @@
 
 <!-- CTA after steps -->
 <div class="svc-cta">
-  <a href="https://t.me/dailyprize_bot" class="btn btn--accent btn--full" target="_blank" rel="noopener" style="max-width:var(--col);margin-inline:auto;">Записатись у Telegram</a>
+  <a href="https://t.me/dailyprize_bot" class="btn btn--accent btn--full svc-book-btn" target="_blank" rel="noopener" style="max-width:var(--col);margin-inline:auto;display:flex;align-items:center;justify-content:center;gap:10px;">
+    <img src="https://www.svgrepo.com/show/388724/telegram.svg" alt="" width="20" height="20" style="filter:brightness(0) invert(1);flex-shrink:0;" />
+    Миттєвий запис на сеанс
+  </a>
 </div>
 
 <!-- CONTACTS — full section, same as index.html -->
@@ -193,7 +190,7 @@
 <!-- FLOATING NAVBAR -->
 <div class="fnav" id="floatCta">
   <div class="fnav__ads" id="fnavAds">
-    <div class="fnav__indicator" id="fnavIndicator"></div>
+    <!-- <div class="fnav__indicator" id="fnavIndicator"></div> -->
     <div class="fnav__track-wrap">
       <div class="fnav__track" id="fnavTrack">
         <div class="fnav__slide">

@@ -6,7 +6,7 @@
   <title>Час для себе — Студія масажу · Миколаїв</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <!-- TTNooks from GitHub -->
   <style>
     @font-face {
@@ -36,7 +36,7 @@
     }
   </style>
   <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Icon.svg" />
-  <link rel="stylesheet" href="style.css?v=17" />
+  <link rel="stylesheet" href="style.css?v=21" />
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -274,7 +274,7 @@
       </button>
       <div class="cert-program-table" id="certProgramTable" aria-hidden="true">
         <div class="cert-program-disclaimer">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;opacity:0.8;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;margin-top:1px;opacity:0.7;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
           Це приклад програми. Ви можете обрати будь-які процедури на суму сертифіката.
         </div>
         <div class="cert-program-table__inner">
@@ -318,7 +318,6 @@
             <img src="https://unpkg.com/lucide-static@latest/icons/hand.svg" class="price-acc__ico" alt="" />
             <span class="price-acc__title">Масаж</span>
           </div>
-          <svg class="price-acc__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="price-acc__body">
           <div class="price-acc__inner">
@@ -345,7 +344,6 @@
             <img src="https://unpkg.com/lucide-static@latest/icons/gem.svg" class="price-acc__ico" alt="" />
             <span class="price-acc__title">Стоун та СПА</span>
           </div>
-          <svg class="price-acc__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="price-acc__body">
           <div class="price-acc__inner">
@@ -368,7 +366,6 @@
             <img src="https://unpkg.com/lucide-static@latest/icons/syringe.svg" class="price-acc__ico" alt="" />
             <span class="price-acc__title">Фізіотерапія</span>
           </div>
-          <svg class="price-acc__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="price-acc__body">
           <div class="price-acc__inner">
@@ -389,7 +386,7 @@
     </div>
 
     <div class="price-note" style="margin-top:32px;margin-bottom:4px;">
-      <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/ce077278eb1d457a987479990b7aaa06c6862402/info.svg" width="16" height="16" alt="" style="flex-shrink:0;margin-top:2px;" />
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;margin-top:2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
       Точну вартість назве майстер після консультації — але ви завжди можете її знизити, взявши участь у миттєвій лотереї нижче.
     </div>
   </div>
@@ -415,7 +412,7 @@
           <div class="lot-card__body" id="lotCardBody">
             
             <div class="lot-card__rules-note">
-              <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/ce077278eb1d457a987479990b7aaa06c6862402/info.svg" width="16" height="16" alt="" style="flex-shrink:0;" />
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;opacity:0.6;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
               Стирай покриття пальцем — код діє при записі сьогодні. Одна спроба на добу. Удачі.
             </div>
             <div class="lot-card__scratch-zone">
@@ -513,7 +510,7 @@
 
   <!-- LEFT 65% — рекламна карусель -->
   <div class="fnav__ads" id="fnavAds">
-    <div class="fnav__indicator" id="fnavIndicator"></div>
+    <!-- <div class="fnav__indicator" id="fnavIndicator"></div> -->
     <div class="fnav__track-wrap">
       <div class="fnav__track" id="fnavTrack">
 
@@ -601,8 +598,8 @@
   <!-- RIGHT 35% — кнопка запису -->
   <div class="fnav__book-wrap">
     <button class="fnav__book" id="fnavBook">
+      <img src="https://www.svgrepo.com/show/388724/telegram.svg" alt="" width="16" height="16" style="filter:brightness(0) invert(1);flex-shrink:0;" />
       <span>Записатись</span>
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
     </button>
   </div>
 
@@ -679,7 +676,7 @@
   });
 })();
 </script>
-<script src="app.js?v=23"></script>
+<script src="app.js?v=27"></script>
 <script>
 /* ── Desktop icon pattern ── */
 (function() {
@@ -936,7 +933,7 @@
       size,
       alpha: 0.6 + Math.random() * 0.35,
       life: 0,
-      maxLife: 1400 + Math.random() * 1000,
+      maxLife: (1400 + Math.random() * 1000) * 0.8,
       rotation: 0,
       rotSpeed: 0,
       dying: false,
@@ -970,14 +967,14 @@
 
   // Draw standard radial glow
   function drawGlow(w, h) {
-    const cx = w / 2, cy = h / 2;
-    const r  = Math.min(w, h) * 0.45;
+    const cx = w / 2, cy = h * 0.65; /* lower center */
+    const r  = Math.min(w, h) * 0.38; /* smaller radius */
     const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-    grd.addColorStop(0,   glowColor + 'cc'); // 80%
-    grd.addColorStop(0.5, glowColor + '55');
+    grd.addColorStop(0,   glowColor + '88');
+    grd.addColorStop(0.5, glowColor + '44');
     grd.addColorStop(1,   glowColor + '00');
     ctx.save();
-    ctx.filter = 'blur(20px)';
+    ctx.filter = 'blur(24px)';
     ctx.fillStyle = grd;
     ctx.fillRect(0, 0, w, h);
     ctx.restore();
