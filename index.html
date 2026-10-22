@@ -36,7 +36,7 @@
     }
   </style>
   <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/Icon.svg" />
-  <link rel="stylesheet" href="style.css?v=16" />
+  <link rel="stylesheet" href="style.css?v=17" />
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -274,7 +274,7 @@
       </button>
       <div class="cert-program-table" id="certProgramTable" aria-hidden="true">
         <div class="cert-program-disclaimer">
-          <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/ce077278eb1d457a987479990b7aaa06c6862402/info.svg" width="14" height="14" alt="" style="flex-shrink:0;margin-top:1px;opacity:0.7;" />
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;opacity:0.8;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
           Це приклад програми. Ви можете обрати будь-які процедури на суму сертифіката.
         </div>
         <div class="cert-program-table__inner">
@@ -314,7 +314,10 @@
       <!-- Масаж -->
       <div class="price-acc__group">
         <button class="price-acc__head" aria-expanded="false">
-          <span class="price-acc__title">Масаж</span>
+          <div class="price-acc__head-left">
+            <img src="https://unpkg.com/lucide-static@latest/icons/hand.svg" class="price-acc__ico" alt="" />
+            <span class="price-acc__title">Масаж</span>
+          </div>
           <svg class="price-acc__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="price-acc__body">
@@ -338,7 +341,10 @@
       <!-- Стоун та СПА -->
       <div class="price-acc__group">
         <button class="price-acc__head" aria-expanded="false">
-          <span class="price-acc__title">Стоун та СПА</span>
+          <div class="price-acc__head-left">
+            <img src="https://unpkg.com/lucide-static@latest/icons/gem.svg" class="price-acc__ico" alt="" />
+            <span class="price-acc__title">Стоун та СПА</span>
+          </div>
           <svg class="price-acc__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="price-acc__body">
@@ -358,7 +364,10 @@
       <!-- Фізіотерапія -->
       <div class="price-acc__group">
         <button class="price-acc__head" aria-expanded="false">
-          <span class="price-acc__title">Фізіотерапія</span>
+          <div class="price-acc__head-left">
+            <img src="https://unpkg.com/lucide-static@latest/icons/syringe.svg" class="price-acc__ico" alt="" />
+            <span class="price-acc__title">Фізіотерапія</span>
+          </div>
           <svg class="price-acc__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="price-acc__body">
@@ -588,16 +597,6 @@
       </div>
     </div>
   </div>
-          </div>
-          <div class="fnav__slide-body">
-            <strong>Stone Massage 90 хв</strong>
-            <span>Гарячі камені · Глибокий релакс</span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
 
   <!-- RIGHT 35% — кнопка запису -->
   <div class="fnav__book-wrap">
@@ -680,7 +679,7 @@
   });
 })();
 </script>
-<script src="app.js?v=22"></script>
+<script src="app.js?v=23"></script>
 <script>
 /* ── Desktop icon pattern ── */
 (function() {

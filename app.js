@@ -400,6 +400,21 @@
     });
   }
   initSnapDots('servicesTrack', 'servicesDots');
+
+  // Desktop: click on side cards scrolls to them
+  (function () {
+    const track = document.getElementById('servicesTrack');
+    if (!track) return;
+    const inner = track.querySelector('.snap-inner');
+    if (!inner) return;
+    inner.addEventListener('click', (e) => {
+      const card = e.target.closest('.service-card');
+      if (!card) return;
+      // if button inside card clicked — let it handle itself
+      if (e.target.closest('button, a')) return;
+      track.scrollTo({ left: card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2, behavior: 'smooth' });
+    });
+  })();
 })();
 
 /* ══════════════════════════════════════
