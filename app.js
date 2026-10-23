@@ -43,6 +43,7 @@
     const delay   = Math.max(0, MIN_SHOW_MS - elapsed) + 280;
     setTimeout(() => {
       loader.classList.add('is-hidden');
+      document.body.classList.add('hero-ready');
       setTimeout(() => { if (loader.parentNode) loader.parentNode.removeChild(loader); }, 600);
     }, delay);
   }

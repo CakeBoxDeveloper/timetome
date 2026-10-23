@@ -151,13 +151,34 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 .hero__ticker-fade--right { right: 0; background: linear-gradient(to left,  var(--card-bg) 0%, var(--card-bg) 15%, transparent 100%); }
 
 /* ── Hero review cards ── */
+@keyframes reviewFlyLeft {
+  from {
+    opacity: 0;
+    transform: translateX(180px) scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+@keyframes reviewFlyRight {
+  from {
+    opacity: 0;
+    transform: translateX(-180px) scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
 .hero-reviews {
   position: absolute;
   top: 0;
   bottom: 0;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 20px;
   pointer-events: none;
   z-index: 0;
   perspective: 600px;
@@ -178,7 +199,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 .hero-reviews__col {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 22px;
 }
 /* Col with 2 cards — outer; col with 3 cards — inner (closer to logo) */
 .hero-reviews--left  .hero-reviews__col--a { order: 1; }
@@ -195,7 +216,30 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   flex-shrink: 0;
+  opacity: 0;
 }
+
+/* Запускаем только после скрытия лоадера — JS добавляет .hero-ready на body */
+.hero-ready .hero-review-card {
+  animation-duration: 0.6s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: forwards;
+}
+.hero-ready .hero-reviews--left .hero-review-card  { animation-name: reviewFlyLeft; }
+.hero-ready .hero-reviews--right .hero-review-card { animation-name: reviewFlyRight; }
+
+.hero-ready .hero-reviews--left  .hero-reviews__col--b .hero-review-card:nth-child(1) { animation-delay: 0.5s; }
+.hero-ready .hero-reviews--left  .hero-reviews__col--b .hero-review-card:nth-child(2) { animation-delay: 0.7s; }
+.hero-ready .hero-reviews--left  .hero-reviews__col--b .hero-review-card:nth-child(3) { animation-delay: 0.94s; }
+.hero-ready .hero-reviews--left  .hero-reviews__col--a .hero-review-card:nth-child(1) { animation-delay: 0.8s; }
+.hero-ready .hero-reviews--left  .hero-reviews__col--a .hero-review-card:nth-child(2) { animation-delay: 1.04s; }
+
+.hero-ready .hero-reviews--right .hero-reviews__col--b .hero-review-card:nth-child(1) { animation-delay: 0.5s; }
+.hero-ready .hero-reviews--right .hero-reviews__col--b .hero-review-card:nth-child(2) { animation-delay: 0.7s; }
+.hero-ready .hero-reviews--right .hero-reviews__col--b .hero-review-card:nth-child(3) { animation-delay: 0.94s; }
+.hero-ready .hero-reviews--right .hero-reviews__col--a .hero-review-card:nth-child(1) { animation-delay: 0.8s; }
+.hero-ready .hero-reviews--right .hero-reviews__col--a .hero-review-card:nth-child(2) { animation-delay: 1.04s; }
+
 
 
 .hero__title {
