@@ -218,7 +218,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   top: -100px;
   bottom: -200px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 20px;
   pointer-events: none;
   z-index: 0;
@@ -236,6 +236,14 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   transform-origin: left center;
   flex-direction: row-reverse;
 }
+
+/* Шахматное смещение колонок */
+.hero-reviews--left  .hero-reviews__col--a { margin-top: 270px; }
+.hero-reviews--left  .hero-reviews__col--b { margin-top: 82px; }
+.hero-reviews--left  .hero-reviews__col--c { margin-top: 170px; }
+.hero-reviews--right .hero-reviews__col--a { margin-top: 270px; }
+.hero-reviews--right .hero-reviews__col--b { margin-top: 82px; }
+.hero-reviews--right .hero-reviews__col--c { margin-top: 170px; }
 
 .hero-reviews__col {
   display: flex;
@@ -506,6 +514,8 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   display: flex;
   justify-content: center;
   padding: 24px var(--gap) 0;
+  position: relative;
+  z-index: 3;
 }
 .hero-card-overlay .hero__card {
   width: 100%;
