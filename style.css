@@ -114,6 +114,11 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   background:radial-gradient(circle, rgba(77,140,255,0.10) 0%, transparent 68%);
   top:30%; left:50%; transform:translate(-50%,-50%);
   pointer-events:none;
+  opacity: 0;
+  transition: opacity 1.2s ease-out;
+}
+.hero-ready .hero::before {
+  opacity: 1;
 }
 .hero::after {
   content:''; position:absolute;
@@ -131,6 +136,11 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   margin-bottom: 16px;
   margin-top: 80px;
   z-index: 1;
+  opacity: 0;
+  transition: opacity 1.2s ease-out;
+}
+.hero-ready .hero__3d-wrap {
+  opacity: 1;
 }
 .hero__3d-wrap model-viewer {
   width:100%; height:100%; display:block;
