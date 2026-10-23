@@ -190,19 +190,42 @@
       style="background:transparent;width:100%;height:100%;display:block;--progress-bar-height:0px;--progress-bar-color:transparent;"
     ></model-viewer>
   </div>
-  <div class="hero__content">
-    <div class="hero__card">
-      <p class="hero__slogan">Зупинись і знайди <span class="hero__slogan--glow">час для себе</span></p>
-      <a href="https://maps.google.com/?q=вул.+Захисників+Миколаєва,+15,+Миколаїв" class="map-chip hero__location--full" target="_blank" rel="noopener">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-        вул. Захисників Миколаєва, 15
-        <span class="map-chip__arrow">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </span>
+</section>
+
+<!-- hero card overlay — на стыке hero и bridge -->
+<div class="hero-card-overlay">
+  <div class="hero__card">
+    <p class="hero__slogan">Зупинись і знайди <span class="hero__slogan--glow">час для себе</span></p>
+    <a href="https://maps.google.com/?q=вул.+Захисників+Миколаєва,+15,+Миколаїв" class="map-chip hero__location--full" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+      вул. Захисників Миколаєва, 15
+      <span class="map-chip__arrow">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </span>
+    </a>
+    <div class="hero__map">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2735.5!2d31.9950!3d46.9750!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40c5c8f0!2z0LLRg9C7LiDQl9Cw0YXQuNGB0L3QuNC60ZbQstCh0LXQsdC1LCAxNSwg0JzQuNC60L7Qu9Cw0ZfQsg!5e0!3m2!1suk!2sua!4v1234567890"
+        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        title="Час для себе на карті">
+      </iframe>
+    </div>
+    <div class="hero__cta-row">
+      <a href="https://t.me/pro_telo_niko" class="hero__cta-btn hero__cta-btn--tg" target="_blank" rel="noopener">
+        <img src="https://www.svgrepo.com/show/388724/telegram.svg" alt="" width="16" height="16" />
+        Telegram
       </a>
+      <a href="https://www.instagram.com/pro_telo_niko" class="hero__cta-btn hero__cta-btn--ig" target="_blank" rel="noopener">
+        <img src="https://www.svgrepo.com/show/521711/instagram.svg" alt="" width="16" height="16" />
+        Instagram
+      </a>
+      <button class="hero__cta-btn hero__cta-btn--contacts" onclick="document.getElementById('contacts').scrollIntoView({behavior:'smooth'})">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.12 1.18 2 2 0 012.11 0h3a2 2 0 012 1.72c.13 1 .36 1.97.72 2.9a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.18-1.18a2 2 0 012.11-.45c.93.36 1.9.59 2.9.72A2 2 0 0122 14.92z"/></svg>
+        Контакти
+      </button>
     </div>
   </div>
-</section>
+</div>
 
 <!-- gradient bridge hero → services -->
 <div class="section-bridge" aria-hidden="true"></div>
@@ -553,40 +576,7 @@
       </a>
 
       <!-- Social CTAs row -->
-      <div class="social-row">
-        <a href="https://t.me/pro_telo_niko" class="contact-btn contact-btn--tg" target="_blank" rel="noopener">
-          <img src="https://www.svgrepo.com/show/388724/telegram.svg" alt="Telegram" width="22" height="22" />
-          Telegram
-        </a>
-        <a href="https://www.instagram.com/pro_telo_niko" class="contact-btn contact-btn--ig" target="_blank" rel="noopener">
-          <img src="https://www.svgrepo.com/show/521711/instagram.svg" alt="Instagram" width="22" height="22" />
-          Instagram
-        </a>
-      </div>
 
-      <!-- Perks -->
-      <div class="perks-list">
-        <div class="perk-item">
-          <div class="perk-item__ico"><img src="https://unpkg.com/lucide-static@latest/icons/hand.svg" alt="" /></div>
-          <div class="perk-item__text"><strong>Авторські методики</strong><span>Стоун · Dry Needling · Перкусія · Класика</span></div>
-        </div>
-        <div class="perk-item">
-          <div class="perk-item__ico"><img src="https://unpkg.com/lucide-static@latest/icons/graduation-cap.svg" alt="" /></div>
-          <div class="perk-item__text"><strong>Медична освіта</strong><span>Фізіотерапевт з офіційною кваліфікацією</span></div>
-        </div>
-        <div class="perk-item">
-          <div class="perk-item__ico"><img src="https://unpkg.com/lucide-static@latest/icons/user-check.svg" alt="" /></div>
-          <div class="perk-item__text"><strong>Індивідуальний підхід</strong><span>Кожен сеанс адаптований під вас</span></div>
-        </div>
-        <div class="perk-item">
-          <div class="perk-item__ico"><img src="https://unpkg.com/lucide-static@latest/icons/sun.svg" alt="" /></div>
-          <div class="perk-item__text"><strong>Терапія червоним світлом</strong><span>Фотобіомодуляція для відновлення тканин</span></div>
-        </div>
-        <div class="perk-item">
-          <div class="perk-item__ico"><img src="https://unpkg.com/lucide-static@latest/icons/syringe.svg" alt="" /></div>
-          <div class="perk-item__text"><strong>Акупунктура (Dry Needling)</strong><span>Точкова робота з тригерними зонами</span></div>
-        </div>
-      </div>
 
     </div>
   </div>

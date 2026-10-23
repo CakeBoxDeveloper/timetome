@@ -106,7 +106,6 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   overflow:visible;
   position:relative;
   padding-top: 40px;
-  padding-bottom: 60px;
 }
 .hero::before {
   content:''; position:absolute;
@@ -135,6 +134,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   overflow:visible; background:transparent; position:relative;
   margin-bottom: 16px;
   margin-top: 80px;
+  margin-top: 80px;
   z-index: 1;
   opacity: 0;
   transition: opacity 1.2s ease-out;
@@ -152,7 +152,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   padding:0 var(--gap) 24px;
   text-align:center;
   position: relative;
-  z-index: 1;
+  z-index: 3;
 }
 
 .hero__card {
@@ -215,8 +215,8 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 
 .hero-reviews {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: -100px;
+  bottom: -200px;
   display: flex;
   align-items: center;
   gap: 20px;
@@ -439,6 +439,77 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   display:flex;
   width:100%;
   justify-content:center;
+}
+
+/* ── Hero map ── */
+.hero__map {
+  width: 100%;
+  border-radius: var(--r);
+  overflow: hidden;
+  aspect-ratio: 16/7;
+  border: 1px solid var(--border-accent);
+}
+.hero__map iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: none;
+  filter: invert(90%) hue-rotate(180deg);
+}
+
+/* ── Hero CTA row ── */
+.hero__cta-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+.hero__cta-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 10px;
+  border-radius: var(--r);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  white-space: nowrap;
+  transition: filter 0.2s;
+}
+.hero__cta-btn:hover { filter: brightness(1.15); }
+.hero__cta-btn img {
+  flex-shrink: 0;
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
+}
+.hero__cta-btn svg { flex-shrink: 0; }
+.hero__cta-btn--tg {
+  background: #29b6f6;
+  color: #fff;
+}
+.hero__cta-btn--ig {
+  background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
+  color: #fff;
+}
+.hero__cta-btn--contacts {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+}
+
+/* ── Hero card overlay — між hero і bridge ── */
+.hero-card-overlay {
+  display: flex;
+  justify-content: center;
+  padding: 24px var(--gap) 0;
+}
+.hero-card-overlay .hero__card {
+  width: 100%;
+  max-width: var(--col);
 }
 
 /* ── Gradient bridge hero → next section ── */
