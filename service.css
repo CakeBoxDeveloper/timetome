@@ -496,3 +496,124 @@
   letter-spacing: -0.01em;
   text-transform: none;
 }
+
+/* ── Article layout ── */
+.svc-article {
+  max-width: var(--col);
+  margin-inline: auto;
+  padding: 32px var(--gap) 64px;
+}
+.svc-article__header {
+  margin-bottom: 40px;
+}
+.svc-article__title {
+  font-family: var(--font-title);
+  font-size: clamp(28px, 8vw, 42px);
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--text);
+  margin: 12px 0 16px;
+}
+.svc-article__lead {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.svc-article__body {
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.75;
+}
+.svc-article__body h2 {
+  font-family: var(--font);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 36px 0 12px;
+}
+.svc-article__body p {
+  margin-bottom: 16px;
+  color: rgba(255,255,255,0.8);
+}
+.svc-article__body ul {
+  margin: 0 0 16px 20px;
+  color: rgba(255,255,255,0.75);
+}
+.svc-article__body ul li {
+  margin-bottom: 6px;
+}
+.svc-article__body strong {
+  color: var(--text);
+  font-weight: 600;
+}
+.svc-article__footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(77,140,255,0.12);
+}
+
+/* ── Price table ── */
+.svc-price-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0 8px;
+  font-size: 14px;
+}
+.svc-price-table th {
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border-bottom: 1px solid rgba(77,140,255,0.15);
+}
+.svc-price-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.8);
+}
+.svc-price-table td:last-child {
+  color: var(--accent);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.svc-price-table tr:last-child td { border-bottom: none; }
+.svc-price-note {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+/* ── Location block ── */
+.svc-location-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 32px;
+  padding: 16px 18px;
+  background: rgba(77,140,255,0.1);
+  border: 1px solid rgba(77,140,255,0.25);
+  border-radius: var(--r);
+  color: var(--accent);
+}
+.svc-location-block svg { flex-shrink: 0; }
+.svc-location-block div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.svc-location-block strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+.svc-location-block span {
+  font-size: 13px;
+  color: var(--text-muted);
+}
