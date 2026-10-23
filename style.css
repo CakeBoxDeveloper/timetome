@@ -331,22 +331,28 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 .hero-ready .hero-reviews--left  .hero-reviews__col--b .hero-review-card:nth-child(1) { animation-delay: 0.6s; }
 .hero-ready .hero-reviews--left  .hero-reviews__col--b .hero-review-card:nth-child(2) { animation-delay: 0.64s; }
 .hero-ready .hero-reviews--left  .hero-reviews__col--b .hero-review-card:nth-child(3) { animation-delay: 0.68s; }
+.hero-ready .hero-reviews--left  .hero-reviews__col--b .hero-review-card:nth-child(4) { animation-delay: 0.72s; }
+.hero-ready .hero-reviews--left  .hero-reviews__col--b .hero-review-card:nth-child(5) { animation-delay: 0.76s; }
 .hero-ready .hero-reviews--left  .hero-reviews__col--a .hero-review-card:nth-child(1) { animation-delay: 0.62s; }
 .hero-ready .hero-reviews--left  .hero-reviews__col--a .hero-review-card:nth-child(2) { animation-delay: 0.66s; }
 .hero-ready .hero-reviews--left  .hero-reviews__col--c .hero-review-card:nth-child(1) { animation-delay: 0.64s; }
 .hero-ready .hero-reviews--left  .hero-reviews__col--c .hero-review-card:nth-child(2) { animation-delay: 0.68s; }
 .hero-ready .hero-reviews--left  .hero-reviews__col--c .hero-review-card:nth-child(3) { animation-delay: 0.72s; }
 .hero-ready .hero-reviews--left  .hero-reviews__col--c .hero-review-card:nth-child(4) { animation-delay: 0.76s; }
+.hero-ready .hero-reviews--left  .hero-reviews__col--c .hero-review-card:nth-child(5) { animation-delay: 0.80s; }
 
 .hero-ready .hero-reviews--right .hero-reviews__col--b .hero-review-card:nth-child(1) { animation-delay: 0.6s; }
 .hero-ready .hero-reviews--right .hero-reviews__col--b .hero-review-card:nth-child(2) { animation-delay: 0.64s; }
 .hero-ready .hero-reviews--right .hero-reviews__col--b .hero-review-card:nth-child(3) { animation-delay: 0.68s; }
+.hero-ready .hero-reviews--right .hero-reviews__col--b .hero-review-card:nth-child(4) { animation-delay: 0.72s; }
+.hero-ready .hero-reviews--right .hero-reviews__col--b .hero-review-card:nth-child(5) { animation-delay: 0.76s; }
 .hero-ready .hero-reviews--right .hero-reviews__col--a .hero-review-card:nth-child(1) { animation-delay: 0.62s; }
 .hero-ready .hero-reviews--right .hero-reviews__col--a .hero-review-card:nth-child(2) { animation-delay: 0.66s; }
 .hero-ready .hero-reviews--right .hero-reviews__col--c .hero-review-card:nth-child(1) { animation-delay: 0.64s; }
 .hero-ready .hero-reviews--right .hero-reviews__col--c .hero-review-card:nth-child(2) { animation-delay: 0.68s; }
 .hero-ready .hero-reviews--right .hero-reviews__col--c .hero-review-card:nth-child(3) { animation-delay: 0.72s; }
 .hero-ready .hero-reviews--right .hero-reviews__col--c .hero-review-card:nth-child(4) { animation-delay: 0.76s; }
+.hero-ready .hero-reviews--right .hero-reviews__col--c .hero-review-card:nth-child(5) { animation-delay: 0.80s; }
 
 
 
@@ -378,6 +384,13 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   box-sizing: border-box;
 }
 .hero__slogan--glow {
+  text-shadow:
+    0 0 8px rgba(77, 180, 255, 0.9),
+    0 0 20px rgba(77, 180, 255, 0.6),
+    0 0 40px rgba(77, 180, 255, 0.35);
+}
+/* glow на весь слоган */
+.hero__slogan {
   text-shadow:
     0 0 8px rgba(77, 180, 255, 0.9),
     0 0 20px rgba(77, 180, 255, 0.6),
