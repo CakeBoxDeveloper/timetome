@@ -370,7 +370,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 
 .hero__slogan {
   font-family: var(--font);
-  font-size: clamp(11px, 3vw, 14px);
+  font-size: clamp(13px, 3.5vw, 16px);
   font-weight: 500;
   color: var(--accent);
   opacity: 1;
@@ -481,8 +481,9 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 /* ── Hero CTA row ── */
 .hero__cta-row {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
+  flex-wrap: wrap;
 }
 .hero__cta-btn {
   flex: 1;
@@ -1923,4 +1924,19 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 
   /* Content above pattern */
   .section > *:not(.sec-pat-col):not(.sec-pat-fade) { position: relative; z-index: 3; }
+}
+
+/* ── Lot played note — одна строка ── */
+.lot-card__played-note {
+  font-size: 11px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  padding: 4px 8px;
+}
+
+/* ── Отступ снизу последней секции чтобы fnav не перекрывал ── */
+#contacts {
+  padding-bottom: 96px;
 }
