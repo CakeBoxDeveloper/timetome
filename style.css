@@ -570,6 +570,8 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 ══════════════════════════════════════════════ */
 .section      { padding:48px 0; background:var(--bg-alt); }
 .section--alt { background:var(--bg-alt); }
+/* Services section — less top gap */
+#services { padding-top: 16px; }
 
 .section-title {
   font-size:clamp(24px,7vw,34px);
@@ -626,15 +628,19 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   animation: certFlipIn 0.36s ease-in-out forwards;
 }
 @keyframes certFlipOut {
-  0%   { transform: scaleX(1);  filter: blur(0px); }
-  25%  { transform: scaleX(0);  filter: blur(4px); }
-  50%  { transform: scaleX(-1); filter: blur(0px); }
-  75%  { transform: scaleX(0);  filter: blur(4px); }
-  100% { transform: scaleX(1);  filter: blur(0px); }
+  0%   { transform: scaleX(1);   filter: blur(0px); }
+  15%  { transform: scaleX(0.5); filter: blur(6px); }
+  25%  { transform: scaleX(0);   filter: blur(14px); }
+  35%  { transform: scaleX(0.5); filter: blur(6px); }
+  50%  { transform: scaleX(1);   filter: blur(0px); }
+  65%  { transform: scaleX(0.5); filter: blur(6px); }
+  75%  { transform: scaleX(0);   filter: blur(14px); }
+  85%  { transform: scaleX(0.5); filter: blur(6px); }
+  100% { transform: scaleX(1);   filter: blur(0px); }
 }
 @keyframes certFlipIn {
-  0%   { transform: scaleX(1);  filter: blur(0px); }
-  100% { transform: scaleX(1);  filter: blur(0px); }
+  0%   { transform: scaleX(1); filter: blur(0px); }
+  100% { transform: scaleX(1); filter: blur(0px); }
 }
 
 .cert-model-viewer {

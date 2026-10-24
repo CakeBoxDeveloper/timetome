@@ -573,8 +573,10 @@
 
   function resize() {
     const r = canvas.getBoundingClientRect();
-    if (!r.width || !r.height) return;
-    canvas.width = r.width; canvas.height = r.height;
+    const w = r.width  || canvas.offsetWidth  || canvas.clientWidth;
+    const h = r.height || canvas.offsetHeight || canvas.clientHeight;
+    if (!w || !h) return;
+    canvas.width = w; canvas.height = h;
     if (!revealed) drawLayer();
     const prize = document.getElementById('lotPrize');
     if (prize) prize.style.visibility = 'visible';
@@ -638,7 +640,12 @@
     localStorage.setItem(STORAGE_KEY, today);
   });
   canvas.addEventListener('touchstart', e => {
-    if (alreadyPlayed) return; e.preventDefault(); drawing = true; erase(...pos(e));
+    if (alreadyPlayed) return;
+    // Ensure canvas is sized before first touch
+    if (!canvas.width || !canvas.height) resize();
+    e.preventDefault();
+    drawing = true;
+    erase(...pos(e));
     localStorage.setItem(STORAGE_KEY, today);
   }, { passive: false });
   document.addEventListener('mousemove', e => { if (drawing) erase(...pos(e)); });
@@ -655,6 +662,16 @@
   if (document.readyState === 'complete') setTimeout(resize, 100);
   else window.addEventListener('load', () => setTimeout(resize, 100));
   window.addEventListener('resize', () => { if (!revealed) resize(); });
+
+  // Trigger resize when canvas scrolls into view (fixes mobile first-touch issue)
+  if ('IntersectionObserver' in window) {
+    const obs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && (!canvas.width || !canvas.height)) {
+        resize();
+      }
+    }, { threshold: 0.1 });
+    obs.observe(canvas);
+  }
 })();
 
 /* ══════════════════════════════════════
@@ -780,7 +797,8 @@
   }
 
   // Map slide elements to their keys — must match HTML slide order
-  const slideKeys = ['light', 'needle', 'stone', 'perc', 'cert', 'lottery', 'fire'];
+  // Current order: fire, cert, needle, stone, light, perc, lottery
+  const slideKeys = ['fire', 'cert', 'needle', 'stone', 'light', 'perc', 'lottery'];
 
   // Attach click handlers
   track.querySelectorAll('.fnav__slide').forEach((slide, i) => {
@@ -957,7 +975,7 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
     const btns   = inner.querySelector('.service-card__btns')?.outerHTML || '';
 
     return `
-      <button class="svc-expanded-card__back">← до інших видів масажу</button>
+      <button class="svc-expanded-card__back">← до інших видів послуг</button>
       <div class="svc-expanded-card__content">
         ${header}
         ${tags}
