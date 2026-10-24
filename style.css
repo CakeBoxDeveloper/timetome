@@ -221,7 +221,6 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   align-items: flex-start;
   gap: 20px;
   pointer-events: none;
-  z-index: 0;
   perspective: 600px;
 }
 .hero-reviews--left  {
@@ -288,11 +287,25 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   flex-shrink: 0;
 }
 .hero-review-card__avatar {
-  width: 13px;
-  height: 13px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  background: var(--av, #4db4ff);
+  background: transparent;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+.hero-review-card__avatar img {
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: 16px !important;
+  max-height: 16px !important;
+  object-fit: contain !important;
+  display: block !important;
 }
 .hero-review-card__name {
   font-family: var(--font);
@@ -538,12 +551,11 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 
 /* ── Gradient bridge hero → next section ── */
 .section-bridge {
-  height: 160px;
-  margin-top: -80px;
-  background: linear-gradient(to bottom, transparent 0%, #0c0e1a 60%);
+  height: 96px;
+  background: linear-gradient(to bottom, transparent 0%, #0c0e1a 100%);
   pointer-events: none;
   position: relative;
-  z-index: 2;
+  z-index: 1;
 }
 /* alt(#0c0e1a) → bg(#08090f) */
 .section-bridge--alt-to-bg {
@@ -1310,12 +1322,13 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 
 /* Top 1/3 — pink */
 .lot-card__top {
-  flex: 1;
+  flex: 0 0 auto;
+  min-height: 56px;
   background: #c8860a;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 20px;
+  padding: 10px 20px;
 }
 .lot-card__title {
   font-family: var(--font-title);
@@ -1969,6 +1982,27 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 .price-row--hot {
   background: rgba(255, 200, 50, 0.07);
   position: relative;
+  overflow: hidden;
+}
+.price-row--hot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 25%,
+    rgba(255, 220, 80, 0.07) 40%,
+    rgba(255, 245, 150, 0.13) 50%,
+    rgba(255, 220, 80, 0.07) 60%,
+    transparent 75%
+  );
+  background-size: 200% 100%;
+  animation: priceRowShimmer 4s linear infinite;
+  pointer-events: none;
+}
+@keyframes priceRowShimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
 }
 .price-row--hot::before {
   content: '🔥';
@@ -1996,8 +2030,175 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   .sec-pat-col, .sec-pat-fade { display: none; }
 }
 
-/* Последние карточки col--c поверх bridge-градиента */
-.hero-reviews__col--c .hero-review-card:last-child {
+/* Нижние карточки col--a и col--c поверх bridge */
+.hero-reviews__col--c .hero-review-card:last-child,
+.hero-reviews__col--a .hero-review-card:last-child {
   position: relative;
-  z-index: 3;
+  z-index: 2;
+}
+
+/* ══════════════════════════════════════
+   SVC LIST — expand-from-row
+══════════════════════════════════════ */
+.svc-list {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--r);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  position: relative;
+}
+
+/* ── Row ── */
+.svc-item {
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.svc-item:last-child { border-bottom: none; }
+
+.svc-item__row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  gap: 12px;
+  transition: background var(--ease);
+  position: relative;
+  z-index: 1;
+}
+.svc-item__row:hover { background: rgba(77,140,255,0.07); }
+
+.svc-item__row-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.svc-item__ico {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(77,140,255,0.1);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--r);
+  flex-shrink: 0;
+}
+.svc-item__ico img {
+  width: 20px; height: 20px;
+  filter: brightness(0) saturate(100%) invert(53%) sepia(60%) saturate(800%) hue-rotate(195deg) brightness(1.1);
+}
+.svc-item__name {
+  font-size: 15px; font-weight: 600; color: var(--text);
+}
+.svc-item__arrow {
+  flex-shrink: 0; color: var(--text-muted);
+  transition: transform var(--ease);
+}
+.svc-item.is-open .svc-item__arrow { transform: rotate(180deg); }
+
+/* ── Body: hidden by default ── */
+.svc-item__body { display: none; }
+
+/* ── Expanded card: absolute, covers full list ── */
+.svc-expanded-card {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: var(--bg-card);
+  border-radius: var(--r);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: svcExpand 0.22s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes svcExpand {
+  from { clip-path: inset(var(--svc-origin-y, 0px) 0 calc(100% - var(--svc-origin-bottom, 52px)) 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+.svc-expanded-card.is-closing {
+  animation: svcCollapse 0.18s cubic-bezier(0.4, 0, 0.8, 1) forwards;
+}
+@keyframes svcCollapse {
+  from { clip-path: inset(0 0 0 0); }
+  to   { clip-path: inset(var(--svc-origin-y, 0px) 0 calc(100% - var(--svc-origin-bottom, 52px)) 0); }
+}
+
+/* hide icon in expanded card */
+.svc-expanded-card .svc-item__card-header .service-card__ico { display: none; }
+
+/* Top blue bar — "до інших видів масажу" */
+.svc-expanded-card__back {
+  display: block;
+  width: 100%;
+  padding: 11px 16px;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: filter var(--ease);
+}
+.svc-expanded-card__back:hover { filter: brightness(1.12); }
+
+/* Content area */
+.svc-expanded-card__content {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+}
+
+/* Footer with action buttons */
+.svc-expanded-card__footer {
+  flex-shrink: 0;
+  padding: 12px 16px 16px;
+}
+.svc-expanded-card__footer .service-card__btns {
+  margin-top: 0;
+}
+
+/* desc color */
+.svc-expanded-card .service-card__desc {
+  color: var(--accent);
+  opacity: 0.9;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* tags: 3px radius, lowercase, # prefix */
+.svc-expanded-card .service-card__tags span {
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: lowercase;
+}
+.svc-expanded-card .service-card__tags span::before {
+  content: '#';
+  opacity: 0.55;
+}
+
+.svc-item__close {
+  display: flex; align-items: center; gap: 6px;
+  background: none; border: none;
+  color: var(--text-muted); font-family: var(--font);
+  font-size: 13px; font-weight: 500;
+  cursor: pointer; padding: 0; width: fit-content;
+  transition: color var(--ease);
+}
+.svc-item__close:hover { color: var(--accent); }
+
+.svc-item__card-header {
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 8px;
 }

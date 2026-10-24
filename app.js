@@ -751,42 +751,30 @@
 
   function handleSlide(slideKey) {
     switch (slideKey) {
-
       case 'light':
-        if (isMain) { openServiceCard(SERVICE_CARD_IDX.light, true); }
-        else { gotoMain('#action=svc&card=' + SERVICE_CARD_IDX.light); }
+        window.location.href = 'red-light.html';
         break;
-
       case 'needle':
-        if (isMain) { openServiceCard(SERVICE_CARD_IDX.needle, true); }
-        else { gotoMain('#action=svc&card=' + SERVICE_CARD_IDX.needle); }
+        window.location.href = 'dry-needling.html';
         break;
-
       case 'stone':
-        if (isMain) { openServiceCard(SERVICE_CARD_IDX.stone, true); }
-        else { gotoMain('#action=svc&card=' + SERVICE_CARD_IDX.stone); }
+        window.location.href = 'stone.html';
         break;
-
       case 'perc':
-        if (isMain) { openServiceCard(SERVICE_CARD_IDX.perc, true); }
-        else { gotoMain('#action=svc&card=' + SERVICE_CARD_IDX.perc); }
+        window.location.href = 'deep-tissue.html';
         break;
-
       case 'cert':
         if (isMain) { openCertificate(0); }
         else { gotoMain('#action=cert'); }
         break;
-
       case 'lottery':
         if (isMain) {
           const lot = document.getElementById('lottery');
           if (lot) scrollTo(lot, 'center');
         } else { gotoMain('#action=lottery'); }
         break;
-
       case 'fire':
-        if (isMain) { openServiceCard(SERVICE_CARD_IDX.fire, true); }
-        else { gotoMain('#action=svc&card=' + SERVICE_CARD_IDX.fire); }
+        window.location.href = 'spa.html';
         break;
     }
   }
@@ -890,3 +878,86 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
 /* ══════════════════════════════════════
    HERO MODEL — idle orbit animation
 ══════════════════════════════════════ */
+
+/* ══════════════════════════════════════
+   SVC LIST ACCORDION
+══════════════════════════════════════ */
+(function () {
+  const list = document.getElementById('svcList');
+  if (!list) return;
+  const items = Array.from(list.querySelectorAll('.svc-item'));
+  let expandedCard = null;
+
+  function getCardHTML(item) {
+    const body = item.querySelector('.svc-item__body');
+    if (!body) return '';
+    const inner = body.querySelector('.svc-item__card');
+    if (!inner) return '';
+
+    const header = inner.querySelector('.svc-item__card-header')?.outerHTML || '';
+    const tags   = inner.querySelector('.service-card__tags')?.outerHTML || '';
+    const desc   = inner.querySelector('.service-card__desc')?.outerHTML || '';
+    const btns   = inner.querySelector('.service-card__btns')?.outerHTML || '';
+
+    return `
+      <button class="svc-expanded-card__back">← до інших видів масажу</button>
+      <div class="svc-expanded-card__content">
+        ${header}
+        ${tags}
+        ${desc}
+      </div>
+      <div class="svc-expanded-card__footer">
+        ${btns}
+      </div>
+    `;
+  }
+
+  function open(item) {
+    if (expandedCard) removeCard(false);
+
+    // Measure row position relative to list
+    const listRect = list.getBoundingClientRect();
+    const rowRect = item.querySelector('.svc-item__row').getBoundingClientRect();
+    const originY = rowRect.top - listRect.top;
+    const originH = rowRect.height;
+
+    // Create overlay card
+    expandedCard = document.createElement('div');
+    expandedCard.className = 'svc-expanded-card';
+    expandedCard.style.setProperty('--svc-origin-y', originY + 'px');
+    expandedCard.style.setProperty('--svc-origin-bottom', (originY + originH) + 'px');
+    expandedCard.innerHTML = getCardHTML(item);
+
+    // Wire close button
+    const closeBtn = expandedCard.querySelector('.svc-expanded-card__back');
+    if (closeBtn) closeBtn.addEventListener('click', () => removeCard(true));
+
+    // Wire book buttons
+    expandedCard.querySelectorAll('.svc-book-btn').forEach(btn => {
+      btn.addEventListener('click', () => window.open('https://t.me/dailyprize_bot', '_blank', 'noopener'));
+    });
+
+    list.appendChild(expandedCard);
+    item.classList.add('is-open');
+  }
+
+  function removeCard(animate) {
+    if (!expandedCard) return;
+    const card = expandedCard;
+    expandedCard = null;
+    items.forEach(i => i.classList.remove('is-open'));
+
+    if (animate) {
+      card.classList.add('is-closing');
+      card.addEventListener('animationend', () => card.remove(), { once: true });
+    } else {
+      card.remove();
+    }
+  }
+
+  items.forEach(item => {
+    item.querySelector('.svc-item__row').addEventListener('click', () => {
+      item.classList.contains('is-open') ? removeCard(true) : open(item);
+    });
+  });
+})();
