@@ -47,20 +47,12 @@
 <div class="loader" id="siteLoader" aria-hidden="true">
   <div class="loader__hero">
     <div class="loader__model-wrap">
-      <model-viewer
-        src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/3D%20Logo.glb?v=4"
-        autoplay
-        animation-name="Empty.002Action"
-        camera-orbit="0deg 105deg 90%"
-        orientation="0deg 90deg 0deg"
-        field-of-view="28deg"
-        environment-image="neutral"
-        exposure="3.0"
-        shadow-intensity="0"
-        interaction-prompt="none"
-        tone-mapping="commerce"
-        style="background:transparent;width:100%;height:100%;display:block;--progress-bar-height:0px;--progress-bar-color:transparent;filter:drop-shadow(0 0 18px rgba(77,180,255,0.7)) drop-shadow(0 0 40px rgba(77,180,255,0.35));"
-      ></model-viewer>
+      <img
+        src="https://github.com/CakeBoxDeveloper/timetome/blob/main/ClockLoader.webp?raw=true"
+        alt=""
+        class="loader__img"
+        style="width:100%;height:100%;object-fit:contain;display:block;"
+      />
     </div>
     <div class="loader__title">ЧАС ДЛЯ СЕБЕ</div>
   </div>
@@ -371,11 +363,10 @@
 ══════════════════════════════════════ -->
 <section class="section" id="certificates">
 
-
   <div class="cert-carousel-wrap" style="position:relative;">
-    <!-- Glow + particles — behind card, covers full wrap -->
-    <canvas id="certParticleCanvas" class="cert-particle-canvas"></canvas>
     <div class="cert-flip-wrap" id="certFlipWrap">
+      <!-- Rays canvas — inside flip-wrap so it flips and changes color with card -->
+      <canvas id="certParticleCanvas" class="cert-particle-canvas"></canvas>
       <!-- cert image card injected by JS -->
     </div>
   </div><!-- /.cert-carousel-wrap -->
@@ -456,12 +447,12 @@
         <div class="price-acc__body">
           <div class="price-acc__inner">
             <div class="price-row"><span>Класичний масаж (спина + шия)</span><span>від 600 <em>₴</em></span></div>
-            <div class="price-row"><span>Загальний масаж (все тіло)</span><span>від 900 <em>₴</em></span></div>
+            <div class="price-row price-row--hot"><span>Загальний масаж (все тіло)</span><span>від 900 <em>₴</em></span></div>
             <div class="price-row"><span>Антистрес (60 хв)</span><span>700 <em>₴</em></span></div>
-            <div class="price-row"><span>Антистрес (90 хв)</span><span>1 000 <em>₴</em></span></div>
+            <div class="price-row price-row--hot"><span>Антистрес (90 хв)</span><span>1 000 <em>₴</em></span></div>
             <div class="price-row"><span>Масаж голови + дарсонваль</span><span>750 <em>₴</em></span></div>
             <div class="price-row"><span>Масаж ніг + стоп (гарячі камені)</span><span>850 <em>₴</em></span></div>
-            <div class="price-row"><span>Aroma Relax (90 хв)</span><span>900 <em>₴</em></span></div>
+            <div class="price-row price-row--hot"><span>Aroma Relax (90 хв)</span><span>900 <em>₴</em></span></div>
             <div class="price-row"><span>Глибокий тканинний (60 хв)</span><span>від 800 <em>₴</em></span></div>
             <div class="price-row"><span>Глибокий тканинний (90 хв)</span><span>від 1 100 <em>₴</em></span></div>
             <div class="price-row"><span>Stretch Release Massage (75 хв)</span><span>1 200 <em>₴</em></span></div>
@@ -481,10 +472,10 @@
         </button>
         <div class="price-acc__body">
           <div class="price-acc__inner">
-            <div class="price-row"><span>Stone Massage (90 хв)</span><span>1 200 <em>₴</em></span></div>
-            <div class="price-row"><span>Stone Massage всього тіла (90 хв)</span><span>1 800 <em>₴</em></span></div>
+            <div class="price-row price-row--hot"><span>Stone Massage (90 хв)</span><span>1 200 <em>₴</em></span></div>
+            <div class="price-row price-row--hot"><span>Stone Massage всього тіла (90 хв)</span><span>1 800 <em>₴</em></span></div>
             <div class="price-row"><span>Вогняне відновлення (90 хв)</span><span>1 500 <em>₴</em></span></div>
-            <div class="price-row"><span>СПА-програма (120 хв)</span><span>1 800 <em>₴</em></span></div>
+            <div class="price-row price-row--hot"><span>СПА-програма (120 хв)</span><span>1 800 <em>₴</em></span></div>
             <div class="price-row"><span>Баночний масаж (спина)</span><span>від 500 <em>₴</em></span></div>
             <div class="price-row"><span>Масаж спини + баночний масаж</span><span>1 200 <em>₴</em></span></div>
           </div>
@@ -503,12 +494,12 @@
         </button>
         <div class="price-acc__body">
           <div class="price-acc__inner">
-            <div class="price-row"><span>Dry Needling (локальна зона)</span><span>від 500 <em>₴</em></span></div>
+            <div class="price-row price-row--hot"><span>Dry Needling (локальна зона)</span><span>від 500 <em>₴</em></span></div>
             <div class="price-row"><span>Dry Needling (кілька зон)</span><span>від 800 <em>₴</em></span></div>
-            <div class="price-row"><span>Масаж спини + сухі голки</span><span>1 350 <em>₴</em></span></div>
+            <div class="price-row price-row--hot"><span>Масаж спини + сухі голки</span><span>1 350 <em>₴</em></span></div>
             <div class="price-row"><span>Терапія червоним світлом (30 хв)</span><span>від 400 <em>₴</em></span></div>
-            <div class="price-row"><span>Терапія червоним світлом (60 хв)</span><span>від 700 <em>₴</em></span></div>
-            <div class="price-row"><span>Aroma Relax + червоне світло (90 хв)</span><span>900 <em>₴</em></span></div>
+            <div class="price-row price-row--hot"><span>Терапія червоним світлом (60 хв)</span><span>від 700 <em>₴</em></span></div>
+            <div class="price-row price-row--hot"><span>Aroma Relax + червоне світло (90 хв)</span><span>900 <em>₴</em></span></div>
             <div class="price-row"><span>Перкусія (локальна)</span><span>від 300 <em>₴</em></span></div>
             <div class="price-row"><span>Перкусія (загальна)</span><span>від 500 <em>₴</em></span></div>
           </div>
@@ -708,21 +699,7 @@
 
 <script>
 /* Colour loader model same as hero */
-(function () {
-  const lmv = document.querySelector('.loader__model-wrap model-viewer');
-  if (!lmv) return;
-  lmv.addEventListener('load', () => {
-    const colors = [
-      [0.30, 0.75, 1.0, 1.0],
-      [0.15, 0.55, 0.90, 1.0],
-    ];
-    lmv.model.materials.forEach((mat, i) => {
-      mat.pbrMetallicRoughness.setBaseColorFactor(colors[i % colors.length]);
-      mat.pbrMetallicRoughness.setMetallicFactor(0.0);
-      mat.pbrMetallicRoughness.setRoughnessFactor(0.6);
-    });
-  });
-})();
+/* Colour loader model same as hero — removed, loader now uses img */
 
 (function () {
   const mv = document.getElementById('heroModel');
@@ -1012,94 +989,30 @@
     return;
   }
 })();
-/* ── Cert glow + particles ── */
+/* ── Cert glow + rays ── */
 (function() {
   const canvas = document.getElementById('certParticleCanvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
-  const ICON_SRC = 'https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/17d548fc0afc9b9d5f73b9705d03aa8e1480a9b1/ClockStraight.svg';
-  const iconImg = new Image();
-  iconImg.crossOrigin = 'anonymous';
-  iconImg.src = ICON_SRC;
-
   let glowColor = '#7d5c5b';
-  let fgColor   = '#f5d9d5';
-  let tintedCanvas = null; // pre-tinted icon, rebuilt on color change
-
-  function buildTinted() {
-    if (!iconImg.complete) return;
-    tintedCanvas = document.createElement('canvas');
-    /* 128px = crisp at all particle sizes (12–30px drawn from 128 source) */
-    tintedCanvas.width = 128; tintedCanvas.height = 128;
-    const tc = tintedCanvas.getContext('2d');
-    tc.imageSmoothingEnabled = true;
-    tc.imageSmoothingQuality = 'high';
-    tc.drawImage(iconImg, 0, 0, 128, 128);
-    tc.globalCompositeOperation = 'source-in';
-    tc.fillStyle = fgColor;
-    tc.fillRect(0, 0, 128, 128);
-  }
-  iconImg.onload = buildTinted;
-
-  let dying = false; // true = fade all out fast on flip
+  let rayR = 125, rayG = 92, rayB = 91;
 
   window.setCertGlowColor = (bg, fg) => {
     glowColor = bg;
-    fgColor   = fg;
-    // Rebuild tinted canvas for existing particles — they change color instantly
-    buildTinted();
+    // parse hex to rgb for rays
+    const hex = bg.replace('#','');
+    if (hex.length === 6) {
+      rayR = parseInt(hex.slice(0,2),16);
+      rayG = parseInt(hex.slice(2,4),16);
+      rayB = parseInt(hex.slice(4,6),16);
+    }
   };
 
-  const PARTICLE_COUNT = 16;
-  const particles = [];
-
-  function randomParticle(w, h) {
-    const size = 13 + Math.random() * 15;
-    return {
-      x: w * 0.18 + Math.random() * w * 0.64,
-      y: h * 0.55 + Math.random() * h * 0.25, /* spawn zone moved up */
-      vx: (Math.random() - 0.5) * 0.04,
-      vy: -(0.06 + Math.random() * 0.08),
-      size,
-      alpha: 0.6 + Math.random() * 0.35,
-      life: 0,
-      maxLife: (1400 + Math.random() * 1000) * 0.8,
-      rotation: 0,
-      rotSpeed: 0,
-      dying: false,
-    };
-  }
-
-  function spawnParticle(w, h) {
-    // Try up to 10 times to find non-overlapping position
-    for (let attempt = 0; attempt < 15; attempt++) {
-      const p = randomParticle(w, h);
-      const minDist = p.size * 3.0; /* larger gap — no overlap */
-      const ok = particles.every(existing => {
-        const dx = existing.x - p.x, dy = existing.y - p.y;
-        return Math.sqrt(dx*dx + dy*dy) > minDist;
-      });
-      if (ok || attempt === 14) return p;
-    }
-    return randomParticle(w, h);
-  }
-
-  function init(w, h) {
-    particles.length = 0;
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      const p = spawnParticle(w, h);
-      p.life = Math.random() * p.maxLife;
-      p.x += p.vx * p.life;
-      p.y += p.vy * p.life;
-      particles.push(p);
-    }
-  }
-
-  // Draw standard radial glow
+  // Draw radial glow
   function drawGlow(w, h) {
-    const cx = w / 2, cy = h * 0.65; /* lower center */
-    const r  = Math.min(w, h) * 0.38; /* smaller radius */
+    const cx = w / 2, cy = h * 0.65;
+    const r  = Math.min(w, h) * 0.38;
     const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
     grd.addColorStop(0,   glowColor + '88');
     grd.addColorStop(0.5, glowColor + '44');
@@ -1111,10 +1024,56 @@
     ctx.restore();
   }
 
+  const RAY_COUNT = 18;
+  let t = 0;
+
+  function drawRays(w, h) {
+    const cx = w / 2;
+    const cy = h * 0.5;
+
+    for (let i = 0; i < RAY_COUNT; i++) {
+      const baseAngle = (i / RAY_COUNT) * Math.PI * 2;
+      const wave = 0.04 * Math.sin(t * 0.9 + i * 1.3);
+      const angle = baseAngle + wave;
+
+      const pulse = 0.5 + 0.5 * Math.sin(t * 1.4 + i * 0.8);
+      const len = (0.30 + 0.08 * pulse) * Math.max(w, h);  // разница длин сужена: было 0.17, теперь 0.08
+      const halfW = (3 + 7 * Math.sin(Math.PI * i / RAY_COUNT)) * (0.7 + 0.3 * pulse);
+
+      const ex = cx + Math.cos(angle) * len;
+      const ey = cy + Math.sin(angle) * len;
+
+      // расширяется к концу: у центра узкий, на конце широкий
+      const nxNear =  Math.sin(angle) * 1;
+      const nyNear = -Math.cos(angle) * 1;
+      const nxFar  =  Math.sin(angle) * halfW;
+      const nyFar  = -Math.cos(angle) * halfW;
+
+      const alpha = 0.14 + 0.10 * pulse;
+
+      const grad = ctx.createLinearGradient(cx, cy, ex, ey);
+      grad.addColorStop(0,    `rgba(${rayR},${rayG},${rayB},0)`);
+      grad.addColorStop(0.25, `rgba(${rayR},${rayG},${rayB},${alpha * 0.6})`);
+      grad.addColorStop(0.6,  `rgba(${rayR},${rayG},${rayB},${alpha})`);
+      grad.addColorStop(0.85, `rgba(${rayR},${rayG},${rayB},${alpha * 0.4})`);
+      grad.addColorStop(1,    'rgba(0,0,0,0)');
+
+      ctx.beginPath();
+      ctx.moveTo(cx + nxNear, cy + nyNear);
+      ctx.lineTo(ex + nxFar, ey + nyFar);
+      ctx.lineTo(ex - nxFar, ey - nyFar);
+      ctx.lineTo(cx - nxNear, cy - nyNear);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+  }
+
   let lastTs = 0;
   function draw(ts) {
     const dt = Math.min(ts - lastTs, 50);
     lastTs = ts;
+    t += dt * 0.001;
 
     const dpr = window.devicePixelRatio || 1;
     const w = canvas.offsetWidth;
@@ -1124,45 +1083,11 @@
       canvas.width  = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
       ctx.scale(dpr, dpr);
-      init(w, h);
     }
 
     ctx.clearRect(0, 0, w, h);
     drawGlow(w, h);
-
-    if (tintedCanvas) {
-      particles.forEach(p => {
-        p.life += dt * 0.14;
-        p.x    += p.vx * dt * 0.14;
-        p.y    += p.vy * dt * 0.14;
-        p.rotation += p.rotSpeed * dt * 0.14;
-
-        // slight horizontal wobble
-        p.vx += (Math.random() - 0.5) * 0.0008;
-        p.vx *= 0.99; // dampen drift
-
-        if (p.life >= p.maxLife) {
-          Object.assign(p, spawnParticle(w, h));
-          p.life = 0;
-        }
-
-        const t = p.life / p.maxLife;
-        // spawn bottom → peak at 38% life (visually higher) → fade out to top
-        // fade-in: 0–15%, full: 15–38%, fade-out: 38–100%
-        const fade = t < 0.15 ? t / 0.15
-                   : t > 0.38 ? 1 - (t - 0.38) / 0.62
-                   : 1;
-        const alpha = p.alpha * fade;
-        if (alpha <= 0.01) return;
-
-        ctx.save();
-        ctx.globalAlpha = alpha;
-        ctx.translate(p.x, p.y);
-        /* draw taller — width normal, height +40% */
-        ctx.drawImage(tintedCanvas, -p.size/2, -p.size * 0.7, p.size, p.size * 1.4);
-        ctx.restore();
-      });
-    }
+    drawRays(w, h);
 
     requestAnimationFrame(draw);
   }
