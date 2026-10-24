@@ -319,14 +319,14 @@
       nextImg.src = certData[i].img;
     }
 
-    // Phase 1: flip out (180ms)
+    // Phase 1: flip out — full 720° double spin via scaleX
     flipWrap.classList.add('is-flipping-out');
 
-    // Swap metadata at scaleX=0 — img already loaded
+    // Swap at midpoint of first rotation (180ms)
     setTimeout(() => {
       activeIndex = i;
       applyData(i);
-    }, 90);
+    }, 180);
 
     // Phase 2: flip in
     setTimeout(() => {
@@ -335,8 +335,8 @@
       setTimeout(() => {
         flipWrap.classList.remove('is-flipping-in');
         flipping = false;
-      }, 180);
-    }, 180);
+      }, 360);
+    }, 360);
   }
 
   // Tab clicks
@@ -870,7 +870,64 @@
   });
 })();
 
-/* All booking buttons → Telegram Bot */
+/* ── Lottery rays — yellow ── */
+(function() {
+  const canvas = document.getElementById('lotRaysCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const RAY_COUNT = 18;
+  let t = 0;
+  let lastTs = 0;
+
+  function draw(ts) {
+    const dt = Math.min(ts - lastTs, 50);
+    lastTs = ts;
+    t += dt * 0.001;
+
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.offsetWidth, h = canvas.offsetHeight;
+    if (!w || !h) { requestAnimationFrame(draw); return; }
+    if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
+      canvas.width  = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.scale(dpr, dpr);
+    }
+    ctx.clearRect(0, 0, w, h);
+
+    const cx = w / 2, cy = h / 2;
+    for (let i = 0; i < RAY_COUNT; i++) {
+      const baseAngle = (i / RAY_COUNT) * Math.PI * 2;
+      const wave = 0.04 * Math.sin(t * 0.9 + i * 1.3);
+      const angle = baseAngle + wave;
+      const pulse = 0.5 + 0.5 * Math.sin(t * 1.4 + i * 0.8);
+      const len = (0.30 + 0.08 * pulse) * Math.max(w, h);
+      const halfW = (3 + 7 * Math.sin(Math.PI * i / RAY_COUNT)) * (0.7 + 0.3 * pulse);
+      const ex = cx + Math.cos(angle) * len;
+      const ey = cy + Math.sin(angle) * len;
+      const nxNear =  Math.sin(angle) * 1;
+      const nyNear = -Math.cos(angle) * 1;
+      const nxFar  =  Math.sin(angle) * halfW;
+      const nyFar  = -Math.cos(angle) * halfW;
+      const alpha = 0.10 + 0.08 * pulse;
+      const grad = ctx.createLinearGradient(cx, cy, ex, ey);
+      grad.addColorStop(0,    `rgba(200,160,0,0)`);
+      grad.addColorStop(0.25, `rgba(200,160,0,${alpha * 0.6})`);
+      grad.addColorStop(0.6,  `rgba(220,180,0,${alpha})`);
+      grad.addColorStop(0.85, `rgba(200,160,0,${alpha * 0.4})`);
+      grad.addColorStop(1,    'rgba(0,0,0,0)');
+      ctx.beginPath();
+      ctx.moveTo(cx + nxNear, cy + nyNear);
+      ctx.lineTo(ex + nxFar, ey + nyFar);
+      ctx.lineTo(ex - nxFar, ey - nyFar);
+      ctx.lineTo(cx - nxNear, cy - nyNear);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
 document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
   btn.addEventListener('click', () => window.open('https://t.me/dailyprize_bot', '_blank', 'noopener'));
 });
@@ -961,3 +1018,5 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
     });
   });
 })();
+
+/* All booking buttons → Telegram Bot */

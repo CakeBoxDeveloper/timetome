@@ -246,13 +246,15 @@
 <!-- gradient bridge hero → services -->
 <div class="section-bridge" aria-hidden="true"></div>
 
+<!-- gradient bridge hero → services -->
+<div class="section-bridge" aria-hidden="true"></div>
+
 <!-- ══════════════════════════════════════
      SECTION 1 — ПОСЛУГИ
 ══════════════════════════════════════ -->
 <section class="section section--alt" id="services">
   <div class="col">
-    <h2 class="section-title">Послуги <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/ce077278eb1d457a987479990b7aaa06c6862402/list.svg" class="section-title__ico" width="28" height="28" alt="" /></h2>
-    <p class="section-sub">Обери свій тип масажу</p>
+    <h2 class="section-title">Послуги <img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Gem%20Stone.webp?raw=true" class="section-title__ico" width="28" height="28" alt="" /></h2>
 
     <div class="svc-list" id="svcList">
 
@@ -434,8 +436,6 @@
     </div>
   </div>
 </section>
-<div class="section-bridge section-bridge--alt-to-bg" aria-hidden="true"></div>
-
 <!-- ══════════════════════════════════════
      SECTION 2 — СЕРТИФІКАТИ (3D carousel)
 ══════════════════════════════════════ -->
@@ -508,10 +508,9 @@
 <!-- ══════════════════════════════════════
      SECTION 3 — ПРАЙС
 ══════════════════════════════════════ -->
-<div class="section-bridge section-bridge--bg-to-alt" aria-hidden="true"></div>
 <section class="section section--alt" id="price">
   <div class="col">
-    <h2 class="section-title">Прайс <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/ce077278eb1d457a987479990b7aaa06c6862402/receipt-2-1.svg" class="section-title__ico" width="28" height="28" alt="" /></h2>
+    <h2 class="section-title">Прайс <img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Memo.webp?raw=true" class="section-title__ico" width="28" height="28" alt="" /></h2>
 
     <div class="price-accordion" id="priceAccordion">
 
@@ -599,13 +598,14 @@
 <!-- ══════════════════════════════════════
      SECTION 3b — ЛОТЕРЕЯ
 ══════════════════════════════════════ -->
-<div class="section-bridge section-bridge--alt-to-bg" aria-hidden="true"></div>
 <section class="section" id="lottery">
   <div class="col">
     <div class="price-list">
       <!-- SCRATCH LOTTERY CARD -->
       <div class="lot-scene">
         <div class="lot-tilt-wrap" id="lotTiltWrap">
+        <!-- Rays canvas — outside card, tilts with it -->
+        <canvas id="lotRaysCanvas" class="lot-rays-canvas"></canvas>
         <div class="lot-card" id="lotCard">
           <!-- Shimmer border canvas — inside card, clipped by overflow:hidden -->
           <canvas class="lot-shimmer-canvas" id="lotShimmerCanvas"></canvas>
@@ -645,35 +645,23 @@
 <!-- ══════════════════════════════════════
      SECTION 4 — КОНТАКТИ
 ══════════════════════════════════════ -->
-<div class="section-bridge section-bridge--bg-to-alt" aria-hidden="true"></div>
 <section class="section section--alt" id="contacts">
   <div class="col">
-    <h2 class="section-title">Контакти <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/ce077278eb1d457a987479990b7aaa06c6862402/contact-us.svg" class="section-title__ico" width="28" height="28" alt="" /></h2>
-    <p class="section-sub">Фізіотерапевт з мед. освітою · Миколаїв</p>
+    <h2 class="section-title">Цікаві матеріали <img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/File%20Folder.webp?raw=true" class="section-title__ico" width="28" height="28" alt="" /></h2>
 
     <div class="contacts-block">
-
-      <!-- Map -->
-      <div class="map-wrap">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2735.5!2d31.9950!3d46.9750!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40c5c8f0!2z0LLRg9C7LiDQl9Cw0YXQuNGB0L3QuNC60ZbQstCh0LXQsdC1LCAxNSwg0JzQuNC60L7Qu9Cw0ZfQsg!5e0!3m2!1suk!2sua!4v1234567890"
-          allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-          title="Час для себе на карті">
-        </iframe>
-      </div>
-
-      <!-- Address chip -->
-      <a href="https://maps.google.com/?q=вул.+Захисників+Миколаєва,+15,+Миколаїв" class="map-chip" target="_blank" rel="noopener">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-        вул. Захисників Миколаєва, 15
-        <span class="map-chip__arrow">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </span>
-      </a>
-
-      <!-- Social CTAs row -->
-
-
+      <!-- Articles footer links -->
+      <nav class="footer-links">
+        <div class="footer-links__grid">
+          <a href="classic.html" class="footer-link">Класичний масаж</a>
+          <a href="antistress.html" class="footer-link">Антистрес</a>
+          <a href="deep-tissue.html" class="footer-link">Глибокий тканинний</a>
+          <a href="stone.html" class="footer-link">Стоун-масаж</a>
+          <a href="dry-needling.html" class="footer-link">Dry Needling</a>
+          <a href="red-light.html" class="footer-link">Терапія червоним світлом</a>
+          <a href="spa.html" class="footer-link">СПА-програма</a>
+        </div>
+      </nav>
     </div>
   </div>
 </section>
@@ -901,66 +889,59 @@
 })();
 </script>
 <script>
-/* ── Desktop icon pattern ── */
+/* ── Desktop icon pattern — DISABLED ── */
+/* ── Desktop icon pattern — single fixed layer, no seam between sections ── */
 (function() {
   if (window.innerWidth < 900) return;
-  const ICON = "url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/65757fa20ff65e9e580f742c00c5137ed1e0f445/Icon.svg')";
-  const ICON_DARK = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 164.21 110.05'%3E%3Cg style='fill:%23111;stroke:%23111;stroke-width:3'%3E%3Cpath d='M-133.07,98h-58.88s4-44.8,27.11-44.8c-23.1,0-27.11-45.34-27.11-45.34h58.88s-6,45.34-27.77,45.34C-139.07,53.2-133.07,98-133.07,98Z' transform='translate(289.02 2.09)'/%3E%3C/g%3E%3C/svg%3E\")";
+  const ICON_URL = 'https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/65757fa20ff65e9e580f742c00c5137ed1e0f445/Icon.svg';
+  const FILT = 'brightness(0) saturate(100%) invert(12%) sepia(50%) hue-rotate(202deg) saturate(300%) brightness(120%)';
 
-  // Col1: 86px (large), closest to content edge
-  // Col2: 65px (medium), middle
-  // Col3: 46px (small), farthest — pushed further out past the gradient
   const cols = [
-    { size: '86px 144px', offsetRight: 280, offsetLeft: 280, yOff: 0,  cls: '1' },
-    { size: '65px 120px', offsetRight: 150, offsetLeft: 150, yOff: 60, cls: '2' },
-    { size: '46px 96px',  offsetRight: 30,  offsetLeft: 30,  yOff: 20, cls: '3' },
+    { size: '86px 144px', offsetRight: 280, cls: '1' },
+    { size: '65px 120px', offsetRight: 150, cls: '2' },
+    { size: '46px 96px',  offsetRight: 30,  cls: '3' },
   ];
 
-  document.querySelectorAll('.section').forEach(sec => {
-    const isAlt = sec.classList.contains('section--alt');
-    const icon = ICON;
-    const filt = 'brightness(0) saturate(100%) invert(12%) sepia(50%) hue-rotate(202deg) saturate(300%) brightness(120%)';
+  // One fixed wrapper behind everything
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;';
+  document.body.appendChild(wrap);
 
-    cols.forEach((c, i) => {
-      // LEFT
-      const l = document.createElement('div');
-      l.className = `sec-pat-col sec-pat-col--${c.cls} sec-pat-col--left-${c.cls}`;
-      l.style.cssText = `
-        right: calc(100% - ${c.offsetRight + parseInt(c.size)}px - 10px);
-        width: calc(50% - 240px - ${c.offsetRight}px + ${parseInt(c.size)}px);
-        background-image: ${icon};
-        background-size: ${c.size};
-        background-position: right 0 top ${c.yOff}px;
-        filter: ${filt};
-      `;
-      sec.prepend(l);
+  cols.forEach(c => {
+    const sz = parseInt(c.size);
+    const w = `calc(50% - 240px - ${c.offsetRight}px + ${sz}px)`;
 
-      // RIGHT
-      const r = document.createElement('div');
-      r.className = `sec-pat-col sec-pat-col--${c.cls} sec-pat-col--right-${c.cls}`;
-      r.style.cssText = `
-        left: calc(100% - ${c.offsetRight + parseInt(c.size)}px - 10px);
-        width: calc(50% - 240px - ${c.offsetRight}px + ${parseInt(c.size)}px);
-        background-image: ${icon};
-        background-size: ${c.size};
-        background-position: left 0 top ${c.yOff}px;
-        filter: ${filt};
-      `;
-      sec.prepend(r);
-    });
+    const l = document.createElement('div');
+    l.style.cssText = `
+      position:absolute; top:0; bottom:0;
+      right:calc(50% + 240px + ${c.offsetRight}px - ${sz}px);
+      width:${w};
+      background-image:url('${ICON_URL}');
+      background-size:${c.size};
+      background-repeat:repeat;
+      filter:${FILT};
+    `;
+    wrap.appendChild(l);
 
-    // Fade overlays — edge to col1 (hides cols 2&3 past col1)
-    const fl = document.createElement('div');
-    fl.className = 'sec-pat-fade sec-pat-fade--left';
-    sec.prepend(fl);
-    const fr = document.createElement('div');
-    fr.className = 'sec-pat-fade sec-pat-fade--right';
-    sec.prepend(fr);
+    const r = document.createElement('div');
+    r.style.cssText = `
+      position:absolute; top:0; bottom:0;
+      left:calc(50% + 240px + ${c.offsetRight}px - ${sz}px);
+      width:${w};
+      background-image:url('${ICON_URL}');
+      background-size:${c.size};
+      background-repeat:repeat;
+      filter:${FILT};
+    `;
+    wrap.appendChild(r);
   });
+
   window.addEventListener('resize', () => {
-    if (window.innerWidth < 900) document.querySelectorAll('.sec-pat-col').forEach(e => e.remove());
+    if (window.innerWidth < 900) wrap.style.display = 'none';
+    else wrap.style.display = '';
   });
 })();
+*/
 </script>
 
 <script>

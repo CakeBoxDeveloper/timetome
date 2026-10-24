@@ -120,12 +120,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   opacity: 1;
 }
 .hero::after {
-  content:''; position:absolute;
-  top:0; left:0; right:0;
-  height:80px;
-  background:linear-gradient(to bottom, #08090f 0%, transparent 100%);
-  pointer-events:none;
-  z-index: 1;
+  display: none;
 }
 
 .hero__3d-wrap {
@@ -384,8 +379,8 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 .hero__slogan {
   font-family: var(--font);
   font-size: clamp(13px, 3.5vw, 16px);
-  font-weight: 500;
-  color: var(--accent);
+  font-weight: 800;
+  color: #ffffff;
   opacity: 1;
   margin-bottom: 2px;
   line-height: 1.4;
@@ -394,20 +389,14 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   text-transform: uppercase;
   letter-spacing: 0.08em;
   white-space: nowrap;
+  text-shadow:
+    0 0 8px rgba(255,255,255,0.9),
+    0 0 20px rgba(255,255,255,0.6),
+    0 0 40px rgba(255,255,255,0.3);
   box-sizing: border-box;
 }
 .hero__slogan--glow {
-  text-shadow:
-    0 0 8px rgba(77, 180, 255, 0.9),
-    0 0 20px rgba(77, 180, 255, 0.6),
-    0 0 40px rgba(77, 180, 255, 0.35);
-}
-/* glow на весь слоган */
-.hero__slogan {
-  text-shadow:
-    0 0 8px rgba(77, 180, 255, 0.9),
-    0 0 20px rgba(77, 180, 255, 0.6),
-    0 0 40px rgba(77, 180, 255, 0.35);
+  /* glow now on entire slogan */
 }
 .hero__ticker-wrap {
   position: relative;
@@ -559,13 +548,13 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 }
 /* alt(#0c0e1a) → bg(#08090f) */
 .section-bridge--alt-to-bg {
-  background: linear-gradient(to bottom, #0c0e1a 0%, #08090f 100%);
+  background: linear-gradient(to bottom, #0c0e1a 0%, #0c0e1a 100%);
   margin-top: 0;
   height: 48px;
 }
 /* bg(#08090f) → alt(#0c0e1a) */
 .section-bridge--bg-to-alt {
-  background: linear-gradient(to bottom, #08090f 0%, #0c0e1a 100%);
+  background: linear-gradient(to bottom, #0c0e1a 0%, #0c0e1a 100%);
   margin-top: 0;
   height: 48px;
 }
@@ -573,7 +562,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 /* ══════════════════════════════════════════════
    SECTIONS
 ══════════════════════════════════════════════ */
-.section      { padding:48px 0; background:var(--bg); }
+.section      { padding:48px 0; background:var(--bg-alt); }
 .section--alt { background:var(--bg-alt); }
 
 .section-title {
@@ -591,7 +580,8 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   flex-shrink: 0;
   opacity: 0.85;
   display: block;
-  /* tint img icons to --accent */
+  width: 36px;
+  height: 36px;
   filter: brightness(0) saturate(100%) invert(53%) sepia(60%) saturate(800%) hue-rotate(195deg) brightness(1.1);
 }
 .section-sub {
@@ -624,15 +614,21 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 }
 
 .cert-flip-wrap.is-flipping-out {
-  transform: scaleX(0);
-  transition: transform 0.18s ease-in;
-  filter: blur(6px);
+  animation: certFlipOut 0.36s ease-in-out forwards;
 }
-
 .cert-flip-wrap.is-flipping-in {
-  transform: scaleX(1);
-  transition: transform 0.18s ease-out;
-  filter: blur(0px);
+  animation: certFlipIn 0.36s ease-in-out forwards;
+}
+@keyframes certFlipOut {
+  0%   { transform: scaleX(1);  filter: blur(0px); }
+  25%  { transform: scaleX(0);  filter: blur(4px); }
+  50%  { transform: scaleX(-1); filter: blur(0px); }
+  75%  { transform: scaleX(0);  filter: blur(4px); }
+  100% { transform: scaleX(1);  filter: blur(0px); }
+}
+@keyframes certFlipIn {
+  0%   { transform: scaleX(1);  filter: blur(0px); }
+  100% { transform: scaleX(1);  filter: blur(0px); }
 }
 
 .cert-model-viewer {
@@ -1331,7 +1327,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   padding: 10px 20px;
 }
 .lot-card__title {
-  font-family: var(--font-title);
+  font-family: var(--font);
   font-size: clamp(18px, 6vw, 28px);
   font-weight: 900;
   color: #ffe033;
@@ -2201,4 +2197,83 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 .svc-item__card-header {
   display: flex; align-items: center;
   justify-content: space-between; gap: 8px;
+}
+
+/* ── Section pattern: no fade overlays, no vertical mask ── */
+.sec-pat-fade { display: none; }
+.sec-pat-col {
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}
+
+/* ── Footer article links ── */
+.footer-links {
+  margin-top: 8px;
+}
+.footer-links__title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.footer-links__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-radius: var(--r);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.footer-link {
+  display: block;
+  padding: 11px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  transition: background var(--ease), color var(--ease);
+}
+.footer-link:last-child { border-bottom: none; }
+.footer-link:hover {
+  background: rgba(77,140,255,0.06);
+  color: var(--accent);
+}
+
+/* Lottery section — reduce top gap from price note */
+#lottery { padding-top: 16px; }
+/* Section titles blue */
+.section-title { color: var(--accent); }
+/* Price section title */
+#price .section-title { color: var(--accent); }
+
+/* Hero black, gradient to services */
+.hero { background: #08090f !important; }
+/* Bridge after hero: black → main bg, no overlap */
+.section-bridge {
+  background: linear-gradient(to bottom, #08090f 0%, var(--bg-alt) 100%) !important;
+  margin-top: 0 !important;
+  height: 120px !important;
+  position: relative !important;
+  z-index: 0 !important;
+}
+
+/* Animated emoji section icons — no color filter */
+.section-title__ico[src*="Telegram-Animated"] {
+  filter: none;
+}
+
+/* ── Lottery rays canvas ── */
+.lot-rays-canvas {
+  position: absolute;
+  top: -60px;
+  left: -80px;
+  right: -80px;
+  bottom: -60px;
+  width: calc(100% + 160px);
+  height: calc(100% + 120px);
+  pointer-events: none;
+  z-index: 0;
 }
