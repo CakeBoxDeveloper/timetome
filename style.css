@@ -120,7 +120,13 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   opacity: 1;
 }
 .hero::after {
-  display: none;
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, #08090f 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 5;
 }
 
 .hero__3d-wrap {
