@@ -617,3 +617,17 @@
   font-size: 13px;
   color: var(--text-muted);
 }
+
+/* ── Article lists — restore markers ── */
+.svc-article__body ul {
+  list-style: disc;
+  padding-left: 20px;
+}
+.svc-article__body ol {
+  list-style: decimal;
+  padding-left: 20px;
+}
+.svc-article__body ul li,
+.svc-article__body ol li {
+  padding-left: 4px;
+}

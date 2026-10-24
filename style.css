@@ -545,6 +545,18 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   position: relative;
   z-index: 2;
 }
+/* alt(#0c0e1a) → bg(#08090f) */
+.section-bridge--alt-to-bg {
+  background: linear-gradient(to bottom, #0c0e1a 0%, #08090f 100%);
+  margin-top: 0;
+  height: 48px;
+}
+/* bg(#08090f) → alt(#0c0e1a) */
+.section-bridge--bg-to-alt {
+  background: linear-gradient(to bottom, #08090f 0%, #0c0e1a 100%);
+  margin-top: 0;
+  height: 48px;
+}
 
 /* ══════════════════════════════════════════════
    SECTIONS
@@ -1982,4 +1994,10 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 @media (max-width: 768px) {
   .hero-reviews { display: none; }
   .sec-pat-col, .sec-pat-fade { display: none; }
+}
+
+/* Последние карточки col--c поверх bridge-градиента */
+.hero-reviews__col--c .hero-review-card:last-child {
+  position: relative;
+  z-index: 3;
 }
