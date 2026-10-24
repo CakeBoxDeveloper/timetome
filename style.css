@@ -114,7 +114,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   top:30%; left:50%; transform:translate(-50%,-50%);
   pointer-events:none;
   opacity: 0;
-  transition: opacity 1.2s ease-out;
+  transition: opacity 1.4s ease-out 0.5s;
 }
 .hero-ready .hero::before {
   opacity: 1;
@@ -1955,8 +1955,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 
 /* ── Hot price rows ── */
 .price-row--hot {
-  background: rgba(77, 140, 255, 0.08);
-  border-radius: var(--r);
+  background: rgba(255, 200, 50, 0.07);
   position: relative;
 }
 .price-row--hot::before {
@@ -1969,9 +1968,18 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   opacity: 0.8;
 }
 .price-row--hot > span:first-child {
-  color: rgba(255,255,255,0.95);
+  color: rgba(255, 220, 100, 0.95);
   font-weight: 500;
 }
 .price-row--hot > span:last-child {
-  color: var(--accent);
+  color: #fbbf24;
+}
+.price-row--hot > span:last-child em {
+  color: #fbbf24;
+}
+
+/* ── Mobile: hide hero review cards and side patterns ── */
+@media (max-width: 768px) {
+  .hero-reviews { display: none; }
+  .sec-pat-col, .sec-pat-fade { display: none; }
 }
