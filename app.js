@@ -48,6 +48,9 @@
     }, delay);
   }
 
+  // Hard fallback: if something delays loader logic, still set hero-ready after 4s
+  setTimeout(() => { document.body.classList.add('hero-ready'); }, 4000);
+
   function onPageLoad() {
     if (pageReady) return;
     pageReady = true;
@@ -930,7 +933,7 @@
       const nyNear = -Math.cos(angle) * 1;
       const nxFar  =  Math.sin(angle) * halfW;
       const nyFar  = -Math.cos(angle) * halfW;
-      const alpha = 0.10 + 0.08 * pulse;
+      const alpha = 0.12 + 0.096 * pulse;
       const grad = ctx.createLinearGradient(cx, cy, ex, ey);
       grad.addColorStop(0,    `rgba(200,160,0,0)`);
       grad.addColorStop(0.25, `rgba(200,160,0,${alpha * 0.6})`);
@@ -1042,3 +1045,35 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
 })();
 
 /* All booking buttons → Telegram Bot */
+
+/* ══════════════════════════════════════
+   CERT DEEP-LINK — index.html?cert=N
+   Opens main page, scrolls to cert section, selects tab N (0-based)
+══════════════════════════════════════ */
+(function () {
+  const params = new URLSearchParams(window.location.search);
+  const certIdx = parseInt(params.get('cert'), 10);
+  if (isNaN(certIdx)) return;
+
+  // Remove param from URL without reload
+  const url = new URL(window.location.href);
+  url.searchParams.delete('cert');
+  window.history.replaceState({}, '', url);
+
+  function openCert() {
+    const certSection = document.getElementById('certificates');
+    if (!certSection) return;
+    certSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => {
+      const tabs = document.querySelectorAll('#certTabs .cert-tab');
+      if (tabs[certIdx]) tabs[certIdx].click();
+    }, 700);
+  }
+
+  // Wait for page to be ready before scrolling
+  if (document.readyState === 'complete') {
+    setTimeout(openCert, 300);
+  } else {
+    window.addEventListener('load', () => setTimeout(openCert, 300), { once: true });
+  }
+})();

@@ -762,7 +762,7 @@
   <!-- RIGHT 35% — кнопка запису -->
   <div class="fnav__book-wrap">
     <button class="fnav__book" id="fnavBook">
-      <img src="https://www.svgrepo.com/show/388724/telegram.svg" alt="" width="16" height="16" style="filter:brightness(0) invert(1);flex-shrink:0;" />
+      <img src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/2f37ee482c3b80118c4aa47593f75c24b2f6cce7/calendar-lines-pen-svgrepo-com.svg" alt="" width="16" height="16" style="filter:brightness(0) invert(1);flex-shrink:0;" />
       <span>Записатись</span>
     </button>
   </div>
@@ -846,6 +846,12 @@
       }
     });
     observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+    // Also check immediately — hero-ready may already be set if model loaded late
+    if (document.body.classList.contains('hero-ready')) {
+      observer.disconnect();
+      animateColor();
+    }
 
     if (mv.availableAnimations.length) {
       mv.animationName = mv.availableAnimations[0];
@@ -1148,7 +1154,7 @@
       const nxFar  =  Math.sin(angle) * halfW;
       const nyFar  = -Math.cos(angle) * halfW;
 
-      const alpha = 0.14 + 0.10 * pulse;
+      const alpha = 0.168 + 0.12 * pulse;
 
       const grad = ctx.createLinearGradient(cx, cy, ex, ey);
       grad.addColorStop(0,    `rgba(${rayR},${rayG},${rayB},0)`);
