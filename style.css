@@ -628,19 +628,25 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   animation: certFlipIn 0.36s ease-in-out forwards;
 }
 @keyframes certFlipOut {
-  0%   { transform: scaleX(1);   filter: blur(0px); }
-  15%  { transform: scaleX(0.5); filter: blur(6px); }
-  25%  { transform: scaleX(0);   filter: blur(14px); }
-  35%  { transform: scaleX(0.5); filter: blur(6px); }
-  50%  { transform: scaleX(1);   filter: blur(0px); }
-  65%  { transform: scaleX(0.5); filter: blur(6px); }
-  75%  { transform: scaleX(0);   filter: blur(14px); }
-  85%  { transform: scaleX(0.5); filter: blur(6px); }
-  100% { transform: scaleX(1);   filter: blur(0px); }
+  0%   { transform: scaleX(1);   filter: none; }
+  30%  { transform: scaleX(0.5); filter: url(#hblur-6); }
+  50%  { transform: scaleX(0);   filter: url(#hblur-14); }
+  70%  { transform: scaleX(0.5); filter: url(#hblur-6); }
+  100% { transform: scaleX(1);   filter: none; }
+}
+/* Mobile — same single flip (media override kept for safety) */
+@media (max-width: 639px) {
+  @keyframes certFlipOut {
+    0%   { transform: scaleX(1);   filter: none; }
+    30%  { transform: scaleX(0.5); filter: url(#hblur-6); }
+    50%  { transform: scaleX(0);   filter: url(#hblur-14); }
+    70%  { transform: scaleX(0.5); filter: url(#hblur-6); }
+    100% { transform: scaleX(1);   filter: none; }
+  }
 }
 @keyframes certFlipIn {
-  0%   { transform: scaleX(1); filter: blur(0px); }
-  100% { transform: scaleX(1); filter: blur(0px); }
+  0%   { transform: scaleX(1); filter: none; }
+  100% { transform: scaleX(1); filter: none; }
 }
 
 .cert-model-viewer {
@@ -1489,7 +1495,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   font-size: clamp(11px, 3vw, 14px);
   font-weight: 700;
   text-decoration: none;
-  border-radius: 16px;
+  border-radius: 3px;
   box-sizing: border-box;
 }
 .lot-door-flap span {
@@ -1562,7 +1568,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   height: 52px;
   border-radius: 6px;
   overflow: hidden;
-  z-index: 6; /* above card shimmer */
+  z-index: 20; /* must beat rays canvas z-index:0 AND any card layers */
 }
 .lot-card__prize {
   position: absolute;
@@ -1590,7 +1596,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   cursor: crosshair;
   touch-action: none;
   border-radius: 6px;
-  z-index: 2;
+  z-index: 21;
 }
 
 /* ══════════════════════════════════════════════
@@ -2289,7 +2295,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   filter: none;
 }
 
-/* ── Lottery rays canvas ── */
+/* ── Rays canvas ── */
 .lot-rays-canvas {
   position: absolute;
   top: -60px;
@@ -2298,6 +2304,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   bottom: -60px;
   width: calc(100% + 160px);
   height: calc(100% + 120px);
-  pointer-events: none;
+  pointer-events: none !important;
+  touch-action: none;
   z-index: 0;
 }

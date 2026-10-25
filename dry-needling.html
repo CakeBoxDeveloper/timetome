@@ -14,19 +14,17 @@
     @font-face { font-family:'TTNooks'; src:url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/TTNooks-Regular.ttf') format('truetype'); font-weight:400; font-display:swap; }
   </style>
   <link rel="stylesheet" href="style.css?v=21" />
-  <link rel="stylesheet" href="service.css?v=3" />
+  <link rel="stylesheet" href="service.css?v=4" />
 </head>
 <body>
 <div class="noise" aria-hidden="true"></div>
 <nav class="svc-nav">
   <div class="svc-nav__inner">
-    <a href="index.html" class="svc-nav__back"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>На головну</a>
-    <span class="svc-nav__logo">Час для себе</span>
+    <a href="index.html" class="svc-nav__back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>на головну</a>
   </div>
 </nav>
 <article class="svc-article">
   <header class="svc-article__header">
-    <div class="svc-hero__label"><span class="svc-hero__label-dot"></span>Фізіотерапія · Миколаїв</div>
     <h1 class="svc-article__title">Dry Needling</h1>
     <p class="svc-article__lead">Суха голкотерапія — точковий вплив на тригерні зони м'язів. Знімає хронічний біль там, де масаж вже не допомагає. Виконується фізіотерапевтом з медичною освітою.</p>
     <div class="svc-hero__tags">
@@ -34,6 +32,8 @@
       <span class="svc-hero__tag">Хронічний біль</span>
       <span class="svc-hero__tag">Голкотерапія</span>
       <span class="svc-hero__tag">Фізіотерапія</span>
+      <span class="svc-hero__tag">Міофасціальний синдром</span>
+      <span class="svc-hero__tag">Реабілітація</span>
     </div>
   </header>
   <div class="svc-article__body">
@@ -42,6 +42,9 @@
     <p>Dry Needling — медична техніка введення тонких голок у тригерні точки м'язів. «Суха» — тому що голка не несе ліків. Ефект досягається механічно: голка «розблоковує» тригер і відновлює нормальну роботу м'яза.</p>
     <p>Тригерна точка — зона стійкого спазму м'яза, джерело болю (часто відбитого в інше місце). Dry Needling — один з найефективніших методів їх усунення.</p>
     <p><strong>Важливо:</strong> техніку виконує фізіотерапевт з офіційною медичною кваліфікацією.</p>
+
+    <h2>Цікаво знати</h2>
+    <p>До 85% хронічних больових синдромів пов'язані з тригерними точками. При цьому тригер рідко болить там, де він знаходиться — він «відправляє» біль у зовсім іншу зону. Саме тому класичний масаж у місці болю часто не дає результату.</p>
 
     <h2>Порівняння: масаж vs Dry Needling</h2>
     <table class="svc-price-table">
@@ -61,7 +64,16 @@
       <li>Болі після травм і перевантажень</li>
       <li>Синдром грушоподібного м'яза, тунельні синдроми</li>
       <li>Коли масаж і звичайна фізіотерапія не дають результату</li>
+      <li>Планова реабілітація після операцій або травм</li>
     </ul>
+
+    <!-- Cert block — mid article -->
+    <div class="svc-cert-block">
+      <div class="svc-cert-block__title">Входить у подарункові сертифікати</div>
+      <ul>
+        <li><span class="cert-name--matcha">Матча</span> — масаж спини + сухі голки</li>
+      </ul>
+    </div>
 
     <h2>Як проходить сеанс</h2>
     <ol>
@@ -92,11 +104,6 @@
     </table>
     <p class="svc-price-note">Точну вартість уточнює майстер після консультації.</p>
 
-    <h2>Ці процедури входять у сертифікати</h2>
-    <ul>
-      <li><strong>Матча (7 500 ₴)</strong> — масаж спини + сухі голки</li>
-    </ul>
-
     <div class="svc-location-block">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
       <div><strong>Де знаходимось</strong><span>Миколаїв, вул. Захисників Миколаєва, 15</span></div>
@@ -104,10 +111,9 @@
   </div>
   <footer class="svc-article__footer">
     <a href="https://t.me/pro_telo_niko" class="btn btn--accent btn--full" target="_blank" rel="noopener">Записатись на сеанс</a>
-    <a href="index.html" class="btn btn--outline btn--full">← На головну</a>
   </footer>
 </article>
-<div class="fnav" id="floatCta"><div class="fnav__ads" id="fnavAds"><div class="fnav__track-wrap"><div class="fnav__track" id="fnavTrack"><div class="fnav__slide"><div class="fnav__slide-ico fnav__slide-ico--stone"><img src="https://unpkg.com/lucide-static@latest/icons/gem.svg" alt="" width="20" height="20" style="filter:brightness(0) invert(1);opacity:0.9;" /></div><div class="fnav__slide-body"><strong>Стоун-масаж</strong><span>Рідкісне базальтове каміння з Китаю</span></div></div><div class="fnav__slide"><div class="fnav__slide-ico fnav__slide-ico--light"><img src="https://unpkg.com/lucide-static@latest/icons/sun.svg" alt="" width="20" height="20" style="filter:brightness(0) invert(1);opacity:0.9;" /></div><div class="fnav__slide-body"><strong>Терапія червоним світлом</strong><span>Передова технологія відновлення тканин</span></div></div><div class="fnav__slide"><div class="fnav__slide-ico fnav__slide-ico--perc"><img src="https://unpkg.com/lucide-static@latest/icons/zap.svg" alt="" width="20" height="20" style="filter:brightness(0) invert(1);opacity:0.9;" /></div><div class="fnav__slide-body"><strong>Перкусійний масаж</strong><span>Топове обладнання — глибокий результат</span></div></div><div class="fnav__slide"><div class="fnav__slide-ico fnav__slide-ico--cert"><img src="https://unpkg.com/lucide-static@latest/icons/gift.svg" alt="" width="20" height="20" style="filter:brightness(0) invert(1);opacity:0.9;" /></div><div class="fnav__slide-body"><strong>Подарунковий сертифікат</strong><span>За сертифікатом виходить дешевше</span></div></div></div></div></div><div class="fnav__book-wrap"><button class="fnav__book" id="fnavBook"><img src="https://www.svgrepo.com/show/388724/telegram.svg" alt="" width="16" height="16" style="filter:brightness(0) invert(1);flex-shrink:0;" /><span>Записатись</span></button></div></div>
+<div class="fnav" id="floatCta"><div class="fnav__ads" id="fnavAds"><div class="fnav__track-wrap"><div class="fnav__track" id="fnavTrack"><div class="fnav__slide"><div class="fnav__slide-ico fnav__slide-ico--bare"><img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Activity/Firecracker.webp?raw=true" alt="" width="36" height="36" /></div><div class="fnav__slide-body"><strong>Масаж з вогнем</strong><span>Краще один раз відчути — ніж читати</span></div></div><div class="fnav__slide"><div class="fnav__slide-ico fnav__slide-ico--bare"><img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Symbols/Free%20Button.webp?raw=true" alt="" width="36" height="36" /></div><div class="fnav__slide-body"><strong>Подарунковий сертифікат</strong><span>За сертифікатом виходить дешевше</span></div></div><div class="fnav__slide"><div class="fnav__slide-ico fnav__slide-ico--bare"><img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Syringe.webp?raw=true" alt="" width="36" height="36" /></div><div class="fnav__slide-body"><strong>Dry Needling</strong><span>Ефект, якого не дає жоден інший масаж</span></div></div><div class="fnav__slide"><div class="fnav__slide-ico fnav__slide-ico--bare"><img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Travel%20and%20Places/Moai.webp?raw=true" alt="" width="36" height="36" /></div><div class="fnav__slide-body"><strong>Стоун-масаж</strong><span>Рідкісне базальтове каміння з Китаю</span></div></div><div class="fnav__slide"><div class="fnav__slide-ico fnav__slide-ico--bare"><img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Light%20Bulb.webp?raw=true" alt="" width="36" height="36" /></div><div class="fnav__slide-body"><strong>Терапія червоним світлом</strong><span>Передова технологія відновлення тканин</span></div></div><div class="fnav__slide"><div class="fnav__slide-ico fnav__slide-ico--bare"><img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Toolbox.webp?raw=true" alt="" width="36" height="36" /></div><div class="fnav__slide-body"><strong>Перкусійний масаж</strong><span>Топове обладнання — глибокий результат</span></div></div><div class="fnav__slide"><div class="fnav__slide-ico fnav__slide-ico--bare"><img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Activity/Confetti%20Ball.webp?raw=true" alt="" width="36" height="36" /></div><div class="fnav__slide-body"><strong>Миттєва лотерея</strong><span>Зіграти безкоштовно — просто стирай</span></div></div></div></div></div><div class="fnav__book-wrap"><button class="fnav__book" id="fnavBook"><img src="https://www.svgrepo.com/show/388724/telegram.svg" alt="" width="16" height="16" style="filter:brightness(0) invert(1);flex-shrink:0;" /><span>Записатись</span></button></div></div>
 <script src="app.js?v=27"></script>
 </body>
 </html>

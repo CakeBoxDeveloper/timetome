@@ -319,14 +319,18 @@
       nextImg.src = certData[i].img;
     }
 
-    // Phase 1: flip out — full 720° double spin via scaleX
+    // Phase 1: flip out — double spin on desktop, single on mobile
     flipWrap.classList.add('is-flipping-out');
 
-    // Swap at midpoint of first rotation (180ms)
+    const isMobile = window.matchMedia('(max-width: 639px)').matches;
+    const swapAt  = isMobile ? 180 : 180;  // midpoint of first half-rotation
+    const phase2At = isMobile ? 360 : 360; // total animation duration
+
+    // Swap at midpoint of first rotation
     setTimeout(() => {
       activeIndex = i;
       applyData(i);
-    }, 180);
+    }, swapAt);
 
     // Phase 2: flip in
     setTimeout(() => {
@@ -336,7 +340,7 @@
         flipWrap.classList.remove('is-flipping-in');
         flipping = false;
       }, 360);
-    }, 360);
+    }, phase2At);
   }
 
   // Tab clicks

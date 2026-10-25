@@ -41,6 +41,14 @@
 </head>
 <body>
 
+<!-- SVG filters for horizontal-only blur on cert flip -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden;" aria-hidden="true">
+  <defs>
+    <filter id="hblur-6"  x="-30%" width="160%" y="0%" height="100%"><feGaussianBlur stdDeviation="18 0" /></filter>
+    <filter id="hblur-14" x="-60%" width="220%" y="0%" height="100%"><feGaussianBlur stdDeviation="40 0" /></filter>
+  </defs>
+</svg>
+
 <div class="noise" aria-hidden="true"></div>
 
 <!-- LOADER -->

@@ -3,21 +3,18 @@
    Shared styles, inherits brand variables via import
    ============================================================ */
 
-/* ── Back nav ── */
+/* ── Back nav — blue pill band ── */
 .svc-nav {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(8,9,15,0.85);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(77,140,255,0.12);
+  background: var(--accent);
   padding: 0 var(--gap);
 }
 .svc-nav__inner {
   max-width: var(--col);
   margin-inline: auto;
-  height: 52px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -28,10 +25,13 @@
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  font-weight: 600;
-  color: var(--accent);
-  opacity: 0.85;
+  font-weight: 500;
+  color: var(--bg-alt);
+  opacity: 0.9;
   transition: opacity var(--ease);
+  text-transform: lowercase;
+  width: 100%;
+  justify-content: center;
 }
 .svc-nav__back:hover { opacity: 1; }
 .svc-nav__logo {
@@ -40,7 +40,8 @@
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: rgba(255,255,255,0.7);
+  display: none;
 }
 
 /* ── Hero ── */
@@ -555,6 +556,14 @@
   padding-top: 32px;
   border-top: 1px solid rgba(77,140,255,0.12);
 }
+/* back-to-home button redundant — nav strip at top handles it */
+.svc-article__footer .btn--outline {
+  display: none;
+}
+/* Ensure footer book button isn't covered by floating fnav */
+.svc-article__footer {
+  padding-bottom: calc(58px + 24px + 16px); /* fnav height + bottom offset + gap */
+}
 
 /* ── Price table ── */
 .svc-price-table {
@@ -631,3 +640,163 @@
 .svc-article__body ol li {
   padding-left: 4px;
 }
+
+/* ══════════════════════════════════════════════
+   SERVICE PAGE OVERRIDES — design system
+══════════════════════════════════════════════ */
+
+/* ── Body background same as main site ── */
+body {
+  background: var(--bg-alt);
+}
+
+/* ── Tags — # prefix, 3px radius ── */
+.svc-hero__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.svc-hero__tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  border: 1px solid var(--border-accent);
+  border-radius: 3px;
+  padding: 3px 10px;
+  letter-spacing: 0.03em;
+  background: rgba(77,140,255,0.06);
+}
+.svc-hero__tag::before {
+  content: '#';
+  opacity: 0.6;
+  margin-right: 1px;
+}
+
+/* ── Body text — comfortable blue-white, not pure white or grey ── */
+.svc-article__body {
+  color: #b8c8e8;
+  font-size: 15px;
+  line-height: 1.75;
+}
+.svc-article__body p  { color: #b8c8e8; margin-bottom: 16px; }
+.svc-article__body li { color: #b8c8e8; }
+.svc-article__body strong { color: #d8e4f4; font-weight: 600; }
+.svc-article__body h2 {
+  color: var(--accent);
+  font-size: 18px;
+  font-weight: 700;
+  margin: 36px 0 12px;
+}
+
+/* ── Price table — full borders ── */
+.svc-price-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0 8px;
+  font-size: 14px;
+  border: 1px solid rgba(77,140,255,0.25);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.svc-price-table th {
+  text-align: left;
+  padding: 9px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  background: rgba(77,140,255,0.10);
+  border-bottom: 1px solid rgba(77,140,255,0.25);
+  border-right: 1px solid rgba(77,140,255,0.15);
+}
+.svc-price-table th:last-child { border-right: none; }
+.svc-price-table td {
+  padding: 10px 12px;
+  color: #b8c8e8;
+  border-bottom: 1px solid rgba(77,140,255,0.12);
+  border-right: 1px solid rgba(77,140,255,0.08);
+}
+.svc-price-table td:last-child { border-right: none; }
+.svc-price-table td:last-child {
+  color: var(--accent);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.svc-price-table tr:last-child td { border-bottom: none; }
+.svc-price-note {
+  font-size: 13px;
+  color: rgba(184,200,232,0.6);
+  margin-top: 8px;
+}
+
+/* ── Comparison table (параметр / масаж / needling) ── */
+.svc-article__body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+  border: 1px solid rgba(77,140,255,0.25);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.svc-article__body table th {
+  padding: 9px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  background: rgba(77,140,255,0.10);
+  border-bottom: 1px solid rgba(77,140,255,0.25);
+  border-right: 1px solid rgba(77,140,255,0.15);
+  text-align: left;
+}
+.svc-article__body table th:last-child { border-right: none; }
+.svc-article__body table td {
+  padding: 9px 12px;
+  color: #b8c8e8;
+  border-bottom: 1px solid rgba(77,140,255,0.12);
+  border-right: 1px solid rgba(77,140,255,0.08);
+}
+.svc-article__body table td:last-child { border-right: none; }
+.svc-article__body table tr:last-child td { border-bottom: none; }
+
+/* ── Certificate block — mid-article promo ── */
+.svc-cert-block {
+  margin: 40px 0;
+  padding: 20px 18px;
+  background: rgba(77,140,255,0.06);
+  border: 1px solid var(--border-accent);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r);
+}
+.svc-cert-block__title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.svc-cert-block ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.svc-cert-block ul li {
+  color: #b8c8e8;
+  font-size: 14px;
+  line-height: 1.5;
+  padding-left: 0;
+}
+.svc-cert-block ul li::before { display: none; }
+/* Certificate name color badges */
+.cert-name--kakao   { color: #f5d9d5; font-weight: 700; }
+.cert-name--bumble  { color: #f7b638; font-weight: 700; }
+.cert-name--matcha  { color: #c4d18b; font-weight: 700; }
+.cert-name--ice     { color: #c8bbe7; font-weight: 700; }
