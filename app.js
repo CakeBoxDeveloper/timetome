@@ -979,7 +979,17 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
     const header = inner.querySelector('.svc-item__card-header')?.outerHTML || '';
     const tags   = inner.querySelector('.service-card__tags')?.outerHTML || '';
     const desc   = inner.querySelector('.service-card__desc')?.outerHTML || '';
-    const btns   = inner.querySelector('.service-card__btns')?.outerHTML || '';
+    const detailLink = inner.querySelector('.svc-detail-btn');
+    const hook   = detailLink?.dataset.hook || '';
+    const url    = detailLink?.href || '#';
+
+    const spoilerHTML = hook ? `
+      <div class="svc-read-more">
+        <a href="${url}" class="svc-read-more__toggle">
+          <span class="svc-read-more__label">читати статтю повністю</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>` : '';
 
     return `
       <button class="svc-expanded-card__back">← до інших видів послуг</button>
@@ -987,9 +997,10 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
         ${header}
         ${tags}
         ${desc}
+        ${spoilerHTML}
       </div>
       <div class="svc-expanded-card__footer">
-        ${btns}
+        <button class="btn btn--accent btn--full svc-book-btn">Записатись</button>
       </div>
     `;
   }

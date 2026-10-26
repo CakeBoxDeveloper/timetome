@@ -556,16 +556,26 @@
   margin-top: 40px;
   padding-bottom: calc(58px + 24px + 16px);
 }
-/* hide price note and footer border */
+/* ── Article footer — button now inside price table ── */
+.svc-article__footer {
+  display: none;
+}
 .svc-price-note { display: none; }
+/* Hide "Вартість і тривалість" h2 heading above price table */
+.svc-article__body h2.svc-h2-price { display: none; }
+/* Extra bottom padding so fnav doesn't cover price table */
+.svc-article {
+  padding-bottom: calc(64px + 58px + 32px);
+}
 
-/* ── Price table ── */
+/* ── Price table — full outer + inner borders ── */
 .svc-price-table {
   width: 100%;
-  border-collapse: collapse;
-  margin: 16px 0 8px;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 16px 0 0;
   font-size: 14px;
-  border: 1.5px solid rgba(77,140,255,0.35);
+  border: 1.5px solid rgba(77,140,255,0.40);
   border-radius: var(--r);
   overflow: hidden;
 }
@@ -578,14 +588,14 @@
   letter-spacing: 0.05em;
   color: var(--accent);
   background: rgba(77,140,255,0.10);
-  border-bottom: 1px solid rgba(77,140,255,0.25);
-  border-right: 1px solid rgba(77,140,255,0.15);
+  border-bottom: 1px solid rgba(77,140,255,0.28);
+  border-right: 1px solid rgba(77,140,255,0.18);
 }
 .svc-price-table th:last-child { border-right: none; }
 .svc-price-table td {
   padding: 10px 12px;
-  border-bottom: 1px solid rgba(77,140,255,0.10);
-  border-right: 1px solid rgba(77,140,255,0.07);
+  border-bottom: 1px solid rgba(77,140,255,0.12);
+  border-right: 1px solid rgba(77,140,255,0.08);
   color: #b8c8e8;
 }
 .svc-price-table td:last-child {
@@ -595,6 +605,51 @@
   white-space: nowrap;
 }
 .svc-price-table tr:last-child td { border-bottom: none; }
+/* Book-button row inside table — last row spans all columns */
+.svc-price-table .svc-book-row td {
+  padding: 0;
+  border-bottom: none;
+  border-right: none;
+}
+.svc-price-table .svc-book-row td a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 13px 16px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: filter 0.2s ease;
+  border-top: 1px solid rgba(77,140,255,0.25);
+}
+.svc-price-table .svc-book-row td a:hover { filter: brightness(1.12); }
+
+/* ── Blockquote / pullquote ── */
+.svc-quote-pull {
+  margin: 28px 0;
+  padding: 16px 20px;
+  border-left: 3px solid var(--accent);
+  background: rgba(77,140,255,0.06);
+  border-radius: 0 var(--r) var(--r) 0;
+}
+.svc-quote-pull p {
+  font-size: 16px;
+  font-style: italic;
+  color: #c8d8f0;
+  line-height: 1.7;
+  margin: 0 !important;
+}
+.svc-quote-pull cite {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  font-style: normal;
+  color: rgba(184,200,232,0.55);
+  letter-spacing: 0.04em;
+}
 
 /* ── Location block ── */
 .svc-location-block {
@@ -779,7 +834,7 @@ body {
   border-bottom: 1px solid rgba(77,140,255,0.15);
   overflow: hidden;
 }
-/* ClockStraight SVG pattern — top-right corner */
+/* ClockStraight SVG pattern — top-right corner, rotated CCW 45° */
 .svc-cert-block__img-wrap::after {
   content: '';
   position: absolute;
@@ -792,8 +847,9 @@ body {
   background-repeat: no-repeat;
   background-position: center;
   pointer-events: none;
-  opacity: 0.12;
+  opacity: 0.07;
   filter: brightness(0) invert(1);
+  transform: rotate(-45deg);
 }
 .svc-cert-block__eyebrow { display: none; }
 .svc-cert-block__headline {

@@ -2308,3 +2308,42 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   touch-action: none;
   z-index: 0;
 }
+
+/* ── Service card read-more ── */
+.svc-read-more {
+  position: relative;
+  margin-top: 0;
+}
+/* gradient fade above the link */
+.svc-read-more::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 0; right: 0;
+  height: 40px;
+  background: linear-gradient(to bottom, transparent, var(--bg-card));
+  pointer-events: none;
+}
+.svc-read-more__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+  padding: 8px 0 2px;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  transition: opacity var(--ease);
+}
+.svc-read-more__toggle:hover { opacity: 0.75; }
+.svc-read-more__toggle svg {
+  flex-shrink: 0;
+  /* chevron pointing right */
+}
