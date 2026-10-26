@@ -849,7 +849,7 @@ body {
   pointer-events: none;
   opacity: 0.07;
   filter: brightness(0) invert(1);
-  transform: rotate(-45deg);
+  transform: rotate(-30deg);
 }
 .svc-cert-block__eyebrow { display: none; }
 .svc-cert-block__headline {
