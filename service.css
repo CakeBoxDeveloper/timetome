@@ -830,11 +830,12 @@ body {
   padding: 18px 16px 16px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 3px;
   border-bottom: 1px solid rgba(77,140,255,0.15);
   overflow: hidden;
 }
-/* ClockStraight SVG pattern — top-right corner, rotated CCW 45° */
+/* ClockStraight SVG — right side, rotated CCW -30deg */
 .svc-cert-block__img-wrap::after {
   content: '';
   position: absolute;
@@ -850,6 +851,23 @@ body {
   opacity: 0.07;
   filter: brightness(0) invert(1);
   transform: rotate(-30deg);
+}
+/* ClockStraight SVG — left side, mirrored + 15% smaller + slight rotation */
+.svc-cert-block__img-wrap::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: -8px;
+  width: 75px;
+  height: 75px;
+  background-image: url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/2f37ee482c3b80118c4aa47593f75c24b2f6cce7/ClockStraight.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none;
+  opacity: 0.07;
+  filter: brightness(0) invert(1);
+  transform: scaleX(-1) rotate(-30deg);
 }
 .svc-cert-block__eyebrow { display: none; }
 .svc-cert-block__headline {
