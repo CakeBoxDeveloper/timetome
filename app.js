@@ -515,7 +515,8 @@
     const wrap = document.getElementById('lotTiltWrap');
     if (!wrap) return;
     // Passive idle sway: CSS animation handles it, no mouse tracking
-    wrap.style.animation = 'lotSway 4s ease-in-out infinite';
+    // Keep animation duration from CSS (8s), don't override it
+    // wrap.style.animation = 'lotSway 8s ease-in-out infinite';
   })();
 
   /* ── Scratch card ── */
@@ -1087,4 +1088,73 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
   } else {
     window.addEventListener('load', () => setTimeout(openCert, 300), { once: true });
   }
+})();
+
+
+/* ══════════════════════════════════════
+   MOBILE ANIMATION FIX
+   Ensure animations run at correct speed on mobile devices
+══════════════════════════════════════ */
+(function () {
+  // Check if we're on mobile
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+                || window.innerWidth <= 768;
+  
+  if (!isMobile) return;
+  
+  // Function to fully reset animation to ensure proper playback
+  function resetAnimationCompletely(selector, animationName, duration, timingFunction, iterationCount) {
+    const elements = document.querySelectorAll(selector);
+    elements.forEach(el => {
+      // Remove animation temporarily
+      const oldAnimation = el.style.animation;
+      el.style.animation = 'none';
+      
+      // Force reflow
+      void el.offsetHeight;
+      
+      // Reapply with explicit values
+      el.style.animationName = animationName;
+      el.style.animationDuration = duration;
+      el.style.animationTimingFunction = timingFunction || 'ease-in-out';
+      el.style.animationIterationCount = iterationCount || 'infinite';
+      el.style.animationPlayState = 'running';
+      el.style.animationFillMode = 'none';
+      
+      console.log(`Reset animation for ${selector}: ${animationName} ${duration}`);
+    });
+  }
+  
+  // Wait for page to load and animations to be applied
+  function applyFixes() {
+    // Fix certificate animations with full reset
+    resetAnimationCompletely('.cert-img-card', 'certImgSway', '6s', 'ease-in-out', 'infinite');
+    resetAnimationCompletely('.cert-img-card__sheen', 'certImgSheen', '4s', 'ease-in-out', 'infinite');
+    
+    // Fix lottery animations with full reset
+    resetAnimationCompletely('.lot-tilt-wrap', 'lotSway', '8s', 'ease-in-out', 'infinite');
+    
+    // For ::before pseudo-element, we need to target the parent
+    const lotCards = document.querySelectorAll('.lot-card');
+    lotCards.forEach(card => {
+      // Force re-render of ::before
+      card.style.setProperty('--force-rerender', Math.random());
+    });
+    
+    console.log('Mobile animation fixes applied completely');
+  }
+  
+  // Apply fixes after page load and after a short delay
+  if (document.readyState === 'complete') {
+    setTimeout(applyFixes, 100);
+  } else {
+    window.addEventListener('load', () => setTimeout(applyFixes, 100));
+  }
+  
+  // Also apply on window resize (orientation change)
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(applyFixes, 250);
+  });
 })();

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Записатись на прийом</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg:      #0d0d0d;
+      --card:    #1a1a1a;
+      --border:  #2a2a2a;
+      --green:   #4caf7d;
+      --green2:  #3a9668;
+      --red:     #c0392b;
+      --blue:    #2980b9;
+      --text:    #f0f0f0;
+      --muted:   #666;
+      --dim:     #333;
+      --radius:  10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--tg-theme-bg-color, var(--bg));
+      color: var(--tg-theme-text-color, var(--text));
+      min-height: 100vh;
+    }
+
+    /* ── HERO IMAGE ── */
+    .hero {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      display: block;
+      margin: 16px auto 8px;
+    }
+
+    .content { padding: 16px; }
+
+    /* ── MONTH NAV ── */
+    .month-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .nav-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--card); border: 1px solid var(--border);
+      color: var(--text); font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s;
+    }
+    .nav-btn:hover  { background: var(--border); }
+    .nav-btn:disabled { opacity: .25; cursor: default; }
+    .month-label { font-size: 17px; font-weight: 700; letter-spacing: .3px; }
+
+    /* ── CALENDAR ── */
+    .calendar {
+      display: grid; grid-template-columns: repeat(7, 1fr);
+      gap: 5px; margin-bottom: 20px;
+    }
+    .cal-header {
+      text-align: center; font-size: 11px; color: var(--muted);
+      padding: 3px 0; font-weight: 600; text-transform: uppercase;
+    }
+    .cal-day {
+      aspect-ratio: 1; border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 500; cursor: pointer;
+      border: 1.5px solid transparent; transition: all .12s;
+      position: relative;
+    }
+    .cal-day.empty   { cursor: default; }
+    .cal-day.past    { color: var(--muted); cursor: default; opacity: .35; }
+    .cal-day.loading { background: var(--card); color: var(--muted); cursor: default; animation: pulse 1.2s infinite; }
+    .cal-day.free    { background: var(--card); border-color: var(--border); color: var(--text); }
+    .cal-day.free:hover { border-color: var(--green); color: var(--green); background: rgba(76,175,125,.08); }
+    .cal-day.full    { background: transparent; color: var(--muted); opacity: .4; cursor: not-allowed; }
+    .cal-day.selected { background: var(--green) !important; color: #fff !important; border-color: var(--green) !important; font-weight: 700; }
+
+    @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:.8} }
+
+    /* ── DATE LABEL ── */
+    .date-label {
+      font-size: 15px; font-weight: 700;
+      margin-bottom: 14px; color: var(--text);
+      padding-bottom: 10px; border-bottom: 1px solid var(--border);
+    }
+
+    /* ── TIME SLOTS ── */
+    .slots {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 8px; margin-bottom: 20px;
+    }
+    .slot {
+      padding: 11px 4px; border-radius: var(--radius);
+      text-align: center; font-size: 14px; font-weight: 600;
+      cursor: pointer; border: 1.5px solid var(--border);
+      background: var(--card); color: var(--text);
+      transition: all .12s;
+    }
+    .slot.free:hover  { border-color: var(--green); color: var(--green); background: rgba(76,175,125,.08); }
+    .slot.taken       { opacity: .3; cursor: not-allowed; text-decoration: line-through; }
+    .slot.selected    { background: var(--green) !important; color: #fff !important; border-color: var(--green) !important; }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 14px; }
+    label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+    input {
+      width: 100%; padding: 13px 14px; border-radius: var(--radius);
+      border: 1.5px solid var(--border); background: var(--card); color: var(--text);
+      font-size: 15px; outline: none; transition: border-color .15s;
+    }
+    input:focus { border-color: var(--green); }
+    input::placeholder { color: var(--muted); }
+
+    /* ── SUMMARY ── */
+    .summary {
+      background: var(--card); border-radius: var(--radius); padding: 14px 16px;
+      margin-bottom: 16px; font-size: 14px; line-height: 2;
+      border-left: 3px solid var(--green);
+    }
+    .summary strong { color: var(--green); }
+
+    /* ── BUTTONS ── */
+    .btn {
+      width: 100%; padding: 14px; border-radius: var(--radius);
+      border: none; font-size: 15px; font-weight: 600;
+      cursor: pointer; transition: opacity .15s, transform .1s;
+      letter-spacing: .2px;
+    }
+    .btn:active { transform: scale(.98); }
+    .btn-green  { background: var(--green); color: #fff; }
+    .btn-green:hover { background: var(--green2); }
+    .btn-green:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-ghost  { background: var(--card); color: var(--muted); border: 1.5px solid var(--border); margin-top: 10px; }
+    .btn-ghost:hover { border-color: var(--muted); color: var(--text); }
+
+    /* ── SUCCESS ── */
+    .success-screen { text-align: center; padding: 32px 20px; }
+    .success-img { width: 100px; height: 100px; margin: 0 auto 20px; }
+    .success-screen h2 { font-size: 22px; margin-bottom: 10px; color: var(--green); }
+    .success-screen p  { color: var(--muted); font-size: 14px; line-height: 1.7; }
+
+    /* ── SPINNER ── */
+    .spinner {
+      display: inline-block; width: 18px; height: 18px;
+      border: 2.5px solid rgba(255,255,255,.3); border-top-color: #fff;
+      border-radius: 50%; animation: spin .7s linear infinite;
+      vertical-align: middle; margin-right: 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .hidden { display: none !important; }
+    .error-msg {
+      background: rgba(192,57,43,.15); border: 1px solid var(--red);
+      border-radius: var(--radius); padding: 10px 14px;
+      font-size: 13px; color: #e74c3c; margin-bottom: 12px;
+    }
+
+    /* ── BACK LINK ── */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--muted); cursor: pointer;
+      margin-bottom: 16px; padding: 4px 0;
+      border: none; background: none;
+    }
+    .back-link:hover { color: var(--text); }
+    .back-link::before { content: '←'; font-size: 15px; }
+  </style>
+</head>
+<body>
+
+<!-- Hero image -->
+<img class="hero" id="hero-img"
+     src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Tear%20Off%20Calendar.webp?raw=true"
+     alt="" />
+
+<div class="content">
+
+  <!-- STEP 1: DATE -->
+  <div id="step-date">
+    <div class="month-nav">
+      <button class="nav-btn" id="prev-month">‹</button>
+      <span class="month-label" id="month-label"></span>
+      <button class="nav-btn" id="next-month">›</button>
+    </div>
+    <div class="calendar" id="calendar"></div>
+  </div>
+
+  <!-- STEP 2: TIME -->
+  <div id="step-time" class="hidden">
+    <button class="back-link" id="back-to-date">Обрати інший день</button>
+    <div class="date-label" id="time-date-label"></div>
+    <div class="slots" id="slots"></div>
+  </div>
+
+  <!-- STEP 3: FORM -->
+  <div id="step-form" class="hidden">
+    <button class="back-link" id="back-to-time">Обрати інший час</button>
+    <div class="summary" id="booking-summary"></div>
+    <div class="error-msg hidden" id="form-error"></div>
+    <div class="form-group">
+      <label>Ваше ім'я</label>
+      <input type="text" id="inp-name" placeholder="Ім'я та прізвище" autocomplete="name" />
+    </div>
+    <div class="form-group">
+      <label>Телефон (необов'язково)</label>
+      <input type="tel" id="inp-phone" placeholder="+380..." autocomplete="tel" />
+    </div>
+    <button class="btn btn-green" id="btn-confirm">Підтвердити запис</button>
+  </div>
+
+  <!-- STEP 4: SUCCESS -->
+  <div id="step-success" class="hidden success-screen">
+    <img class="success-img" id="confetti-img"
+         src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Activity/Confetti%20Ball.webp?raw=true"
+         alt="" />
+    <h2>Запис підтверджено!</h2>
+    <p id="success-text"></p>
+    <br/>
+    <button class="btn btn-ghost" id="btn-close">Закрити</button>
+  </div>
+
+</div><!-- /content -->
+
+<script>
+const tg = window.Telegram?.WebApp;
+if (tg) {
+  tg.ready();
+  tg.expand();
+  // Match Telegram theme
+  document.documentElement.style.setProperty('--bg',   tg.themeParams.bg_color       || '#0d0d0d');
+  document.documentElement.style.setProperty('--card', tg.themeParams.secondary_bg_color || '#1a1a1a');
+  document.documentElement.style.setProperty('--text', tg.themeParams.text_color      || '#f0f0f0');
+}
+
+const userId = tg?.initDataUnsafe?.user?.id || null;
+
+const MONTHS_UA = ['Січень','Лютий','Березень','Квітень','Травень','Червень',
+                   'Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];
+const DAYS_SHORT = ['Нд','Пн','Вт','Ср','Чт','Пт','Сб'];
+const DAYS_FULL  = ['Неділя','Понеділок','Вівторок','Середа','Четвер','Пятниця','Субота'];
+
+let state = {
+  year:  new Date().getFullYear(),
+  month: new Date().getMonth(),
+  date:  null, hour: null, cache: {}
+};
+
+const pad = n => String(n).padStart(2,'0');
+const toDateStr = (y,m,d) => `${pad(d)}.${pad(m+1)}.${y}`;
+const monthKey  = (y,m)   => `${y}-${pad(m+1)}`;
+const makeDefaultSlots = () => Array.from({length:13},(_,i)=>({hour:9+i,free:true}));
+
+async function fetchMonth(y,m) {
+  const key = monthKey(y,m);
+  if (state.cache[key]) return state.cache[key];
+  try {
+    const res  = await fetch(`/api/schedule?month=${key}`);
+    const data = await res.json();
+    state.cache[key] = data.dates || {};
+  } catch(e) {
+    state.cache[key] = {};
+  }
+  return state.cache[key];
+}
+
+function showStep(n) {
+  ['step-date','step-time','step-form','step-success'].forEach((id,i) =>
+    document.getElementById(id).classList.toggle('hidden', i !== n-1)
+  );
+}
+
+/* ── Calendar ── */
+async function renderCalendar() {
+  const { year, month } = state;
+  document.getElementById('month-label').textContent = `${MONTHS_UA[month]} ${year}`;
+
+  const today    = new Date(); today.setHours(0,0,0,0);
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysIn   = new Date(year, month+1, 0).getDate();
+  const cal      = document.getElementById('calendar');
+  cal.innerHTML  = '';
+
+  DAYS_SHORT.forEach(d => {
+    const h = document.createElement('div');
+    h.className = 'cal-header'; h.textContent = d; cal.appendChild(h);
+  });
+  for (let i = 0; i < firstDay; i++) {
+    const e = document.createElement('div'); e.className = 'cal-day empty'; cal.appendChild(e);
+  }
+
+  const cells = [];
+  for (let d = 1; d <= daysIn; d++) {
+    const cell    = document.createElement('div');
+    const dateStr = toDateStr(year, month, d);
+    const isPast  = new Date(year, month, d) < today;
+    cell.className   = isPast ? 'cal-day past' : 'cal-day loading';
+    cell.textContent = d;
+    cell.dataset.date = dateStr;
+    cal.appendChild(cell);
+    cells.push({ cell, dateStr, isPast });
+  }
+
+  const dates = await fetchMonth(year, month);
+  cells.forEach(({ cell, dateStr, isPast }) => {
+    if (isPast) return;
+    const info    = dates[dateStr];
+    const hasFree = !info || info.slots.some(s => s.free);
+    if (!info) {
+      cell.className = 'cal-day free';
+      cell.addEventListener('click', () => selectDate(dateStr, makeDefaultSlots()));
+    } else if (hasFree) {
+      cell.className = 'cal-day free';
+      cell.addEventListener('click', () => selectDate(dateStr, info.slots));
+    } else {
+      cell.className = 'cal-day full';
+    }
+  });
+
+  const now = new Date();
+  document.getElementById('prev-month').disabled =
+    year < now.getFullYear() || (year === now.getFullYear() && month <= now.getMonth());
+  document.getElementById('next-month').disabled =
+    year > 2027 || (year === 2027 && month >= 11);
+}
+
+function selectDate(dateStr, slots) {
+  state.date = dateStr;
+  renderTimeSlots(dateStr, slots);
+  showStep(2);
+}
+
+/* ── Time slots ── */
+function renderTimeSlots(dateStr, slots) {
+  const [dd, mm, yyyy] = dateStr.split('.');
+  const jsDate = new Date(Number(yyyy), Number(mm)-1, Number(dd));
+  document.getElementById('time-date-label').textContent =
+    `${DAYS_FULL[jsDate.getDay()]}, ${dd} ${MONTHS_UA[jsDate.getMonth()].toLowerCase()}`;
+
+  const container = document.getElementById('slots');
+  container.innerHTML = '';
+  slots.forEach(({ hour, free }) => {
+    const btn = document.createElement('div');
+    btn.className = 'slot ' + (free ? 'free' : 'taken');
+    btn.textContent = `${hour}:00`;
+    if (free) btn.addEventListener('click', () => selectHour(hour));
+    container.appendChild(btn);
+  });
+}
+
+function selectHour(hour) {
+  state.hour = hour;
+  const [dd, mm, yyyy] = state.date.split('.');
+  const jsDate = new Date(Number(yyyy), Number(mm)-1, Number(dd));
+  document.getElementById('booking-summary').innerHTML =
+    `<strong>Дата</strong>&nbsp;&nbsp;${DAYS_FULL[jsDate.getDay()]}, ${dd} ${MONTHS_UA[jsDate.getMonth()].toLowerCase()} ${yyyy}<br>` +
+    `<strong>Час</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${hour}:00`;
+  const tgUser = tg?.initDataUnsafe?.user;
+  if (tgUser && !document.getElementById('inp-name').value) {
+    document.getElementById('inp-name').value =
+      [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ');
+  }
+  showStep(3);
+}
+
+/* ── Confirm ── */
+document.getElementById('btn-confirm').addEventListener('click', async () => {
+  const name  = document.getElementById('inp-name').value.trim();
+  const phone = document.getElementById('inp-phone').value.trim();
+  const errEl = document.getElementById('form-error');
+  errEl.classList.add('hidden');
+  if (!name) {
+    errEl.textContent = "Будь ласка, введіть ваше ім'я";
+    errEl.classList.remove('hidden'); return;
+  }
+  const btn = document.getElementById('btn-confirm');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Записуємо...';
+  try {
+    const res  = await fetch('/api/book', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date: state.date, hour: state.hour, name, phone, userId }),
+    });
+    const data = await res.json();
+    if (data.ok) {
+      const [dd, mm, yyyy] = state.date.split('.');
+      const jsDate = new Date(Number(yyyy), Number(mm)-1, Number(dd));
+      document.getElementById('success-text').innerHTML =
+        `${DAYS_FULL[jsDate.getDay()]}, ${dd} ${MONTHS_UA[jsDate.getMonth()].toLowerCase()} — ${state.hour}:00<br>` +
+        `${name}` + (phone ? `<br>${phone}` : '') +
+        `<br><br>Підтвердження надіслано у Telegram`;
+      showStep(4);
+      delete state.cache[monthKey(state.year, state.month)];
+    } else if (data.error === 'taken') {
+      errEl.textContent = 'Цей час вже зайнятий. Оберіть інший.';
+      errEl.classList.remove('hidden');
+      btn.disabled = false; btn.textContent = 'Підтвердити запис';
+    } else { throw new Error(data.error || 'unknown'); }
+  } catch(e) {
+    errEl.textContent = 'Помилка: ' + e.message;
+    errEl.classList.remove('hidden');
+    btn.disabled = false; btn.textContent = 'Підтвердити запис';
+  }
+});
+
+/* ── Nav ── */
+document.getElementById('prev-month').addEventListener('click', () => {
+  if (state.month === 0) { state.year--; state.month = 11; } else state.month--;
+  renderCalendar();
+});
+document.getElementById('next-month').addEventListener('click', () => {
+  if (state.month === 11) { state.year++; state.month = 0; } else state.month++;
+  renderCalendar();
+});
+document.getElementById('back-to-date').addEventListener('click', () => {
+  state.date = null; showStep(1);
+});
+document.getElementById('back-to-time').addEventListener('click', async () => {
+  const dates = await fetchMonth(state.year, state.month);
+  const info  = dates[state.date];
+  renderTimeSlots(state.date, info ? info.slots : makeDefaultSlots());
+  showStep(2);
+});
+document.getElementById('btn-close').addEventListener('click', () => {
+  if (tg) tg.close(); else window.close();
+});
+
+showStep(1);
+renderCalendar();
+</script>
+</body>
+</html>

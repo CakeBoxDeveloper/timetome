@@ -1707,7 +1707,21 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   .section { padding:64px 0; }
 }
 @media (prefers-reduced-motion:reduce) {
-  *,*::before,*::after { animation-duration:.01ms !important; transition-duration:.01ms !important; }
+  /* Reduce motion for most elements */
+  *,*::before,*::after { 
+    animation-duration: 0.3s !important; 
+    transition-duration: 0.3s !important;
+    animation-iteration-count: 1 !important;
+  }
+  
+  /* BUT: keep cert and lottery animations running normally */
+  .cert-img-card,
+  .cert-img-card__sheen,
+  .lot-tilt-wrap,
+  .lot-card::before {
+    animation-duration: revert !important;
+    animation-iteration-count: revert !important;
+  }
 }
 
 /* Idle tilt — disabled, conflicts with swipe */
@@ -2346,4 +2360,81 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 .svc-read-more__toggle svg {
   flex-shrink: 0;
   /* chevron pointing right */
+}
+
+
+/* ══════════════════════════════════════════════
+   MOBILE FIX: Prevent animation speed issues
+══════════════════════════════════════════════ */
+
+/* Force explicit animation timing on all devices */
+.cert-img-card {
+  animation-name: certImgSway !important;
+  animation-duration: 6s !important;
+  animation-timing-function: ease-in-out !important;
+  animation-iteration-count: infinite !important;
+  animation-play-state: running !important;
+  animation-fill-mode: none !important;
+}
+
+.cert-img-card__sheen {
+  animation-name: certImgSheen !important;
+  animation-duration: 4s !important;
+  animation-timing-function: ease-in-out !important;
+  animation-iteration-count: infinite !important;
+  animation-play-state: running !important;
+  animation-fill-mode: none !important;
+}
+
+.lot-tilt-wrap {
+  animation-name: lotSway !important;
+  animation-duration: 8s !important;
+  animation-timing-function: ease-in-out !important;
+  animation-iteration-count: infinite !important;
+  animation-play-state: running !important;
+  animation-fill-mode: none !important;
+}
+
+.lot-card::before {
+  animation-name: lotSheen !important;
+  animation-duration: 5s !important;
+  animation-timing-function: ease-in-out !important;
+  animation-iteration-count: infinite !important;
+  animation-play-state: running !important;
+  animation-fill-mode: none !important;
+}
+
+@media (max-width: 768px) {
+  /* Ensure cert animations run at correct speed on mobile */
+  .cert-img-card {
+    animation: certImgSway 6s ease-in-out infinite !important;
+    animation-play-state: running !important;
+  }
+  
+  .cert-img-card__sheen {
+    animation: certImgSheen 4s ease-in-out infinite !important;
+    animation-play-state: running !important;
+  }
+  
+  .cert-flip-wrap.is-flipping-out {
+    animation: certFlipOut 0.36s ease-in-out forwards !important;
+    animation-play-state: running !important;
+  }
+  
+  /* Ensure lottery animations run at correct speed on mobile */
+  .lot-tilt-wrap {
+    animation: lotSway 8s ease-in-out infinite !important;
+    animation-play-state: running !important;
+  }
+  
+  .lot-card::before {
+    animation: lotSheen 5s ease-in-out infinite !important;
+    animation-play-state: running !important;
+  }
+  
+  .lot-door-flap.is-open {
+    animation: doorSwing 1.15s cubic-bezier(0.22, 1.4, 0.55, 1) forwards,
+               doorWobble 2.7s ease-in-out 1.05s 1 forwards !important;
+    animation-play-state: running !important;
+  }
 }
