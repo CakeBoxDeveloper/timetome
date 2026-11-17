@@ -192,25 +192,43 @@
     </div>
   </div>
 
-  <div class="hero__3d-wrap">
-    <model-viewer
-      id="heroModel"
-      src="https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/main/3D%20Logo.glb?v=4"
-      alt="Час для себе"
-      autoplay
-      animation-name="Empty.002Action"
-      disable-zoom
-      disable-pan
-      camera-orbit="0deg 105deg 90%"
-      orientation="0deg 90deg 0deg"
-      field-of-view="28deg"
-      environment-image="neutral"
-      exposure="3.0"
-      shadow-intensity="0"
-      interaction-prompt="none"
-      tone-mapping="commerce"
-      style="background:transparent;width:100%;height:100%;display:block;--progress-bar-height:0px;--progress-bar-color:transparent;pointer-events:none;"
-    ></model-viewer>
+  <!-- Flip Card (заменяет 3D модель) -->
+  <div class="hero__flip-card" id="heroFlipCard">
+    <div class="hero__flip-inner">
+      <!-- Front side (WebM анимация) -->
+      <div class="hero__flip-front">
+        <video 
+          class="hero__flip-video" 
+          id="heroFlipVideo"
+          src="https://github.com/CakeBoxDeveloper/timetome/raw/main/SmileWebm.webm"
+          autoplay 
+          loop 
+          muted 
+          playsinline>
+        </video>
+      </div>
+      
+      <!-- Back side (Контакты) -->
+      <div class="hero__flip-back">
+        <div class="hero__flip-contacts">
+          <p style="font-size: 18px; font-weight: 700; margin-bottom: 16px; color: var(--accent); text-align: center;">Зв'яжіться з нами</p>
+          <div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+            <a href="https://t.me/pro_telo_niko" target="_blank" rel="noopener" style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #229ED9; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600;">
+              <span style="font-size: 20px;">✈️</span>
+              <span>Telegram: @pro_telo_niko</span>
+            </a>
+            <a href="https://www.instagram.com/pro_telo_niko" target="_blank" rel="noopener" style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #E1306C; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600;">
+              <span style="font-size: 20px;">📺</span>
+              <span>Instagram: @pro_telo_niko</span>
+            </a>
+            <a href="tel:+380996335197" style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #25D366; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600;">
+              <span style="font-size: 20px;">📱</span>
+              <span>Телефон: +380 99 633-51-97</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 

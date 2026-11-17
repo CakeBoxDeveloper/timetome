@@ -4,7 +4,7 @@
    ============================================================ */
 
 :root {
-  --bg:          #08090f;
+  --bg:          #0c0e1a;
   --bg-alt:      #0c0e1a;
   --bg-card:     #101422;
 
@@ -99,7 +99,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
    HERO
 ══════════════════════════════════════════════ */
 .hero {
-  background:var(--bg);
+  background:var(--bg-alt) !important;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -259,37 +259,46 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 .hero-reviews--right .hero-reviews__col--c { order: 0; }
 
 .hero-review-card {
-  width: 90px;
-  height: 120px;
-  border-radius: 10px;
-  background: rgba(10, 18, 40, 0.75);
-  border: 1px solid rgba(77,180,255,0.18);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  width: 75px;
+  min-height: 100px;
+  height: auto;
+  border-radius: 18px;
+  background: rgba(230, 230, 235, 0.95);
+  border: none;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   flex-shrink: 0;
   opacity: 0;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: visible;
   text-decoration: none;
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 
+    0 0.5px 1px rgba(0, 0, 0, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.12);
+  position: relative;
+  padding: 6px 8px;
+  gap: 4px;
 }
 .hero-review-card:hover {
-  background: rgba(15, 28, 60, 0.85);
-  border-color: rgba(77,180,255,0.35);
+  transform: scale(1.02);
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.12),
+    0 2px 4px rgba(0, 0, 0, 0.16);
 }
 .hero-review-card__top {
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 6px 7px 5px;
-  border-bottom: 1px solid rgba(77,180,255,0.1);
+  gap: 4px;
+  padding: 0;
+  border-bottom: none;
   flex-shrink: 0;
 }
 .hero-review-card__avatar {
-  width: 16px;
-  height: 16px;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
   background: transparent;
   flex-shrink: 0;
@@ -299,34 +308,34 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   overflow: visible;
 }
 .hero-review-card__avatar img {
-  width: 16px !important;
-  height: 16px !important;
+  width: 11px !important;
+  height: 11px !important;
   min-width: 0 !important;
   min-height: 0 !important;
-  max-width: 16px !important;
-  max-height: 16px !important;
+  max-width: 11px !important;
+  max-height: 11px !important;
   object-fit: contain !important;
   display: block !important;
 }
 .hero-review-card__name {
-  font-family: var(--font);
-  font-size: 8px;
-  font-weight: 400;
-  color: rgba(77, 120, 200, 0.6);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', var(--font);
+  font-size: 6px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.5);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .hero-review-card__text {
-  padding: 6px 7px 6px;
-  font-family: var(--font);
-  font-size: 9px;
-  font-weight: 300;
-  color: rgba(77, 120, 200, 0.75);
-  line-height: 1.35;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', var(--font);
+  font-size: 7px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.85);
+  line-height: 1.4;
   flex: 1;
   display: -webkit-box;
-  -webkit-line-clamp: 5;
+  -webkit-line-clamp: 6;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2735,4 +2744,76 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
     height: 44px;
     font-size: 13px;
   }
+}
+
+
+/* Скрыть блок контактов с картой */
+.hero-card-overlay {
+  display: none !important;
+}
+
+
+/* ══════════════════════════════════════════════
+   FLIP CARD (замена 3D модели)
+══════════════════════════════════════════════ */
+.hero__flip-card {
+  width: 100%;
+  max-width: 380px;
+  margin: 80px auto 16px;
+  perspective: 1000px;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.hero__flip-inner {
+  position: relative;
+  width: 100%;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.hero__flip-card.flipped .hero__flip-inner {
+  transform: rotateY(180deg);
+}
+
+.hero__flip-front,
+.hero__flip-back {
+  width: 100%;
+  backface-visibility: hidden;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.hero__flip-front {
+  background: transparent;
+}
+
+.hero__flip-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  transform: rotateY(180deg);
+  background: rgba(230, 230, 235, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.hero__flip-video {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 18px;
+}
+
+.hero__flip-contacts {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

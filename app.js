@@ -1227,3 +1227,64 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
     }
   });
 })();
+
+
+/* ══════════════════════════════════════════════
+   FLIP CARD — WebM animation + contacts
+   - Auto-flip every 5 seconds (before animation ends)
+   - Manual flip on click
+   - Once manually flipped, auto-flip stops until page reload
+   - If flipped from back to front, auto-flip back after animation cycle
+══════════════════════════════════════════════ */
+(function() {
+  const card = document.getElementById('heroFlipCard');
+  const video = document.getElementById('heroFlipVideo');
+  if (!card || !video) return;
+
+  let autoFlipEnabled = true;
+  let autoFlipTimer = null;
+  let isFlipped = false;
+
+  const ANIMATION_DURATION = 5000; // 5 секунд
+  const FLIP_BEFORE_END = 500;
+
+  function flip() {
+    isFlipped = !isFlipped;
+    card.classList.toggle('flipped', isFlipped);
+  }
+
+  function scheduleAutoFlip() {
+    if (!autoFlipEnabled) return;
+    clearTimeout(autoFlipTimer);
+    autoFlipTimer = setTimeout(() => {
+      flip();
+      if (!isFlipped) {
+        scheduleAutoFlip();
+      } else {
+        autoFlipTimer = setTimeout(() => {
+          flip();
+          scheduleAutoFlip();
+        }, 3000);
+      }
+    }, ANIMATION_DURATION - FLIP_BEFORE_END);
+  }
+
+  card.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A' || e.target.closest('a')) return;
+    
+    autoFlipEnabled = false;
+    clearTimeout(autoFlipTimer);
+    
+    flip();
+    
+    if (!isFlipped) {
+      setTimeout(() => {
+        flip();
+      }, ANIMATION_DURATION - FLIP_BEFORE_END);
+    }
+  });
+
+  setTimeout(() => {
+    scheduleAutoFlip();
+  }, ANIMATION_DURATION - FLIP_BEFORE_END);
+})();
