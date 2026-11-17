@@ -2758,11 +2758,18 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 ══════════════════════════════════════════════ */
 .hero__flip-card {
   width: 100%;
-  max-width: 380px;
-  margin: 80px auto 16px;
+  max-width: 280px;
+  margin: 60px auto 16px;
   perspective: 1000px;
   z-index: 1;
   cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .hero__flip-card {
+    max-width: 240px;
+    margin: 40px auto 16px;
+  }
 }
 
 .hero__flip-inner {
@@ -2770,10 +2777,8 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   width: 100%;
   transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   transform-style: preserve-3d;
-}
-
-.hero__flip-card.flipped .hero__flip-inner {
-  transform: rotateY(180deg);
+  transform: rotateY(0deg);
+  /* Rotation controlled by JS inline style for continuous clockwise rotation */
 }
 
 .hero__flip-front,

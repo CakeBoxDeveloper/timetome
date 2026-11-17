@@ -1231,60 +1231,85 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
 
 /* ══════════════════════════════════════════════
    FLIP CARD — WebM animation + contacts
-   - Auto-flip every 5 seconds (before animation ends)
-   - Manual flip on click
-   - Once manually flipped, auto-flip stops until page reload
-   - If flipped from back to front, auto-flip back after animation cycle
+   - Animation: 6 sec, flip at 5.5s to hide end
+   - Video restarts on every flip to front
+   - Front shown 5.5s, back shown 5s
+   - Click on front: flip to back, disable auto-flip
+   - Click on back: flip to front, then auto-flip back after 5.5s
+   - Always flip clockwise (continuous cycle effect)
 ══════════════════════════════════════════════ */
 (function() {
   const card = document.getElementById('heroFlipCard');
+  const inner = card?.querySelector('.hero__flip-inner');
   const video = document.getElementById('heroFlipVideo');
-  if (!card || !video) return;
+  if (!card || !inner || !video) return;
 
+  let rotationCount = 0; // Счётчик вращений: 0, 1, 2, 3... (всегда по часовой)
   let autoFlipEnabled = true;
   let autoFlipTimer = null;
-  let isFlipped = false;
+  
+  const ANIMATION_DURATION = 6000; // 6 секунд - длительность видео
+  const FLIP_BEFORE_END = 500;     // Флип за 500мс до конца (5.5s)
+  const BACK_DISPLAY_TIME = 5000;  // Задняя сторона висит 5 секунд
 
-  const ANIMATION_DURATION = 5000; // 5 секунд
-  const FLIP_BEFORE_END = 500;
+  function isShowingFront() {
+    // Чётное число оборотов = фронт (0, 2, 4...), нечётное = бэк (1, 3, 5...)
+    return rotationCount % 2 === 0;
+  }
 
-  function flip() {
-    isFlipped = !isFlipped;
-    card.classList.toggle('flipped', isFlipped);
+  function flipClockwise() {
+    rotationCount++;
+    const degrees = rotationCount * 180;
+    inner.style.transform = `rotateY(${degrees}deg)`;
+    
+    // Если флипнули на фронт — перезапуск видео
+    if (isShowingFront()) {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    }
   }
 
   function scheduleAutoFlip() {
     if (!autoFlipEnabled) return;
     clearTimeout(autoFlipTimer);
-    autoFlipTimer = setTimeout(() => {
-      flip();
-      if (!isFlipped) {
+    
+    if (isShowingFront()) {
+      // Сейчас показывается фронт - флип через 5.5s
+      autoFlipTimer = setTimeout(() => {
+        flipClockwise();
         scheduleAutoFlip();
-      } else {
-        autoFlipTimer = setTimeout(() => {
-          flip();
-          scheduleAutoFlip();
-        }, 3000);
-      }
-    }, ANIMATION_DURATION - FLIP_BEFORE_END);
+      }, ANIMATION_DURATION - FLIP_BEFORE_END);
+    } else {
+      // Сейчас показывается бэк - флип через 5s
+      autoFlipTimer = setTimeout(() => {
+        flipClockwise();
+        scheduleAutoFlip();
+      }, BACK_DISPLAY_TIME);
+    }
   }
 
+  // Клик по карте
   card.addEventListener('click', (e) => {
+    // Не флипаем если кликнули на ссылку
     if (e.target.tagName === 'A' || e.target.closest('a')) return;
     
-    autoFlipEnabled = false;
-    clearTimeout(autoFlipTimer);
-    
-    flip();
-    
-    if (!isFlipped) {
-      setTimeout(() => {
-        flip();
+    if (isShowingFront()) {
+      // Клик на фронт - флип на бэк, отключаем автофлип
+      autoFlipEnabled = false;
+      clearTimeout(autoFlipTimer);
+      flipClockwise();
+    } else {
+      // Клик на бэк - флип на фронт, затем автофлип назад через 5.5s
+      flipClockwise();
+      clearTimeout(autoFlipTimer);
+      autoFlipTimer = setTimeout(() => {
+        flipClockwise();
+        // После этого флипа автофлип остаётся выключенным
       }, ANIMATION_DURATION - FLIP_BEFORE_END);
     }
   });
 
-  setTimeout(() => {
-    scheduleAutoFlip();
-  }, ANIMATION_DURATION - FLIP_BEFORE_END);
+  // Запускаем автофлип сразу
+  video.play().catch(() => {});
+  scheduleAutoFlip();
 })();
