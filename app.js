@@ -1158,3 +1158,72 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
     resizeTimer = setTimeout(applyFixes, 250);
   });
 })();
+
+
+/* ══════════════════════════════════════
+   TELEGRAM-STYLE ANIMATED BUTTONS
+   Click-only logic with "Show All" button
+══════════════════════════════════════ */
+(function () {
+  const box = document.getElementById('tgContacts');
+  const btn = document.getElementById('tgToggle');
+  const containers = document.querySelectorAll('.tg-tooltip-container');
+  
+  if (!box || !btn || !containers.length) return;
+
+  // Click on individual button
+  containers.forEach(container => {
+    const icon = container.querySelector('.tg-icon');
+    const profile = container.querySelector('.tg-profile');
+    
+    if (!icon) return;
+
+    icon.addEventListener('click', (e) => {
+      const isActive = container.classList.contains('active');
+      
+      if (isActive) {
+        // Second click - allow link to work (don't prevent)
+        // But if clicking on icon again (not profile link), toggle off
+        if (!e.target.closest('.tg-profile')) {
+          e.preventDefault();
+          container.classList.remove('active');
+        }
+      } else {
+        // First click - open this tooltip, close others
+        e.preventDefault();
+        
+        // Close all others
+        containers.forEach(other => {
+          if (other !== container) {
+            other.classList.remove('active');
+          }
+        });
+        
+        // Open this one
+        container.classList.add('active');
+      }
+    });
+  });
+
+  // "Show All" / "Hide All" button
+  btn.addEventListener('click', () => {
+    const isOpen = box.classList.toggle('open');
+    
+    containers.forEach(container => {
+      container.classList.toggle('active', isOpen);
+    });
+    
+    btn.textContent = isOpen ? 'Сховати контакти' : 'Показати всі контакти';
+  });
+
+  // Close tooltips when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.telegram-contacts')) {
+      containers.forEach(container => {
+        container.classList.remove('active');
+      });
+      box.classList.remove('open');
+      btn.textContent = 'Показати всі контакти';
+    }
+  });
+})();
