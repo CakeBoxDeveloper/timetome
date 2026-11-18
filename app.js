@@ -1378,3 +1378,50 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
   }
 })();
 
+/* ══════════════════════════════════════════════
+   BODY BACKGROUND FADE ON SCROLL
+══════════════════════════════════════════════ */
+(function() {
+  function initBodyBackgroundFade() {
+    const heroSection = document.querySelector('section.hero');
+    if (!heroSection) return;
+    
+    let rafId;
+    
+    function updateBodyBackground() {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const scrollY = window.scrollY || window.pageYOffset;
+        const heroHeight = heroSection.offsetHeight;
+        
+        if (heroHeight === 0) return;
+        
+        const transitionStart = heroHeight * 0.2;
+        const transitionEnd = heroHeight * 0.6;
+        
+        let progress = 0;
+        if (scrollY > transitionStart) {
+          progress = Math.min(1, (scrollY - transitionStart) / (transitionEnd - transitionStart));
+        }
+        
+        // Interpolate RGB: светлый серый -> темно-синий
+        // #d8dae5 (216, 218, 229) -> #0c0e1a (12, 14, 26)
+        const r = Math.round(216 - 204 * progress);  // 216 -> 12
+        const g = Math.round(218 - 204 * progress);  // 218 -> 14
+        const b = Math.round(229 - 203 * progress);  // 229 -> 26
+        
+        document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+      });
+    }
+    
+    window.addEventListener('scroll', updateBodyBackground, { passive: true });
+    updateBodyBackground();
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initBodyBackgroundFade);
+  } else {
+    initBodyBackgroundFade();
+  }
+})();
+

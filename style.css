@@ -34,11 +34,12 @@
 html { scroll-behavior:smooth; overflow-x:clip; }
 body {
   font-family:var(--font);
-  background:var(--bg);
+  background: #d8dae5;
   color:var(--text);
   line-height:1.55;
   -webkit-font-smoothing:antialiased;
   -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.3s ease;
 }
 img { display:block; max-width:100%; user-select:none; -webkit-user-select:none; }
 a { color:inherit; text-decoration:none; -webkit-tap-highlight-color: transparent; }
@@ -99,7 +100,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
    HERO
 ══════════════════════════════════════════════ */
 .hero {
-  background:var(--bg-alt) !important;
+  background: transparent !important;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -115,10 +116,11 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   top:30%; left:50%; transform:translate(-50%,-50%);
   pointer-events:none;
   opacity: 0;
+  display: none; /* Свечение отключено */
   transition: opacity 1.4s ease-out 0.5s;
 }
 .hero-ready .hero::before {
-  opacity: 1;
+  opacity: 0;
 }
 .hero::after {
   content: '';
@@ -580,8 +582,8 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 /* ══════════════════════════════════════════════
    SECTIONS
 ══════════════════════════════════════════════ */
-.section      { padding:48px 0; background:var(--bg-alt); }
-.section--alt { background:var(--bg-alt); }
+.section      { padding:48px 0; background: transparent; }
+.section--alt { background: transparent; }
 /* Services section — less top gap */
 #services { padding-top: 16px; }
 
@@ -2305,14 +2307,9 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 /* Price section title */
 #price .section-title { color: var(--accent); }
 
-/* Hero black, gradient to services */
-.hero { 
-  background: var(--bg-alt) !important;
-  overflow: visible !important;
-}
-/* Bridge after hero: solid bg like lottery section */
+/* Bridge after hero: transparent */
 .section-bridge {
-  background: var(--bg-alt) !important;
+  background: transparent !important;
   margin-top: 0 !important;
   height: 120px !important;
   position: relative !important;
@@ -2865,16 +2862,17 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   }
   
   .hero-scroll-btn {
-    padding: 10px 20px;
-    font-size: 12px;
-    gap: 10px;
+    padding: 10px 16px;
+    font-size: 11px;
+    gap: 8px;
     width: 85%;
     max-width: 85%;
+    white-space: nowrap;
   }
   
   .scroll-lottie {
-    width: 28px !important;
-    height: 28px !important;
+    width: 24px !important;
+    height: 24px !important;
   }
 }
 
@@ -3048,4 +3046,11 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
     font-size: 12px;
     padding: 8px 10px;
   }
+}
+
+/* Body background RGB variables for scroll effect */
+:root {
+  --body-bg-r: 12;
+  --body-bg-g: 14;
+  --body-bg-b: 26;
 }
