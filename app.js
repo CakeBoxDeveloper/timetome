@@ -1601,8 +1601,13 @@ ${groupsMarkup}</svg>`;
     keyframesEl.textContent = keyframesCss;
     stageEl.innerHTML = svgMarkup;
 
+    let hasPlayed = false; // Прапорець щоб конфетті запустилось тільки один раз
+
     // Запускаємо confetti синхронно з карточками (0.6s delay після hero-ready)
     document.body.addEventListener('heroReady', () => {
+      if (hasPlayed) return; // Якщо вже грало - не запускаємо знову
+      hasPlayed = true;
+      
       setTimeout(() => {
         stageEl.classList.add('is-playing');
         // Прибираємо confetti через 2 секунди (вдвічі швидше)
