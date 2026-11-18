@@ -1404,6 +1404,9 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
   const FLIP_BEFORE_END = 500;
   const BACK_DISPLAY_TIME = 5000;
 
+  const front = card.querySelector('.hero__flip-front');
+  const back = card.querySelector('.hero__flip-back');
+
   inner.style.transform = 'rotateY(0deg)';
   log('Initial transform set to 0deg');
 
@@ -1411,11 +1414,28 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
     return rotationCount % 2 === 0;
   }
 
+  function updateVisibility() {
+    // iOS fix: manually hide/show sides with opacity + pointer-events
+    const showFront = isShowingFront();
+    if (front) {
+      front.style.opacity = showFront ? '1' : '0';
+      front.style.pointerEvents = showFront ? 'auto' : 'none';
+    }
+    if (back) {
+      back.style.opacity = showFront ? '0' : '1';
+      back.style.pointerEvents = showFront ? 'none' : 'auto';
+    }
+    log(`Visibility updated: front=${showFront ? 'visible' : 'hidden'}, back=${showFront ? 'hidden' : 'visible'}`);
+  }
+
   function flipClockwise() {
     rotationCount++;
     const degrees = rotationCount * 180;
     inner.style.transform = `rotateY(${degrees}deg)`;
     log(`Flip to ${degrees}deg (showing ${isShowingFront() ? 'front' : 'back'})`);
+    
+    // Update visibility immediately for iOS
+    updateVisibility();
     
     if (isShowingFront()) {
       log(`Restarting video (currentTime: ${video.currentTime} -> 0)`);
@@ -1430,6 +1450,9 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
       }
     }
   }
+
+  // Set initial visibility
+  updateVisibility();
 
   function scheduleAutoFlip() {
     if (!autoFlipEnabled || !isPageVisible) {
