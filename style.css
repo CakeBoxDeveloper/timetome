@@ -2868,7 +2868,8 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
     padding: 10px 20px;
     font-size: 12px;
     gap: 10px;
-    width: 240px;
+    width: 90%;
+    max-width: 90%;
   }
   
   .scroll-lottie {
@@ -2879,7 +2880,8 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 
 @media (max-width: 480px) {
   .hero__flip-card {
-    max-width: 240px;
+    max-width: 90%;
+    width: 90%;
     margin: 40px auto 16px;
   }
 }
