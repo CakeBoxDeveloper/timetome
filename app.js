@@ -1336,25 +1336,12 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
     } else {
       // Клик на бэк - флип на фронт, затем ВКЛЮЧАЕМ автофлип назад
       flipClockwise();
-      autoFlipEnabled = true; // ВАЖНО: включаем автофлип
+      autoFlipEnabled = true;
       clearTimeout(autoFlipTimer);
-      scheduleAutoFlip(); // Перезапускаем автофлип
+      scheduleAutoFlip();
     }
   });
 
-  //Force autoplay для iOS
-  const forcePlay = () => {
-    if (isShowingFront()) {
-      video.play().catch(() => {});
-    }
-  };
-  
-  // Пытаемся запустить видео при разных событиях (для iOS)
-  document.addEventListener('DOMContentLoaded', forcePlay);
-  window.addEventListener('load', forcePlay);
-  document.body.addEventListener('touchstart', forcePlay, { once: true });
-  document.body.addEventListener('click', forcePlay, { once: true });
-  
   // Запускаем автофлип сразу
   video.play().catch(() => {});
   scheduleAutoFlip();
