@@ -1283,7 +1283,7 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
   // Create debug button (mobile only)
   if (window.innerWidth < 768) {
     const debugBtn = document.createElement('button');
-    debugBtn.textContent = '📥 Debug';
+    debugBtn.textContent = '📋 Копіювати лог';
     debugBtn.style.cssText = `
       position: fixed;
       bottom: 20px;
@@ -1299,20 +1299,57 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       backdrop-filter: blur(10px);
+      transition: all 0.2s ease;
     `;
-    debugBtn.addEventListener('click', () => {
+    
+    debugBtn.addEventListener('click', async () => {
       const content = logs.join('\n');
-      const blob = new Blob([content], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `flip-debug-${Date.now()}.txt`;
-      a.click();
-      URL.revokeObjectURL(url);
-      log('Debug log downloaded');
+      try {
+        // Modern Clipboard API (iOS Safari 13.4+)
+        await navigator.clipboard.writeText(content);
+        debugBtn.textContent = '✅ Скопійовано!';
+        debugBtn.style.background = 'rgba(0, 200, 0, 0.8)';
+        log('Debug log copied to clipboard');
+        
+        setTimeout(() => {
+          debugBtn.textContent = '📋 Копіювати лог';
+          debugBtn.style.background = 'rgba(255, 0, 0, 0.8)';
+        }, 2000);
+      } catch (err) {
+        // Fallback for older browsers
+        log(`Clipboard API failed: ${err.message}, trying fallback`);
+        const textarea = document.createElement('textarea');
+        textarea.value = content;
+        textarea.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
+        document.body.appendChild(textarea);
+        textarea.select();
+        textarea.setSelectionRange(0, 99999); // For iOS
+        
+        try {
+          document.execCommand('copy');
+          debugBtn.textContent = '✅ Скопійовано!';
+          debugBtn.style.background = 'rgba(0, 200, 0, 0.8)';
+          log('Debug log copied via execCommand');
+          
+          setTimeout(() => {
+            debugBtn.textContent = '📋 Копіювати лог';
+            debugBtn.style.background = 'rgba(255, 0, 0, 0.8)';
+          }, 2000);
+        } catch (err2) {
+          debugBtn.textContent = '❌ Помилка';
+          log(`Copy failed: ${err2.message}`);
+          
+          setTimeout(() => {
+            debugBtn.textContent = '📋 Копіювати лог';
+          }, 2000);
+        } finally {
+          document.body.removeChild(textarea);
+        }
+      }
     });
+    
     document.body.appendChild(debugBtn);
-    log('Debug button created');
+    log('Debug button created (clipboard copy)');
   }
 
   // Monitor video events
