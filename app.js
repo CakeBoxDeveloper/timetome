@@ -1354,18 +1354,35 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
 
   // Monitor video events
   video.addEventListener('loadstart', () => log('VIDEO: loadstart'));
-  video.addEventListener('loadedmetadata', () => log(`VIDEO: loadedmetadata (duration: ${video.duration})`));
+  video.addEventListener('loadedmetadata', () => {
+    log(`VIDEO: loadedmetadata (duration: ${video.duration})`);
+    log(`VIDEO: Using source - ${video.currentSrc}`);
+    log(`VIDEO: Video size: ${video.videoWidth}x${video.videoHeight}`);
+  });
   video.addEventListener('loadeddata', () => log(`VIDEO: loadeddata (readyState: ${video.readyState})`));
   video.addEventListener('canplay', () => log('VIDEO: canplay'));
   video.addEventListener('canplaythrough', () => log('VIDEO: canplaythrough'));
-  video.addEventListener('play', () => log('VIDEO: play event'));
-  video.addEventListener('playing', () => log('VIDEO: playing'));
+  video.addEventListener('play', () => log(`VIDEO: play event (currentTime: ${video.currentTime})`));
+  video.addEventListener('playing', () => log(`VIDEO: playing (currentTime: ${video.currentTime})`));
   video.addEventListener('pause', () => log('VIDEO: pause'));
   video.addEventListener('waiting', () => log('VIDEO: waiting'));
   video.addEventListener('stalled', () => log('VIDEO: stalled'));
   video.addEventListener('suspend', () => log('VIDEO: suspend'));
+  
+  // Log only first 3 timeupdate events to avoid spam
+  let timeupdateCount = 0;
+  video.addEventListener('timeupdate', () => {
+    if (timeupdateCount < 3) {
+      log(`VIDEO: timeupdate #${++timeupdateCount} - currentTime: ${video.currentTime.toFixed(3)}s`);
+    }
+  });
+  
   video.addEventListener('error', (e) => {
     log(`VIDEO: error - ${video.error?.code} ${video.error?.message}`);
+    if (video.error) {
+      const errorCodes = ['', 'MEDIA_ERR_ABORTED', 'MEDIA_ERR_NETWORK', 'MEDIA_ERR_DECODE', 'MEDIA_ERR_SRC_NOT_SUPPORTED'];
+      log(`VIDEO: error code meaning - ${errorCodes[video.error.code] || 'UNKNOWN'}`);
+    }
   });
 
   // Monitor visibility changes
@@ -1506,7 +1523,23 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
 
   setTimeout(() => {
     log(`Video state after 3s: readyState=${video.readyState}, paused=${video.paused}, currentTime=${video.currentTime}`);
+    
+    // WORKAROUND: If video is "playing" but stuck at 0, force restart
+    if (!video.paused && video.currentTime === 0 && video.readyState >= 2) {
+      log('WORKAROUND: Video stuck at 0 - forcing restart');
+      video.pause();
+      video.currentTime = 0.01; // Tiny offset to unstick
+      setTimeout(() => {
+        video.play()
+          .then(() => log('WORKAROUND: Restart successful'))
+          .catch(err => log(`WORKAROUND: Restart failed - ${err.message}`));
+      }, 100);
+    }
   }, 3000);
+
+  setTimeout(() => {
+    log(`Video state after 5s: readyState=${video.readyState}, paused=${video.paused}, currentTime=${video.currentTime}`);
+  }, 5000);
 })();
 
 /* ══════════════════════════════════════════════
