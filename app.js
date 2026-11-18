@@ -1517,15 +1517,19 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
 
   function generateConfetti() {
     const rng = createRng(42077);
-    const vw = Math.max(window.innerWidth, 375); // Мінімум 375px для mobile
-    const vh = Math.max(window.innerHeight, 667); // Мінімум 667px для mobile
+    const vw = Math.max(window.innerWidth, 375);
+    const vh = Math.max(window.innerHeight, 667);
     const originX = vw / 2;
     const originY = vh / 2;
+    
+    // Зменшуємо кількість частинок на mobile для продуктивності
+    const isMobile = window.innerWidth < 768;
+    const countMultiplier = isMobile ? 0.5 : 1;
 
     const layers = [
-      {id: 'layer-far-bg', filter: 'url(#dof-bg)', count: 42, wRange: [13, 21], ratioRange: [1.75, 2.3], speedRange: [950, 2150], dragRange: [2.7, 3.4], vTermRange: [340, 440], swayRange: [18, 42], opacity: 0.65},
-      {id: 'layer-mid-sharp', filter: 'url(#dof-mid)', count: 66, wRange: [18, 46], ratioRange: [1.8, 2.45], speedRange: [1150, 2750], dragRange: [2.3, 3.0], vTermRange: [440, 580], swayRange: [25, 58], opacity: 0.98},
-      {id: 'layer-foreground-bokeh', filter: 'url(#dof-fg)', count: 18, wRange: [88, 134], ratioRange: [1.8, 2.25], speedRange: [1450, 2950], dragRange: [1.95, 2.55], vTermRange: [560, 740], swayRange: [20, 48], opacity: 0.85}
+      {id: 'layer-far-bg', filter: 'url(#dof-bg)', count: Math.round(42 * countMultiplier), wRange: [13, 21], ratioRange: [1.75, 2.3], speedRange: [950, 2150], dragRange: [2.7, 3.4], vTermRange: [340, 440], swayRange: [18, 42], opacity: 0.65},
+      {id: 'layer-mid-sharp', filter: 'url(#dof-mid)', count: Math.round(66 * countMultiplier), wRange: [18, 46], ratioRange: [1.8, 2.45], speedRange: [1150, 2750], dragRange: [2.3, 3.0], vTermRange: [440, 580], swayRange: [25, 58], opacity: 0.98},
+      {id: 'layer-foreground-bokeh', filter: 'url(#dof-fg)', count: Math.round(18 * countMultiplier), wRange: [88, 134], ratioRange: [1.8, 2.25], speedRange: [1450, 2950], dragRange: [1.95, 2.55], vTermRange: [560, 740], swayRange: [20, 48], opacity: 0.85}
     ];
 
     let groupsMarkup = '';
