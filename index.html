@@ -252,16 +252,17 @@
   <!-- Flip Card (заменяет 3D модель) -->
   <div class="hero__flip-card" id="heroFlipCard">
     <div class="hero__flip-inner">
-      <!-- Front side (WebM анимация) -->
+      <!-- Front side (WebM анимация з iOS fallback) -->
       <div class="hero__flip-front">
         <video 
           class="hero__flip-video" 
           id="heroFlipVideo"
-          src="https://github.com/CakeBoxDeveloper/timetome/raw/main/SmileWebm.webm"
           autoplay 
           loop 
           muted 
           playsinline>
+          <source src="https://github.com/CakeBoxDeveloper/timetome/raw/main/SmileWebm.webm" type="video/webm">
+          <source src="https://github.com/CakeBoxDeveloper/timetome/raw/main/IosFallback.mp4" type="video/mp4">
         </video>
       </div>
       
