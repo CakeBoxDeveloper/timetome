@@ -1483,9 +1483,10 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
   }
 
   function computeBallisticKeyframes(name, params) {
-    const {vx0, vy0, drag, vTerminal, swayAmp, swayFreq, swayPhase, rotSpeed, rot0, flipFreq, flipPhase, maxOp, totalTime} = params;
-    const steps = 22;
-    const subSteps = 6;
+    const {vx0, vy0, drag, vTerminal, swayAmp, swayFreq, swayPhase, rotSpeed, rot0, flipFreq, flipPhase, maxOp, totalTime, isMobile} = params;
+    // Меньше шагов на mobile для производительности
+    const steps = isMobile ? 12 : 22;
+    const subSteps = isMobile ? 3 : 6;
     const dtTotal = totalTime / steps;
     const dtSub = dtTotal / subSteps;
 
@@ -1528,14 +1529,15 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
     const originX = vw / 2;
     const originY = vh / 2;
     
-    // Зменшуємо кількість частинок на mobile для продуктивності
+    // Агрессивная оптимизация для mobile
     const isMobile = window.innerWidth < 768;
-    const countMultiplier = isMobile ? 0.5 : 1;
+    const countMultiplier = isMobile ? 0.25 : 1; // Ещё меньше частиц на mobile (75% меньше)
+    const useBlur = !isMobile; // Отключаем blur на mobile полностью
 
     const layers = [
-      {id: 'layer-far-bg', filter: 'url(#dof-bg)', count: Math.round(42 * countMultiplier), wRange: [13, 21], ratioRange: [1.75, 2.3], speedRange: [950, 2150], dragRange: [2.7, 3.4], vTermRange: [340, 440], swayRange: [18, 42], opacity: 0.65},
-      {id: 'layer-mid-sharp', filter: 'url(#dof-mid)', count: Math.round(66 * countMultiplier), wRange: [18, 46], ratioRange: [1.8, 2.45], speedRange: [1150, 2750], dragRange: [2.3, 3.0], vTermRange: [440, 580], swayRange: [25, 58], opacity: 0.98},
-      {id: 'layer-foreground-bokeh', filter: 'url(#dof-fg)', count: Math.round(18 * countMultiplier), wRange: [88, 134], ratioRange: [1.8, 2.25], speedRange: [1450, 2950], dragRange: [1.95, 2.55], vTermRange: [560, 740], swayRange: [20, 48], opacity: 0.85}
+      {id: 'layer-far-bg', filter: useBlur ? 'url(#dof-bg)' : '', count: Math.round(42 * countMultiplier), wRange: [13, 21], ratioRange: [1.75, 2.3], speedRange: [950, 2150], dragRange: [2.7, 3.4], vTermRange: [340, 440], swayRange: [18, 42], opacity: useBlur ? 0.65 : 0.5},
+      {id: 'layer-mid-sharp', filter: useBlur ? 'url(#dof-mid)' : '', count: Math.round(66 * countMultiplier), wRange: [18, 46], ratioRange: [1.8, 2.45], speedRange: [1150, 2750], dragRange: [2.3, 3.0], vTermRange: [440, 580], swayRange: [25, 58], opacity: 0.98},
+      {id: 'layer-foreground-bokeh', filter: useBlur ? 'url(#dof-fg)' : '', count: Math.round(18 * countMultiplier), wRange: [88, 134], ratioRange: [1.8, 2.25], speedRange: [1450, 2950], dragRange: [1.95, 2.55], vTermRange: [560, 740], swayRange: [20, 48], opacity: useBlur ? 0.85 : 0.7}
     ];
 
     let groupsMarkup = '';
@@ -1573,11 +1575,11 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
         const flipPhase = rng() * Math.PI * 2;
 
         const impulseOffset = (vy0 - vTerminal) / drag;
-        const targetDy = vh * 0.6; // Використовуємо vh замість window.innerHeight
-        const exactDuration = Math.max(2.1, (targetDy - impulseOffset) / vTerminal) / 2; // Вдвічі швидше
+        const targetDy = vh * 0.6;
+        const exactDuration = Math.max(2.1, (targetDy - impulseOffset) / vTerminal) / 2;
         const durStr = exactDuration.toFixed(2);
 
-        const kfCss = computeBallisticKeyframes(animName, {vx0, vy0, drag, vTerminal, swayAmp, swayFreq, swayPhase, rotSpeed, rot0, flipFreq, flipPhase, maxOp: layer.opacity, totalTime: exactDuration});
+        const kfCss = computeBallisticKeyframes(animName, {vx0, vy0, drag, vTerminal, swayAmp, swayFreq, swayPhase, rotSpeed, rot0, flipFreq, flipPhase, maxOp: layer.opacity, totalTime: exactDuration, isMobile});
         keyframesList.push(kfCss);
 
         const x = originX - Math.round(width / 2);
@@ -1590,11 +1592,16 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
       groupsMarkup += `    <g id="${layer.id}"${filterAttr}>\n${rects}    </g>\n`;
     });
 
+    // Генерируем фильтры только если нужны (desktop)
+    const filtersMarkup = useBlur 
+      ? `<filter id="dof-bg" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7" /></filter>
+    <filter id="dof-mid" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.6" /></filter>
+    <filter id="dof-fg" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="13" /></filter>`
+      : '';
+
     const svgMarkup = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${vw} ${vh}" preserveAspectRatio="xMidYMid slice" class="confetti-svg">
   <defs>
-    <filter id="dof-bg" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7" /></filter>
-    <filter id="dof-mid" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.6" /></filter>
-    <filter id="dof-fg" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="13" /></filter>
+    ${filtersMarkup}
   </defs>
 ${groupsMarkup}</svg>`;
 
