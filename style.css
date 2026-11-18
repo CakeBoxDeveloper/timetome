@@ -127,7 +127,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 80px;
-  background: linear-gradient(to bottom, #08090f 0%, transparent 100%);
+  background: linear-gradient(to bottom, #d8dae5 0%, transparent 100%);
   pointer-events: none;
   z-index: 5;
 }
@@ -241,12 +241,14 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 }
 
 /* Шахматное смещение колонок */
-.hero-reviews--left  .hero-reviews__col--a { margin-top: 270px; }
+.hero-reviews--left  .hero-reviews__col--a { margin-top: 160px; }
 .hero-reviews--left  .hero-reviews__col--b { margin-top: 82px; }
 .hero-reviews--left  .hero-reviews__col--c { margin-top: 170px; }
-.hero-reviews--right .hero-reviews__col--a { margin-top: 270px; }
+.hero-reviews--left  .hero-reviews__col--d { margin-top: 220px; }
+.hero-reviews--right .hero-reviews__col--a { margin-top: 160px; }
 .hero-reviews--right .hero-reviews__col--b { margin-top: 82px; }
 .hero-reviews--right .hero-reviews__col--c { margin-top: 170px; }
+.hero-reviews--right .hero-reviews__col--d { margin-top: 220px; }
 
 .hero-reviews__col {
   display: flex;
@@ -257,9 +259,11 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 .hero-reviews--left  .hero-reviews__col--a { order: 1; }
 .hero-reviews--left  .hero-reviews__col--b { order: 2; }
 .hero-reviews--left  .hero-reviews__col--c { order: 3; }
-.hero-reviews--right .hero-reviews__col--a { order: 2; }
-.hero-reviews--right .hero-reviews__col--b { order: 1; }
-.hero-reviews--right .hero-reviews__col--c { order: 0; }
+.hero-reviews--left  .hero-reviews__col--d { order: 4; }
+.hero-reviews--right .hero-reviews__col--a { order: 3; }
+.hero-reviews--right .hero-reviews__col--b { order: 2; }
+.hero-reviews--right .hero-reviews__col--c { order: 1; }
+.hero-reviews--right .hero-reviews__col--d { order: 0; }
 
 .hero-review-card {
   width: 75px;
@@ -361,11 +365,17 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 .hero-ready .hero-reviews--left  .hero-reviews__col--b .hero-review-card:nth-child(5) { animation-delay: 0.76s; }
 .hero-ready .hero-reviews--left  .hero-reviews__col--a .hero-review-card:nth-child(1) { animation-delay: 0.62s; }
 .hero-ready .hero-reviews--left  .hero-reviews__col--a .hero-review-card:nth-child(2) { animation-delay: 0.66s; }
+.hero-ready .hero-reviews--left  .hero-reviews__col--a .hero-review-card:nth-child(3) { animation-delay: 0.70s; }
 .hero-ready .hero-reviews--left  .hero-reviews__col--c .hero-review-card:nth-child(1) { animation-delay: 0.64s; }
 .hero-ready .hero-reviews--left  .hero-reviews__col--c .hero-review-card:nth-child(2) { animation-delay: 0.68s; }
 .hero-ready .hero-reviews--left  .hero-reviews__col--c .hero-review-card:nth-child(3) { animation-delay: 0.72s; }
 .hero-ready .hero-reviews--left  .hero-reviews__col--c .hero-review-card:nth-child(4) { animation-delay: 0.76s; }
 .hero-ready .hero-reviews--left  .hero-reviews__col--c .hero-review-card:nth-child(5) { animation-delay: 0.80s; }
+.hero-ready .hero-reviews--left  .hero-reviews__col--d .hero-review-card:nth-child(1) { animation-delay: 0.66s; }
+.hero-ready .hero-reviews--left  .hero-reviews__col--d .hero-review-card:nth-child(2) { animation-delay: 0.70s; }
+.hero-ready .hero-reviews--left  .hero-reviews__col--d .hero-review-card:nth-child(3) { animation-delay: 0.74s; }
+.hero-ready .hero-reviews--left  .hero-reviews__col--d .hero-review-card:nth-child(4) { animation-delay: 0.78s; }
+.hero-ready .hero-reviews--left  .hero-reviews__col--d .hero-review-card:nth-child(5) { animation-delay: 0.82s; }
 
 .hero-ready .hero-reviews--right .hero-reviews__col--b .hero-review-card:nth-child(1) { animation-delay: 0.6s; }
 .hero-ready .hero-reviews--right .hero-reviews__col--b .hero-review-card:nth-child(2) { animation-delay: 0.64s; }
@@ -374,11 +384,17 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 .hero-ready .hero-reviews--right .hero-reviews__col--b .hero-review-card:nth-child(5) { animation-delay: 0.76s; }
 .hero-ready .hero-reviews--right .hero-reviews__col--a .hero-review-card:nth-child(1) { animation-delay: 0.62s; }
 .hero-ready .hero-reviews--right .hero-reviews__col--a .hero-review-card:nth-child(2) { animation-delay: 0.66s; }
+.hero-ready .hero-reviews--right .hero-reviews__col--a .hero-review-card:nth-child(3) { animation-delay: 0.70s; }
 .hero-ready .hero-reviews--right .hero-reviews__col--c .hero-review-card:nth-child(1) { animation-delay: 0.64s; }
 .hero-ready .hero-reviews--right .hero-reviews__col--c .hero-review-card:nth-child(2) { animation-delay: 0.68s; }
 .hero-ready .hero-reviews--right .hero-reviews__col--c .hero-review-card:nth-child(3) { animation-delay: 0.72s; }
 .hero-ready .hero-reviews--right .hero-reviews__col--c .hero-review-card:nth-child(4) { animation-delay: 0.76s; }
 .hero-ready .hero-reviews--right .hero-reviews__col--c .hero-review-card:nth-child(5) { animation-delay: 0.80s; }
+.hero-ready .hero-reviews--right .hero-reviews__col--d .hero-review-card:nth-child(1) { animation-delay: 0.66s; }
+.hero-ready .hero-reviews--right .hero-reviews__col--d .hero-review-card:nth-child(2) { animation-delay: 0.70s; }
+.hero-ready .hero-reviews--right .hero-reviews__col--d .hero-review-card:nth-child(3) { animation-delay: 0.74s; }
+.hero-ready .hero-reviews--right .hero-reviews__col--d .hero-review-card:nth-child(4) { animation-delay: 0.78s; }
+.hero-ready .hero-reviews--right .hero-reviews__col--d .hero-review-card:nth-child(5) { animation-delay: 0.82s; }
 
 
 
@@ -2765,6 +2781,16 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   z-index: 1;
   cursor: pointer;
   animation: flipCardSway 4s ease-in-out infinite;
+  /* Анимация появления синхронно с review cards */
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hero-ready .hero__flip-card {
+  opacity: 1;
+  transform: scale(1);
+  transition-delay: 0.6s; /* Синхронно с review cards */
 }
 
 @keyframes flipCardSway {
@@ -2795,10 +2821,10 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   padding: 12px 24px;
   width: 280px;
   max-width: 100%;
-  background: rgba(255, 255, 255, 0.08);
-  border: 2px solid rgba(255, 255, 255, 0.35);
+  background: transparent;
+  border: 2px solid rgba(0, 0, 0, 0.25);
   border-radius: 10px;
-  color: rgba(245, 245, 245, 0.95);
+  color: rgba(40, 40, 40, 0.9);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -2813,7 +2839,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   height: 32px;
   flex-shrink: 0;
   display: block;
-  filter: brightness(0) invert(1) opacity(0.95);
+  filter: brightness(0) opacity(0.7);
 }
 
 .hero-scroll-btn span {
@@ -2821,8 +2847,8 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 }
 
 .hero-scroll-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.35);
   transform: translateY(-2px);
 }
 
