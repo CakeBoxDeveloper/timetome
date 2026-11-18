@@ -1246,8 +1246,6 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
    - Click on front: flip to back, disable auto-flip
    - Click on back: flip to front, then auto-flip back after 5.5s
    - Always flip clockwise (continuous cycle effect)
-   
-   iOS DEBUG: Comprehensive logging with download button
 ══════════════════════════════════════════════ */
 (function() {
   const card = document.getElementById('heroFlipCard');
@@ -1255,146 +1253,6 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
   const video = document.getElementById('heroFlipVideo');
   if (!card || !inner || !video) return;
 
-  // ═══════════════════════════════════════════
-  // iOS DEBUG LOGGING SYSTEM
-  // ═══════════════════════════════════════════
-  const logs = [];
-  function log(message) {
-    const timestamp = new Date().toISOString();
-    const entry = `[${timestamp}] ${message}`;
-    logs.push(entry);
-    console.log('[FLIP DEBUG]', message);
-  }
-
-  // Log initial state
-  log('=== FLIP CARD INIT ===');
-  log(`User Agent: ${navigator.userAgent}`);
-  log(`Platform: ${navigator.platform}`);
-  log(`Video element exists: ${!!video}`);
-  log(`Video readyState: ${video.readyState}`);
-  log(`Video paused: ${video.paused}`);
-  log(`Video muted: ${video.muted}`);
-  log(`Video autoplay: ${video.autoplay}`);
-  log(`Video playsinline: ${video.playsInline}`);
-  log(`Video currentSrc: ${video.currentSrc}`);
-  log(`Video networkState: ${video.networkState}`);
-  log(`Document hidden: ${document.hidden}`);
-  log(`Window innerWidth: ${window.innerWidth}`);
-  log(`Window innerHeight: ${window.innerHeight}`);
-
-  // Create debug button (mobile only)
-  if (window.innerWidth < 768) {
-    const debugBtn = document.createElement('button');
-    debugBtn.textContent = '📋 Копіювати лог';
-    debugBtn.style.cssText = `
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 99999;
-      padding: 12px 16px;
-      background: rgba(255, 0, 0, 0.8);
-      color: white;
-      border: 2px solid white;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      backdrop-filter: blur(10px);
-      transition: all 0.2s ease;
-    `;
-    
-    debugBtn.addEventListener('click', async () => {
-      const content = logs.join('\n');
-      try {
-        // Modern Clipboard API (iOS Safari 13.4+)
-        await navigator.clipboard.writeText(content);
-        debugBtn.textContent = '✅ Скопійовано!';
-        debugBtn.style.background = 'rgba(0, 200, 0, 0.8)';
-        log('Debug log copied to clipboard');
-        
-        setTimeout(() => {
-          debugBtn.textContent = '📋 Копіювати лог';
-          debugBtn.style.background = 'rgba(255, 0, 0, 0.8)';
-        }, 2000);
-      } catch (err) {
-        // Fallback for older browsers
-        log(`Clipboard API failed: ${err.message}, trying fallback`);
-        const textarea = document.createElement('textarea');
-        textarea.value = content;
-        textarea.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
-        document.body.appendChild(textarea);
-        textarea.select();
-        textarea.setSelectionRange(0, 99999); // For iOS
-        
-        try {
-          document.execCommand('copy');
-          debugBtn.textContent = '✅ Скопійовано!';
-          debugBtn.style.background = 'rgba(0, 200, 0, 0.8)';
-          log('Debug log copied via execCommand');
-          
-          setTimeout(() => {
-            debugBtn.textContent = '📋 Копіювати лог';
-            debugBtn.style.background = 'rgba(255, 0, 0, 0.8)';
-          }, 2000);
-        } catch (err2) {
-          debugBtn.textContent = '❌ Помилка';
-          log(`Copy failed: ${err2.message}`);
-          
-          setTimeout(() => {
-            debugBtn.textContent = '📋 Копіювати лог';
-          }, 2000);
-        } finally {
-          document.body.removeChild(textarea);
-        }
-      }
-    });
-    
-    document.body.appendChild(debugBtn);
-    log('Debug button created (clipboard copy)');
-  }
-
-  // Monitor video events
-  video.addEventListener('loadstart', () => log('VIDEO: loadstart'));
-  video.addEventListener('loadedmetadata', () => {
-    log(`VIDEO: loadedmetadata (duration: ${video.duration})`);
-    log(`VIDEO: Using source - ${video.currentSrc}`);
-    log(`VIDEO: Video size: ${video.videoWidth}x${video.videoHeight}`);
-  });
-  video.addEventListener('loadeddata', () => log(`VIDEO: loadeddata (readyState: ${video.readyState})`));
-  video.addEventListener('canplay', () => log('VIDEO: canplay'));
-  video.addEventListener('canplaythrough', () => log('VIDEO: canplaythrough'));
-  video.addEventListener('play', () => log(`VIDEO: play event (currentTime: ${video.currentTime})`));
-  video.addEventListener('playing', () => log(`VIDEO: playing (currentTime: ${video.currentTime})`));
-  video.addEventListener('pause', () => log('VIDEO: pause'));
-  video.addEventListener('waiting', () => log('VIDEO: waiting'));
-  video.addEventListener('stalled', () => log('VIDEO: stalled'));
-  video.addEventListener('suspend', () => log('VIDEO: suspend'));
-  
-  // Log only first 3 timeupdate events to avoid spam
-  let timeupdateCount = 0;
-  video.addEventListener('timeupdate', () => {
-    if (timeupdateCount < 3) {
-      log(`VIDEO: timeupdate #${++timeupdateCount} - currentTime: ${video.currentTime.toFixed(3)}s`);
-    }
-  });
-  
-  video.addEventListener('error', (e) => {
-    log(`VIDEO: error - ${video.error?.code} ${video.error?.message}`);
-    if (video.error) {
-      const errorCodes = ['', 'MEDIA_ERR_ABORTED', 'MEDIA_ERR_NETWORK', 'MEDIA_ERR_DECODE', 'MEDIA_ERR_SRC_NOT_SUPPORTED'];
-      log(`VIDEO: error code meaning - ${errorCodes[video.error.code] || 'UNKNOWN'}`);
-    }
-  });
-
-  // Monitor visibility changes
-  document.addEventListener('visibilitychange', () => {
-    log(`Document visibility changed: hidden=${document.hidden}`);
-  });
-
-  // ═══════════════════════════════════════════
-  // FLIP CARD LOGIC
-  // ═══════════════════════════════════════════
   let rotationCount = 0;
   let autoFlipEnabled = true;
   let autoFlipTimer = null;
@@ -1408,7 +1266,6 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
   const back = card.querySelector('.hero__flip-back');
 
   inner.style.transform = 'rotateY(0deg)';
-  log('Initial transform set to 0deg');
 
   function isShowingFront() {
     return rotationCount % 2 === 0;
@@ -1425,29 +1282,19 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
       back.style.opacity = showFront ? '0' : '1';
       back.style.pointerEvents = showFront ? 'none' : 'auto';
     }
-    log(`Visibility updated: front=${showFront ? 'visible' : 'hidden'}, back=${showFront ? 'hidden' : 'visible'}`);
   }
 
   function flipClockwise() {
     rotationCount++;
     const degrees = rotationCount * 180;
     inner.style.transform = `rotateY(${degrees}deg)`;
-    log(`Flip to ${degrees}deg (showing ${isShowingFront() ? 'front' : 'back'})`);
     
     // Update visibility immediately for iOS
     updateVisibility();
     
     if (isShowingFront()) {
-      log(`Restarting video (currentTime: ${video.currentTime} -> 0)`);
       video.currentTime = 0;
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => log('VIDEO: play() promise resolved'))
-          .catch(err => log(`VIDEO: play() promise rejected - ${err.name}: ${err.message}`));
-      } else {
-        log('VIDEO: play() returned undefined (no promise)');
-      }
+      video.play().catch(() => {});
     }
   }
 
@@ -1455,23 +1302,17 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
   updateVisibility();
 
   function scheduleAutoFlip() {
-    if (!autoFlipEnabled || !isPageVisible) {
-      log(`Auto-flip not scheduled (enabled: ${autoFlipEnabled}, visible: ${isPageVisible})`);
-      return;
-    }
+    if (!autoFlipEnabled || !isPageVisible) return;
     clearTimeout(autoFlipTimer);
     
     if (isShowingFront()) {
-      const delay = ANIMATION_DURATION - FLIP_BEFORE_END;
-      log(`Scheduling auto-flip in ${delay}ms (front -> back)`);
       autoFlipTimer = setTimeout(() => {
         if (isPageVisible) {
           flipClockwise();
           scheduleAutoFlip();
         }
-      }, delay);
+      }, ANIMATION_DURATION - FLIP_BEFORE_END);
     } else {
-      log(`Scheduling auto-flip in ${BACK_DISPLAY_TIME}ms (back -> front)`);
       autoFlipTimer = setTimeout(() => {
         if (isPageVisible) {
           flipClockwise();
@@ -1485,20 +1326,13 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
     isPageVisible = !document.hidden;
     
     if (isPageVisible) {
-      log('Page became visible');
       if (autoFlipEnabled) {
         scheduleAutoFlip();
       }
       if (isShowingFront()) {
-        const playPromise = video.play();
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => log('VIDEO: resumed on visibility'))
-            .catch(err => log(`VIDEO: resume failed - ${err.name}: ${err.message}`));
-        }
+        video.play().catch(() => {});
       }
     } else {
-      log('Page became hidden');
       clearTimeout(autoFlipTimer);
       video.pause();
     }
@@ -1508,12 +1342,10 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
     if (e.target.tagName === 'A' || e.target.closest('a')) return;
     
     if (isShowingFront()) {
-      log('User clicked front - disabling auto-flip');
       autoFlipEnabled = false;
       clearTimeout(autoFlipTimer);
       flipClockwise();
     } else {
-      log('User clicked back - enabling auto-flip');
       flipClockwise();
       autoFlipEnabled = true;
       clearTimeout(autoFlipTimer);
@@ -1521,50 +1353,8 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
     }
   });
 
-  // Initial play attempt
-  log('Attempting initial video.play()');
-  const initialPlay = video.play();
-  if (initialPlay !== undefined) {
-    initialPlay
-      .then(() => {
-        log('VIDEO: Initial play() SUCCESS');
-        scheduleAutoFlip();
-      })
-      .catch(err => {
-        log(`VIDEO: Initial play() FAILED - ${err.name}: ${err.message}`);
-        log('This is expected on iOS - autoplay requires user interaction');
-        // Schedule auto-flip anyway - video will play on first user interaction
-        scheduleAutoFlip();
-      });
-  } else {
-    log('VIDEO: Initial play() returned undefined');
-    scheduleAutoFlip();
-  }
-
-  // Log final readyState after a delay
-  setTimeout(() => {
-    log(`Video state after 1s: readyState=${video.readyState}, paused=${video.paused}, currentTime=${video.currentTime}`);
-  }, 1000);
-
-  setTimeout(() => {
-    log(`Video state after 3s: readyState=${video.readyState}, paused=${video.paused}, currentTime=${video.currentTime}`);
-    
-    // WORKAROUND: If video is "playing" but stuck at 0, force restart
-    if (!video.paused && video.currentTime === 0 && video.readyState >= 2) {
-      log('WORKAROUND: Video stuck at 0 - forcing restart');
-      video.pause();
-      video.currentTime = 0.01; // Tiny offset to unstick
-      setTimeout(() => {
-        video.play()
-          .then(() => log('WORKAROUND: Restart successful'))
-          .catch(err => log(`WORKAROUND: Restart failed - ${err.message}`));
-      }, 100);
-    }
-  }, 3000);
-
-  setTimeout(() => {
-    log(`Video state after 5s: readyState=${video.readyState}, paused=${video.paused}, currentTime=${video.currentTime}`);
-  }, 5000);
+  video.play().catch(() => {});
+  scheduleAutoFlip();
 })();
 
 /* ══════════════════════════════════════════════
