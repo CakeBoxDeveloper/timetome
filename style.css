@@ -298,14 +298,14 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 .hero-review-card__top {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   padding: 0;
   border-bottom: none;
   flex-shrink: 0;
 }
 .hero-review-card__avatar {
-  width: 11px;
-  height: 11px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: transparent;
   flex-shrink: 0;
@@ -315,19 +315,19 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   overflow: visible;
 }
 .hero-review-card__avatar img {
-  width: 11px !important;
-  height: 11px !important;
+  width: 18px !important;
+  height: 18px !important;
   min-width: 0 !important;
   min-height: 0 !important;
-  max-width: 11px !important;
-  max-height: 11px !important;
+  max-width: 18px !important;
+  max-height: 18px !important;
   object-fit: contain !important;
   display: block !important;
 }
 .hero-review-card__name {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', var(--font);
-  font-size: 6px;
-  font-weight: 600;
+  font-size: 9px;
+  font-weight: 700;
   color: rgba(0, 0, 0, 0.5);
   white-space: nowrap;
   overflow: hidden;
