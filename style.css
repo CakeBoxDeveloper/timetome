@@ -2779,6 +2779,104 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   }
 }
 
+/* Scroll Down Button */
+.hero-scroll-down {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 48px;
+  opacity: 0;
+  animation: scrollDownFadeIn 1s ease-out 2s forwards;
+  transition: opacity 0.5s ease;
+}
+
+.hero-scroll-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 24px;
+  width: 280px;
+  max-width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  color: rgba(200, 200, 200, 0.9);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  text-transform: uppercase;
+}
+
+.scroll-lottie {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: block;
+  filter: brightness(0) invert(1) opacity(0.7);
+}
+
+.hero-scroll-btn span {
+  animation: scrollTextPulse 2s ease-in-out infinite;
+}
+
+.hero-scroll-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.hero-scroll-btn:active {
+  transform: translateY(0);
+}
+
+@keyframes scrollDownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-scroll-down.hidden {
+  animation: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+@keyframes scrollTextPulse {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-scroll-down {
+    margin-top: 36px;
+  }
+  
+  .hero-scroll-btn {
+    padding: 10px 20px;
+    font-size: 12px;
+    gap: 10px;
+    width: 240px;
+  }
+  
+  .scroll-lottie {
+    width: 28px !important;
+    height: 28px !important;
+  }
+}
+
 @media (max-width: 480px) {
   .hero__flip-card {
     max-width: 240px;

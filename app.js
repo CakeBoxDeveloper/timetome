@@ -1252,6 +1252,9 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
   const FLIP_BEFORE_END = 500;     // Флип за 500мс до конца (5.5s)
   const BACK_DISPLAY_TIME = 5000;  // Задняя сторона висит 5 секунд
 
+  // ГАРАНТИРУЕМ показ лицевой стороны при загрузке
+  inner.style.transform = 'rotateY(0deg)';
+
   function isShowingFront() {
     // Чётное число оборотов = фронт (0, 2, 4...), нечётное = бэк (1, 3, 5...)
     return rotationCount % 2 === 0;
@@ -1313,3 +1316,65 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
   video.play().catch(() => {});
   scheduleAutoFlip();
 })();
+
+/* ══════════════════════════════════════════════
+   HERO SCROLL DOWN BUTTON
+══════════════════════════════════════════════ */
+(function() {
+  // Ждём полной загрузки DOM
+  function initScrollButton() {
+    const scrollBtn = document.getElementById('heroScrollBtn');
+    const scrollContainer = document.getElementById('heroScrollDown');
+    const heroSection = document.querySelector('section.hero');
+    
+    console.log('Scroll button init:', {scrollBtn, scrollContainer, heroSection});
+    
+    if (!scrollBtn || !scrollContainer || !heroSection) {
+      console.warn('Scroll button elements not found');
+      return;
+    }
+    
+    let hidden = false;
+    
+    function hideButton() {
+      if (hidden) return;
+      hidden = true;
+      scrollContainer.classList.add('hidden');
+      console.log('Button hidden');
+    }
+    
+    // Скрыть при клике
+    scrollBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      console.log('Button clicked');
+      hideButton();
+      const servicesSection = document.getElementById('services');
+      if (servicesSection) {
+        servicesSection.scrollIntoView({behavior:'smooth'});
+      }
+    });
+    
+    // Скрыть при скролле за пределы hero секции
+    let rafId;
+    window.addEventListener('scroll', () => {
+      if (hidden) return;
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const heroBottom = heroSection.getBoundingClientRect().bottom;
+        const threshold = window.innerHeight * 0.3;
+        if (heroBottom < threshold) {
+          hideButton();
+        }
+      });
+    }, { passive: true });
+    
+    console.log('Scroll button initialized');
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScrollButton);
+  } else {
+    initScrollButton();
+  }
+})();
+
