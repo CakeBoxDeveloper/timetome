@@ -3017,6 +3017,8 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   height: auto;
   display: block;
   border-radius: 18px;
+  transform: scaleX(1);
+  -webkit-transform: scaleX(1);
 }
 
 .hero__flip-contacts {
