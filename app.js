@@ -1620,9 +1620,41 @@ ${groupsMarkup}</svg>`;
 
     let hasPlayed = false; // Прапорець щоб конфетті запустилось тільки один раз
 
+    // Перевіряємо чи це прямий заход або рефреш (не перехід з іншої сторінки сайту)
+    function isDirectEntry() {
+      const referrer = document.referrer;
+      
+      // Немає referrer = прямий заход (вписали URL, закладка, або новая вкладка)
+      if (!referrer) return true;
+      
+      // Є referrer - перевіряємо чи це з іншого сайту
+      try {
+        const referrerURL = new URL(referrer);
+        const currentHost = window.location.hostname;
+        
+        // Якщо referrer з того ж домену - це внутрішній перехід
+        if (referrerURL.hostname === currentHost) {
+          console.log('Internal navigation from', referrerURL.pathname, '- skipping confetti');
+          return false;
+        }
+        
+        // Якщо з іншого домену - показуємо конфетті
+        return true;
+      } catch {
+        // Якщо не вдалося розпарсити - вважаємо прямим заходом
+        return true;
+      }
+    }
+
     // Запускаємо confetti синхронно з карточками (0.6s delay після hero-ready)
     document.body.addEventListener('heroReady', () => {
       if (hasPlayed) return; // Якщо вже грало - не запускаємо знову
+      
+      // Перевіряємо чи це не внутрішній перехід
+      if (!isDirectEntry()) {
+        return;
+      }
+      
       hasPlayed = true;
       
       setTimeout(() => {
