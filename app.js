@@ -54,8 +54,10 @@
 
   // Hard fallback: if something delays loader logic, still set hero-ready after 4s
   setTimeout(() => { 
-    document.body.classList.add('hero-ready');
-    document.body.dispatchEvent(new CustomEvent('heroReady'));
+    if (!document.body.classList.contains('hero-ready')) {
+      document.body.classList.add('hero-ready');
+      document.body.dispatchEvent(new CustomEvent('heroReady'));
+    }
   }, 4000);
 
   function onPageLoad() {

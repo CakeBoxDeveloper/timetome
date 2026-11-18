@@ -3001,7 +3001,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   top: 0;
   left: 0;
   height: 100%;
-  transform: rotateY(180deg);
+  /* transform: rotateY(180deg); - REMOVED: conflicts with JS rotation */
   background: rgba(245, 245, 250, 0.98);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
