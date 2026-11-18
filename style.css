@@ -2815,7 +2815,6 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   perspective: 1000px;
   z-index: 1;
   cursor: pointer;
-  animation: flipCardSway 4s ease-in-out infinite;
   /* Анимация появления синхронно с review cards */
   opacity: 0;
   transform: scale(0.8);
@@ -2826,6 +2825,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   opacity: 1;
   transform: scale(1);
   transition-delay: 0.6s; /* Синхронно с review cards */
+  animation: flipCardSway 4s ease-in-out infinite 0.6s; /* Sway стартує після zoom */
 }
 
 @keyframes flipCardSway {

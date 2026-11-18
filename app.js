@@ -1517,8 +1517,10 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
 
   function generateConfetti() {
     const rng = createRng(42077);
-    const originX = window.innerWidth / 2;
-    const originY = window.innerHeight / 2;
+    const vw = Math.max(window.innerWidth, 375); // Мінімум 375px для mobile
+    const vh = Math.max(window.innerHeight, 667); // Мінімум 667px для mobile
+    const originX = vw / 2;
+    const originY = vh / 2;
 
     const layers = [
       {id: 'layer-far-bg', filter: 'url(#dof-bg)', count: 42, wRange: [13, 21], ratioRange: [1.75, 2.3], speedRange: [950, 2150], dragRange: [2.7, 3.4], vTermRange: [340, 440], swayRange: [18, 42], opacity: 0.65},
@@ -1561,7 +1563,7 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
         const flipPhase = rng() * Math.PI * 2;
 
         const impulseOffset = (vy0 - vTerminal) / drag;
-        const targetDy = window.innerHeight * 0.6;
+        const targetDy = vh * 0.6; // Використовуємо vh замість window.innerHeight
         const exactDuration = Math.max(2.1, (targetDy - impulseOffset) / vTerminal) / 2; // Вдвічі швидше
         const durStr = exactDuration.toFixed(2);
 
@@ -1578,7 +1580,7 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
       groupsMarkup += `    <g id="${layer.id}"${filterAttr}>\n${rects}    </g>\n`;
     });
 
-    const svgMarkup = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${window.innerWidth} ${window.innerHeight}" preserveAspectRatio="xMidYMid slice" class="confetti-svg">
+    const svgMarkup = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${vw} ${vh}" preserveAspectRatio="xMidYMid slice" class="confetti-svg">
   <defs>
     <filter id="dof-bg" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7" /></filter>
     <filter id="dof-mid" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.6" /></filter>
