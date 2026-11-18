@@ -1247,6 +1247,7 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
   let rotationCount = 0; // Счётчик вращений: 0, 1, 2, 3... (всегда по часовой)
   let autoFlipEnabled = true;
   let autoFlipTimer = null;
+  let isPageVisible = !document.hidden; // Отслеживание видимости страницы
   
   const ANIMATION_DURATION = 6000; // 6 секунд - длительность видео
   const FLIP_BEFORE_END = 500;     // Флип за 500мс до конца (5.5s)
@@ -1273,23 +1274,47 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
   }
 
   function scheduleAutoFlip() {
-    if (!autoFlipEnabled) return;
+    if (!autoFlipEnabled || !isPageVisible) return; // Не планируем флип если страница скрыта
     clearTimeout(autoFlipTimer);
     
     if (isShowingFront()) {
       // Сейчас показывается фронт - флип через 5.5s
       autoFlipTimer = setTimeout(() => {
-        flipClockwise();
-        scheduleAutoFlip();
+        if (isPageVisible) { // Проверяем перед флипом
+          flipClockwise();
+          scheduleAutoFlip();
+        }
       }, ANIMATION_DURATION - FLIP_BEFORE_END);
     } else {
       // Сейчас показывается бэк - флип через 5s
       autoFlipTimer = setTimeout(() => {
-        flipClockwise();
-        scheduleAutoFlip();
+        if (isPageVisible) { // Проверяем перед флипом
+          flipClockwise();
+          scheduleAutoFlip();
+        }
       }, BACK_DISPLAY_TIME);
     }
   }
+
+  // Отслеживание видимости вкладки
+  document.addEventListener('visibilitychange', () => {
+    isPageVisible = !document.hidden;
+    
+    if (isPageVisible) {
+      // Вкладка стала видимой - возобновляем автофлип
+      if (autoFlipEnabled) {
+        scheduleAutoFlip();
+      }
+      // Возобновляем видео если показывается фронт
+      if (isShowingFront()) {
+        video.play().catch(() => {});
+      }
+    } else {
+      // Вкладка скрыта - останавливаем таймеры и видео
+      clearTimeout(autoFlipTimer);
+      video.pause();
+    }
+  });
 
   // Клик по карте
   card.addEventListener('click', (e) => {
@@ -1306,7 +1331,9 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
       flipClockwise();
       clearTimeout(autoFlipTimer);
       autoFlipTimer = setTimeout(() => {
-        flipClockwise();
+        if (isPageVisible) { // Проверяем видимость
+          flipClockwise();
+        }
         // После этого флипа автофлип остаётся выключенным
       }, ANIMATION_DURATION - FLIP_BEFORE_END);
     }
