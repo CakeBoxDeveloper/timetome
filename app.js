@@ -43,13 +43,20 @@
     const delay   = Math.max(0, MIN_SHOW_MS - elapsed) + 280;
     setTimeout(() => {
       loader.classList.add('is-hidden');
-      setTimeout(() => { document.body.classList.add('hero-ready'); }, 600);
+      setTimeout(() => { 
+        document.body.classList.add('hero-ready');
+        // Dispatch custom event for confetti
+        document.body.dispatchEvent(new CustomEvent('heroReady'));
+      }, 600);
       setTimeout(() => { if (loader.parentNode) loader.parentNode.removeChild(loader); }, 600);
     }, delay);
   }
 
   // Hard fallback: if something delays loader logic, still set hero-ready after 4s
-  setTimeout(() => { document.body.classList.add('hero-ready'); }, 4000);
+  setTimeout(() => { 
+    document.body.classList.add('hero-ready');
+    document.body.dispatchEvent(new CustomEvent('heroReady'));
+  }, 4000);
 
   function onPageLoad() {
     if (pageReady) return;
@@ -1452,3 +1459,164 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
   }
 })();
 
+
+
+/* ══════════════════════════════════════════════
+   CONFETTI EXPLOSION (синхронно з вильотом карток)
+══════════════════════════════════════════════ */
+(function() {
+  const PALETTE = ['#42A5F5', '#F05537', '#FBC02D', '#8DC68F', '#797A9E', '#F4B3A8'];
+  
+  function createRng(seed) {
+    let s = seed % 2147483647;
+    if (s <= 0) s += 2147483646;
+    return function () {
+      s = (s * 16807) % 2147483647;
+      return (s - 1) / 2147483646;
+    };
+  }
+
+  function computeBallisticKeyframes(name, params) {
+    const {vx0, vy0, drag, vTerminal, swayAmp, swayFreq, swayPhase, rotSpeed, rot0, flipFreq, flipPhase, maxOp, totalTime} = params;
+    const steps = 22;
+    const subSteps = 6;
+    const dtTotal = totalTime / steps;
+    const dtSub = dtTotal / subSteps;
+
+    let t = 0, x = 0, y = 0;
+    let frames = [];
+
+    for (let i = 0; i <= steps; i++) {
+      const pct = ((i / steps) * 100).toFixed(1).replace(/\.0$/, '');
+      const rot = (rot0 + rotSpeed * t).toFixed(1);
+      const scaleIntro = i === 0 ? 0.2 : Math.min(1, 0.2 + (t / 0.14) * 0.8);
+      const sy = (Math.cos(flipFreq * t + flipPhase) * scaleIntro).toFixed(3);
+      const sx = scaleIntro.toFixed(3);
+
+      let opacity = maxOp;
+      if (i === 0) opacity = 0;
+      else if (t < 0.08) opacity = +(maxOp * (t / 0.08)).toFixed(2);
+      else if (i === steps) opacity = 0;
+
+      frames.push(`  ${pct}% { opacity: ${opacity}; transform: translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) rotate(${rot}deg) scale(${sx}, ${sy}); }`);
+
+      if (i < steps) {
+        for (let s = 0; s < subSteps; s++) {
+          const tMid = t + dtSub * 0.5;
+          const decay = Math.exp(-drag * tMid);
+          const vx = vx0 * decay + swayAmp * Math.sin(swayFreq * tMid + swayPhase);
+          const vy = (vy0 - vTerminal) * decay + vTerminal;
+          x += vx * dtSub;
+          y += vy * dtSub;
+          t += dtSub;
+        }
+      }
+    }
+    return `@keyframes ${name} {\n${frames.join('\n')}\n}`;
+  }
+
+  function generateConfetti() {
+    const rng = createRng(42077);
+    const originX = window.innerWidth / 2;
+    const originY = window.innerHeight / 2;
+
+    const layers = [
+      {id: 'layer-far-bg', filter: 'url(#dof-bg)', count: 42, wRange: [13, 21], ratioRange: [1.75, 2.3], speedRange: [950, 2150], dragRange: [2.7, 3.4], vTermRange: [340, 440], swayRange: [18, 42], opacity: 0.65},
+      {id: 'layer-mid-sharp', filter: 'url(#dof-mid)', count: 66, wRange: [18, 46], ratioRange: [1.8, 2.45], speedRange: [1150, 2750], dragRange: [2.3, 3.0], vTermRange: [440, 580], swayRange: [25, 58], opacity: 0.98},
+      {id: 'layer-foreground-bokeh', filter: 'url(#dof-fg)', count: 18, wRange: [88, 134], ratioRange: [1.8, 2.25], speedRange: [1450, 2950], dragRange: [1.95, 2.55], vTermRange: [560, 740], swayRange: [20, 48], opacity: 0.85}
+    ];
+
+    let groupsMarkup = '';
+    let keyframesList = [];
+    let particleIndex = 0;
+
+    layers.forEach((layer) => {
+      let rects = '';
+      for (let i = 0; i < layer.count; i++) {
+        particleIndex++;
+        const animName = `cb-${particleIndex}`;
+        const color = PALETTE[Math.floor(rng() * PALETTE.length)];
+        const width = Math.round(layer.wRange[0] + rng() * (layer.wRange[1] - layer.wRange[0]));
+        const ratio = layer.ratioRange[0] + rng() * (layer.ratioRange[1] - layer.ratioRange[0]);
+        const height = Math.round(width * ratio);
+
+        const baseAngle = (i / layer.count) * Math.PI * 2;
+        const jitterAngle = (rng() - 0.5) * ((Math.PI * 2) / layer.count) * 0.85;
+        const angle = baseAngle + jitterAngle;
+
+        const radialFactor = 0.25 + Math.pow(rng(), 0.72) * 0.75;
+        const speed = layer.speedRange[0] + radialFactor * (layer.speedRange[1] - layer.speedRange[0]);
+        const vx0 = Math.cos(angle) * speed;
+        const vy0 = Math.sin(angle) * speed - (Math.sin(angle) < 0 ? 180 : 0);
+
+        const drag = layer.dragRange[0] + rng() * (layer.dragRange[1] - layer.dragRange[0]);
+        const vTerminal = layer.vTermRange[0] + rng() * (layer.vTermRange[1] - layer.vTermRange[0]);
+        const swayAmp = layer.swayRange[0] + rng() * (layer.swayRange[1] - layer.swayRange[0]);
+        const swayFreq = 2.6 + rng() * 2.4;
+        const swayPhase = rng() * Math.PI * 2;
+
+        const rot0 = Math.round(rng() * 360);
+        const rotSpeed = (rng() > 0.5 ? 1 : -1) * (160 + rng() * 260);
+        const flipFreq = 4.5 + rng() * 5.0;
+        const flipPhase = rng() * Math.PI * 2;
+
+        const impulseOffset = (vy0 - vTerminal) / drag;
+        const targetDy = window.innerHeight * 0.6;
+        const exactDuration = Math.max(2.1, (targetDy - impulseOffset) / vTerminal) / 2; // Вдвічі швидше
+        const durStr = exactDuration.toFixed(2);
+
+        const kfCss = computeBallisticKeyframes(animName, {vx0, vy0, drag, vTerminal, swayAmp, swayFreq, swayPhase, rotSpeed, rot0, flipFreq, flipPhase, maxOp: layer.opacity, totalTime: exactDuration});
+        keyframesList.push(kfCss);
+
+        const x = originX - Math.round(width / 2);
+        const y = originY - Math.round(height / 2);
+
+        rects += `      <rect class="confetti-piece" x="${x}" y="${y}" width="${width}" height="${height}" rx="1.5" fill="${color}" style="--anim-name:${animName};--dur:${durStr}s;" />\n`;
+      }
+
+      const filterAttr = layer.filter ? ` filter="${layer.filter}"` : '';
+      groupsMarkup += `    <g id="${layer.id}"${filterAttr}>\n${rects}    </g>\n`;
+    });
+
+    const svgMarkup = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${window.innerWidth} ${window.innerHeight}" preserveAspectRatio="xMidYMid slice" class="confetti-svg">
+  <defs>
+    <filter id="dof-bg" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7" /></filter>
+    <filter id="dof-mid" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.6" /></filter>
+    <filter id="dof-fg" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="13" /></filter>
+  </defs>
+${groupsMarkup}</svg>`;
+
+    return { svgMarkup, keyframesCss: keyframesList.join('\n') };
+  }
+
+  function initConfetti() {
+    const stageEl = document.getElementById('confettiStage');
+    const keyframesEl = document.getElementById('confettiKeyframes');
+    
+    if (!stageEl || !keyframesEl) return;
+
+    const { svgMarkup, keyframesCss } = generateConfetti();
+    keyframesEl.textContent = keyframesCss;
+    stageEl.innerHTML = svgMarkup;
+
+    // Запускаємо confetti синхронно з карточками (0.6s delay після hero-ready)
+    document.body.addEventListener('heroReady', () => {
+      setTimeout(() => {
+        stageEl.classList.add('is-playing');
+        // Прибираємо confetti через 2 секунди (вдвічі швидше)
+        setTimeout(() => {
+          stageEl.classList.remove('is-playing');
+          setTimeout(() => {
+            stageEl.style.opacity = '0';
+          }, 300);
+        }, 2000); // Було 4000, стало 2000
+      }, 600); // Синхронно з delay карточок
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initConfetti);
+  } else {
+    initConfetti();
+  }
+})();
