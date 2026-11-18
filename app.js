@@ -1244,6 +1244,8 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
    - Click on front: flip to back, disable auto-flip
    - Click on back: flip to front, then auto-flip back after 5.5s
    - Always flip clockwise (continuous cycle effect)
+   
+   iOS DEBUG: Comprehensive logging with download button
 ══════════════════════════════════════════════ */
 (function() {
   const card = document.getElementById('heroFlipCard');
@@ -1251,20 +1253,105 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
   const video = document.getElementById('heroFlipVideo');
   if (!card || !inner || !video) return;
 
-  let rotationCount = 0; // Счётчик вращений: 0, 1, 2, 3... (всегда по часовой)
+  // ═══════════════════════════════════════════
+  // iOS DEBUG LOGGING SYSTEM
+  // ═══════════════════════════════════════════
+  const logs = [];
+  function log(message) {
+    const timestamp = new Date().toISOString();
+    const entry = `[${timestamp}] ${message}`;
+    logs.push(entry);
+    console.log('[FLIP DEBUG]', message);
+  }
+
+  // Log initial state
+  log('=== FLIP CARD INIT ===');
+  log(`User Agent: ${navigator.userAgent}`);
+  log(`Platform: ${navigator.platform}`);
+  log(`Video element exists: ${!!video}`);
+  log(`Video readyState: ${video.readyState}`);
+  log(`Video paused: ${video.paused}`);
+  log(`Video muted: ${video.muted}`);
+  log(`Video autoplay: ${video.autoplay}`);
+  log(`Video playsinline: ${video.playsInline}`);
+  log(`Video currentSrc: ${video.currentSrc}`);
+  log(`Video networkState: ${video.networkState}`);
+  log(`Document hidden: ${document.hidden}`);
+  log(`Window innerWidth: ${window.innerWidth}`);
+  log(`Window innerHeight: ${window.innerHeight}`);
+
+  // Create debug button (mobile only)
+  if (window.innerWidth < 768) {
+    const debugBtn = document.createElement('button');
+    debugBtn.textContent = '📥 Debug';
+    debugBtn.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 99999;
+      padding: 12px 16px;
+      background: rgba(255, 0, 0, 0.8);
+      color: white;
+      border: 2px solid white;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+    `;
+    debugBtn.addEventListener('click', () => {
+      const content = logs.join('\n');
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `flip-debug-${Date.now()}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+      log('Debug log downloaded');
+    });
+    document.body.appendChild(debugBtn);
+    log('Debug button created');
+  }
+
+  // Monitor video events
+  video.addEventListener('loadstart', () => log('VIDEO: loadstart'));
+  video.addEventListener('loadedmetadata', () => log(`VIDEO: loadedmetadata (duration: ${video.duration})`));
+  video.addEventListener('loadeddata', () => log(`VIDEO: loadeddata (readyState: ${video.readyState})`));
+  video.addEventListener('canplay', () => log('VIDEO: canplay'));
+  video.addEventListener('canplaythrough', () => log('VIDEO: canplaythrough'));
+  video.addEventListener('play', () => log('VIDEO: play event'));
+  video.addEventListener('playing', () => log('VIDEO: playing'));
+  video.addEventListener('pause', () => log('VIDEO: pause'));
+  video.addEventListener('waiting', () => log('VIDEO: waiting'));
+  video.addEventListener('stalled', () => log('VIDEO: stalled'));
+  video.addEventListener('suspend', () => log('VIDEO: suspend'));
+  video.addEventListener('error', (e) => {
+    log(`VIDEO: error - ${video.error?.code} ${video.error?.message}`);
+  });
+
+  // Monitor visibility changes
+  document.addEventListener('visibilitychange', () => {
+    log(`Document visibility changed: hidden=${document.hidden}`);
+  });
+
+  // ═══════════════════════════════════════════
+  // FLIP CARD LOGIC
+  // ═══════════════════════════════════════════
+  let rotationCount = 0;
   let autoFlipEnabled = true;
   let autoFlipTimer = null;
-  let isPageVisible = !document.hidden; // Отслеживание видимости страницы
+  let isPageVisible = !document.hidden;
   
-  const ANIMATION_DURATION = 6000; // 6 секунд - длительность видео
-  const FLIP_BEFORE_END = 500;     // Флип за 500мс до конца (5.5s)
-  const BACK_DISPLAY_TIME = 5000;  // Задняя сторона висит 5 секунд
+  const ANIMATION_DURATION = 6000;
+  const FLIP_BEFORE_END = 500;
+  const BACK_DISPLAY_TIME = 5000;
 
-  // ГАРАНТИРУЕМ показ лицевой стороны при загрузке
   inner.style.transform = 'rotateY(0deg)';
+  log('Initial transform set to 0deg');
 
   function isShowingFront() {
-    // Чётное число оборотов = фронт (0, 2, 4...), нечётное = бэк (1, 3, 5...)
     return rotationCount % 2 === 0;
   }
 
@@ -1272,30 +1359,42 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
     rotationCount++;
     const degrees = rotationCount * 180;
     inner.style.transform = `rotateY(${degrees}deg)`;
+    log(`Flip to ${degrees}deg (showing ${isShowingFront() ? 'front' : 'back'})`);
     
-    // Если флипнули на фронт — перезапуск видео
     if (isShowingFront()) {
+      log(`Restarting video (currentTime: ${video.currentTime} -> 0)`);
       video.currentTime = 0;
-      video.play().catch(() => {});
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => log('VIDEO: play() promise resolved'))
+          .catch(err => log(`VIDEO: play() promise rejected - ${err.name}: ${err.message}`));
+      } else {
+        log('VIDEO: play() returned undefined (no promise)');
+      }
     }
   }
 
   function scheduleAutoFlip() {
-    if (!autoFlipEnabled || !isPageVisible) return; // Не планируем флип если страница скрыта
+    if (!autoFlipEnabled || !isPageVisible) {
+      log(`Auto-flip not scheduled (enabled: ${autoFlipEnabled}, visible: ${isPageVisible})`);
+      return;
+    }
     clearTimeout(autoFlipTimer);
     
     if (isShowingFront()) {
-      // Сейчас показывается фронт - флип через 5.5s
+      const delay = ANIMATION_DURATION - FLIP_BEFORE_END;
+      log(`Scheduling auto-flip in ${delay}ms (front -> back)`);
       autoFlipTimer = setTimeout(() => {
-        if (isPageVisible) { // Проверяем перед флипом
+        if (isPageVisible) {
           flipClockwise();
           scheduleAutoFlip();
         }
-      }, ANIMATION_DURATION - FLIP_BEFORE_END);
+      }, delay);
     } else {
-      // Сейчас показывается бэк - флип через 5s
+      log(`Scheduling auto-flip in ${BACK_DISPLAY_TIME}ms (back -> front)`);
       autoFlipTimer = setTimeout(() => {
-        if (isPageVisible) { // Проверяем перед флипом
+        if (isPageVisible) {
           flipClockwise();
           scheduleAutoFlip();
         }
@@ -1303,38 +1402,39 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
     }
   }
 
-  // Отслеживание видимости вкладки
   document.addEventListener('visibilitychange', () => {
     isPageVisible = !document.hidden;
     
     if (isPageVisible) {
-      // Вкладка стала видимой - возобновляем автофлип
+      log('Page became visible');
       if (autoFlipEnabled) {
         scheduleAutoFlip();
       }
-      // Возобновляем видео если показывается фронт
       if (isShowingFront()) {
-        video.play().catch(() => {});
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => log('VIDEO: resumed on visibility'))
+            .catch(err => log(`VIDEO: resume failed - ${err.name}: ${err.message}`));
+        }
       }
     } else {
-      // Вкладка скрыта - останавливаем таймеры и видео
+      log('Page became hidden');
       clearTimeout(autoFlipTimer);
       video.pause();
     }
   });
 
-  // Клик по карте
   card.addEventListener('click', (e) => {
-    // Не флипаем если кликнули на ссылку
     if (e.target.tagName === 'A' || e.target.closest('a')) return;
     
     if (isShowingFront()) {
-      // Клик на фронт - флип на бэк, отключаем автофлип
+      log('User clicked front - disabling auto-flip');
       autoFlipEnabled = false;
       clearTimeout(autoFlipTimer);
       flipClockwise();
     } else {
-      // Клик на бэк - флип на фронт, затем ВКЛЮЧАЕМ автофлип назад
+      log('User clicked back - enabling auto-flip');
       flipClockwise();
       autoFlipEnabled = true;
       clearTimeout(autoFlipTimer);
@@ -1342,9 +1442,34 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
     }
   });
 
-  // Запускаем автофлип сразу
-  video.play().catch(() => {});
-  scheduleAutoFlip();
+  // Initial play attempt
+  log('Attempting initial video.play()');
+  const initialPlay = video.play();
+  if (initialPlay !== undefined) {
+    initialPlay
+      .then(() => {
+        log('VIDEO: Initial play() SUCCESS');
+        scheduleAutoFlip();
+      })
+      .catch(err => {
+        log(`VIDEO: Initial play() FAILED - ${err.name}: ${err.message}`);
+        log('This is expected on iOS - autoplay requires user interaction');
+        // Schedule auto-flip anyway - video will play on first user interaction
+        scheduleAutoFlip();
+      });
+  } else {
+    log('VIDEO: Initial play() returned undefined');
+    scheduleAutoFlip();
+  }
+
+  // Log final readyState after a delay
+  setTimeout(() => {
+    log(`Video state after 1s: readyState=${video.readyState}, paused=${video.paused}, currentTime=${video.currentTime}`);
+  }, 1000);
+
+  setTimeout(() => {
+    log(`Video state after 3s: readyState=${video.readyState}, paused=${video.paused}, currentTime=${video.currentTime}`);
+  }, 3000);
 })();
 
 /* ══════════════════════════════════════════════
