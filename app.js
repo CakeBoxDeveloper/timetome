@@ -1397,7 +1397,7 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
         if (heroHeight === 0) return;
         
         const transitionStart = heroHeight * 0.2;
-        const transitionEnd = heroHeight * 0.6;
+        const transitionEnd = heroHeight * 1.2;
         
         let progress = 0;
         if (scrollY > transitionStart) {
