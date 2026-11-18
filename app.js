@@ -1621,11 +1621,18 @@ ${groupsMarkup}</svg>`;
     let hasPlayed = false; // Прапорець щоб конфетті запустилось тільки один раз
 
     // Перевіряємо чи це прямий заход або рефреш (не перехід з іншої сторінки сайту)
-    function isDirectEntry() {
+    function shouldShowConfetti() {
       const referrer = document.referrer;
       
-      // Немає referrer = прямий заход (вписали URL, закладка, або новая вкладка)
-      if (!referrer) return true;
+      // Якщо вже грало в цій сесії браузера через внутрішню навігацію - не показуємо
+      const confettiPlayed = sessionStorage.getItem('confettiPlayed');
+      
+      // Немає referrer = прямий заход або refresh
+      if (!referrer) {
+        // Очищаємо sessionStorage при прямому заході/refresh щоб конфетті показалось
+        sessionStorage.removeItem('confettiPlayed');
+        return true;
+      }
       
       // Є referrer - перевіряємо чи це з іншого сайту
       try {
@@ -1635,23 +1642,34 @@ ${groupsMarkup}</svg>`;
         // Якщо referrer з того ж домену - це внутрішній перехід
         if (referrerURL.hostname === currentHost) {
           console.log('Internal navigation from', referrerURL.pathname, '- skipping confetti');
+          
+          // Якщо вже грало - не показуємо
+          if (confettiPlayed === 'true') {
+            return false;
+          }
+          
+          // Якщо ще не грало - перевіряємо чи це перший внутрішній перехід
+          // Перший внутрішній перехід = не показуємо, запам'ятовуємо
+          sessionStorage.setItem('confettiPlayed', 'true');
           return false;
         }
         
-        // Якщо з іншого домену - показуємо конфетті
+        // Якщо з іншого домену - показуємо конфетті і очищаємо sessionStorage
+        sessionStorage.removeItem('confettiPlayed');
         return true;
       } catch {
         // Якщо не вдалося розпарсити - вважаємо прямим заходом
+        sessionStorage.removeItem('confettiPlayed');
         return true;
       }
     }
 
     // Запускаємо confetti синхронно з карточками (0.6s delay після hero-ready)
     document.body.addEventListener('heroReady', () => {
-      if (hasPlayed) return; // Якщо вже грало - не запускаємо знову
+      if (hasPlayed) return; // Якщо вже грало на цій сторінці - не запускаємо знову
       
-      // Перевіряємо чи це не внутрішній перехід
-      if (!isDirectEntry()) {
+      // Перевіряємо чи треба показувати конфетті
+      if (!shouldShowConfetti()) {
         return;
       }
       
