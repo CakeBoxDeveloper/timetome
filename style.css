@@ -2950,6 +2950,13 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
     width: 24px !important;
     height: 24px !important;
   }
+  
+  /* Показываем текст "Telegram" и "Instagram" на мобильных */
+  .tg-icon .tg-text {
+    opacity: 1;
+    bottom: -22px;
+    font-size: 10px;
+  }
 }
 
 @media (max-width: 480px) {

@@ -1388,9 +1388,9 @@ document.querySelectorAll('.cert-buy-btn, .svc-book-btn').forEach(btn => {
       e.preventDefault();
       console.log('Button clicked');
       hideButton();
-      const servicesSection = document.getElementById('services');
-      if (servicesSection) {
-        servicesSection.scrollIntoView({behavior:'smooth'});
+      const newsSection = document.getElementById('news');
+      if (newsSection) {
+        newsSection.scrollIntoView({behavior:'smooth'});
       }
     });
     
