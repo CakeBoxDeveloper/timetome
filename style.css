@@ -470,9 +470,9 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   letter-spacing: 0.08em;
   white-space: nowrap;
   text-shadow:
-    0 0 8px rgba(255,255,255,0.9),
-    0 0 20px rgba(255,255,255,0.6),
-    0 0 40px rgba(255,255,255,0.3);
+    0 0 8px rgba(0,0,0,0.9),
+    0 0 20px rgba(0,0,0,0.6),
+    0 0 40px rgba(0,0,0,0.3);
   box-sizing: border-box;
 }
 .hero__slogan--glow {
@@ -797,11 +797,11 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   border-radius: 18px;
   background: linear-gradient(
     115deg,
-    transparent 20%,
-    rgba(255,255,255,0.04) 35%,
-    rgba(255,255,255,0.16) 45%,
-    rgba(255,255,255,0.04) 55%,
-    transparent 70%
+    transparent 15%,
+    rgba(255,255,255,0.06) 30%,
+    rgba(255,255,255,0.175) 45%,
+    rgba(255,255,255,0.06) 60%,
+    transparent 75%
   );
   background-size: 300% 100%;
   animation: certImgSheen 4s ease-in-out infinite;
@@ -860,14 +860,14 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
-  background: rgba(255,255,255,0.07);
+  background: rgba(0,0,0,0.07);
   color: var(--text-muted);
   position: relative;
   bottom: -1px;
   letter-spacing: 0.02em;
 }
 .cert-tab:hover {
-  background: rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.12);
   color: var(--text);
 }
 .cert-tab.is-active {
@@ -952,15 +952,15 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   width: 100%;
   padding: 9px 12px;
   border-radius: var(--r);
-  border: 1.5px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.08);
+  border: 1.5px solid rgba(0,0,0,0.2);
+  background: rgba(0,0,0,0.08);
   color: inherit;
   font-family: var(--font);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
 }
-.cert-program-toggle:hover { background: rgba(255,255,255,0.14); }
+.cert-program-toggle:hover { background: rgba(0,0,0,0.14); }
 .cert-program-toggle__arrow {
   transition: transform 0.3s ease;
   flex-shrink: 0;
@@ -978,8 +978,8 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(0,0,0,0.07);
+  border: 1px solid rgba(0,0,0,0.18);
   border-radius: 6px;
   padding: 9px 12px;
   font-size: 11px;
@@ -995,7 +995,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 }
 .cert-program-table__inner {
   margin-top: 6px;
-  border: 1.5px solid rgba(255,255,255,0.22);
+  border: 1.5px solid rgba(0,0,0,0.22);
   border-radius: var(--r);
   overflow: hidden;
 }
@@ -1009,15 +1009,15 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   padding: 7px 8px;
   opacity: 0.6;
   font-weight: 600;
-  border-bottom: 1.5px solid rgba(255,255,255,0.22);
-  border-right: 1px solid rgba(255,255,255,0.12);
+  border-bottom: 1.5px solid rgba(0,0,0,0.22);
+  border-right: 1px solid rgba(0,0,0,0.12);
   background: rgba(0,0,0,0.15);
 }
 .cert-program-table th:last-child { border-right: none; }
 .cert-program-table td {
   padding: 7px 8px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  border-right: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  border-right: 1px solid rgba(0,0,0,0.08);
   line-height: 1.4;
   color: inherit;
 }
@@ -1037,7 +1037,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 .snap-dot {
   width:6px; height:6px;
   border-radius:50%;
-  background:rgba(255,255,255,0.12);
+  background:rgba(0,0,0,0.12);
   transition:all 0.3s ease;
   cursor:pointer;
 }
@@ -1501,11 +1501,11 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   pointer-events: none;
   background: linear-gradient(
     115deg,
-    transparent 20%,
-    rgba(255,255,220,0.18) 35%,
-    rgba(255,255,255,0.38) 45%,
-    rgba(255,250,200,0.18) 55%,
-    transparent 70%
+    transparent 15%,
+    rgba(255,255,220,0.175) 30%,
+    rgba(255,255,255,0.325) 45%,
+    rgba(255,250,200,0.175) 60%,
+    transparent 75%
   );
   background-size: 300% 100%;
   animation: lotSheen 5s ease-in-out infinite;
@@ -1705,7 +1705,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   flex-shrink:0;
   opacity: 1;
   color: #fff;
-  background: rgba(255,255,255,0.25);
+  background: rgba(0,0,0,0.25);
   border-radius: 4px;
   padding: 2px;
   display: flex; align-items: center; justify-content: center;
@@ -1752,7 +1752,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 .perk-item {
   display:flex; align-items:center; gap:14px;
   padding:12px 14px;
-  background:rgba(255,255,255,0.04);
+  background:rgba(0,0,0,0.04);
   border:1px solid var(--border); border-radius:var(--r);
   -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
   transition:border-color var(--ease), background var(--ease);
@@ -1829,11 +1829,11 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 /* shared glass style — only for ads block */
 .fnav__ads {
   border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(0,0,0,0.12);
   background: rgba(10, 11, 20, 0.72);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   backdrop-filter: blur(24px) saturate(180%);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.06) inset;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 1px 0 rgba(0,0,0,0.06) inset;
   height: 58px;
   overflow: hidden;
 }
@@ -1862,7 +1862,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.22);
+  background: rgba(0,0,0,0.22);
   transition: background 0.3s ease;
   flex-shrink: 0;
 }
@@ -1965,11 +1965,11 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   justify-content: center;
   padding: 0 6px;
   border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(0,0,0,0.12);
   background: rgba(10, 11, 20, 0.72);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   backdrop-filter: blur(24px) saturate(180%);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.06) inset;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 1px 0 rgba(0,0,0,0.06) inset;
 }
 .fnav__book {
   display: flex;
@@ -1991,7 +1991,7 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   white-space: nowrap;
   width: 100%;
 }
-.fnav__book:hover { background: rgba(255,255,255,0.08); }
+.fnav__book:hover { background: rgba(0,0,0,0.08); }
 .fnav__book:active { transform: scale(0.97); }
 .fnav__book svg { flex-shrink: 0; }
 .fnav__book span { display: inline; }
@@ -3239,8 +3239,8 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
   margin: 0 auto;
   overflow: hidden;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
 }
 
 .news-carousel__track {
@@ -3302,19 +3302,77 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
 }
 
 /* Заголовок поверх маски */
-.news-carousel__title {
+.news-carousel__content {
   position: absolute;
-  bottom: 24px;
-  left: 24px;
-  right: 24px;
-  color: #fff;
-  font-size: 24px;
-  font-weight: 700;
-  text-align: center;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
   z-index: 2;
+}
+
+.news-carousel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.news-carousel__title {
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
   margin: 0;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  flex: 1;
+}
+
+.news-carousel__duration {
+  display: inline-block;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+}
+
+.news-carousel__desc {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0 0 12px 0;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+}
+
+.news-carousel__link {
+  display: block;
+  text-align: center;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+}
+
+.news-carousel__link:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
 }
 
 /* Точки наверху контейнера */
@@ -3371,11 +3429,27 @@ button { font:inherit; color:inherit; cursor:pointer; border:none; -webkit-tap-h
     aspect-ratio: 1/1;
   }
   
-  .news-carousel__title {
-    font-size: 18px;
-    bottom: 20px;
+  .news-carousel__content {
+    bottom: 16px;
     left: 16px;
     right: 16px;
+  }
+  
+  .news-carousel__title {
+    font-size: 18px;
+  }
+  
+  .news-carousel__duration {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+  
+  .news-carousel__desc {
+    font-size: 13px;
+  }
+  
+  .news-carousel__link {
+    font-size: 12px;
   }
   
   .news-carousel__dots {

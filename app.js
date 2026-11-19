@@ -1624,12 +1624,8 @@ ${groupsMarkup}</svg>`;
     function shouldShowConfetti() {
       const referrer = document.referrer;
       
-      // Якщо вже грало в цій сесії браузера через внутрішню навігацію - не показуємо
-      const confettiPlayed = sessionStorage.getItem('confettiPlayed');
-      
-      // Немає referrer = прямий заход або refresh
+      // Немає referrer = прямий заход або refresh - показуємо конфетті
       if (!referrer) {
-        // Очищаємо sessionStorage при прямому заході/refresh щоб конфетті показалось
         sessionStorage.removeItem('confettiPlayed');
         return true;
       }
@@ -1639,22 +1635,13 @@ ${groupsMarkup}</svg>`;
         const referrerURL = new URL(referrer);
         const currentHost = window.location.hostname;
         
-        // Якщо referrer з того ж домену - це внутрішній перехід
+        // Якщо referrer з того ж домену - це внутрішній перехід, НЕ ПОКАЗУЄМО
         if (referrerURL.hostname === currentHost) {
           console.log('Internal navigation from', referrerURL.pathname, '- skipping confetti');
-          
-          // Якщо вже грало - не показуємо
-          if (confettiPlayed === 'true') {
-            return false;
-          }
-          
-          // Якщо ще не грало - перевіряємо чи це перший внутрішній перехід
-          // Перший внутрішній перехід = не показуємо, запам'ятовуємо
-          sessionStorage.setItem('confettiPlayed', 'true');
           return false;
         }
         
-        // Якщо з іншого домену - показуємо конфетті і очищаємо sessionStorage
+        // Якщо з іншого домену - показуємо конфетті
         sessionStorage.removeItem('confettiPlayed');
         return true;
       } catch {
