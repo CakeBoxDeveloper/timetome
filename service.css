@@ -843,7 +843,7 @@ body {
   top: -8px;
   width: 88px;
   height: 88px;
-  background-image: url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/2f37ee482c3b80118c4aa47593f75c24b2f6cce7/ClockStraight.svg');
+  background-image: url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/fe7cca61ad2167855e6e2a35d5fe10f88f0f91f2/TTMLogoRound.svg');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -860,7 +860,7 @@ body {
   top: -8px;
   width: 75px;
   height: 75px;
-  background-image: url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/2f37ee482c3b80118c4aa47593f75c24b2f6cce7/ClockStraight.svg');
+  background-image: url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/fe7cca61ad2167855e6e2a35d5fe10f88f0f91f2/TTMLogoRound.svg');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -883,26 +883,63 @@ body {
 .svc-cert-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
+  gap: 14px;
+  padding: 14px 18px;
   text-decoration: none;
-  border-bottom: 1px solid rgba(0,0,0,0.12);
-  transition: filter 0.18s ease;
+  transition: all 0.18s ease;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0;
 }
-.svc-cert-row:last-child { border-bottom: none; }
-.svc-cert-row:hover { filter: brightness(1.1); }
-.svc-cert-row:active { filter: brightness(0.92); }
+.svc-cert-row:first-child {
+  border-radius: var(--r) var(--r) 0 0;
+}
+.svc-cert-row:last-child {
+  border-radius: 0 0 var(--r) var(--r);
+}
+.svc-cert-row:first-child:last-child {
+  border-radius: var(--r);
+}
+
+/* Іконка логотипу на підложці */
+.svc-cert-row::before {
+  content: '';
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.svc-cert-row::after {
+  content: '';
+  position: absolute;
+  left: 18px;
+  width: 24px;
+  height: 24px;
+  background-image: url('https://raw.githubusercontent.com/CakeBoxDeveloper/timetome/fe7cca61ad2167855e6e2a35d5fe10f88f0f91f2/TTMLogoRound.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: brightness(0) saturate(100%);
+  z-index: 2;
+}
+
 .svc-cert-row__left {
   flex: 1;
   min-width: 0;
+  margin-left: 36px;
 }
 .svc-cert-row__name {
   font-size: 15px;
   font-weight: 700;
   line-height: 1.2;
 }
-/* hide description in row */
 .svc-cert-row__desc { display: none; }
 .svc-cert-row__prices {
   display: flex;
@@ -929,8 +966,48 @@ body {
   opacity: 0.55;
   margin-left: 4px;
 }
-/* Per-cert colors */
-.svc-cert-row--kakao  { background: #7d5c5b; color: #f5d9d5; }
-.svc-cert-row--bumble { background: #780115; color: #f7b638; }
-.svc-cert-row--matcha { background: #383f0c; color: #c4d18b; }
-.svc-cert-row--ice    { background: #3730a2; color: #c8bbe7; }
+
+/* Per-cert colors з градієнтами */
+.svc-cert-row--kakao {
+  background: linear-gradient(135deg, #7d5c5b 0%, #9a7170 100%);
+  color: #f5d9d5;
+}
+.svc-cert-row--kakao::before {
+  background: linear-gradient(135deg, rgba(245, 217, 213, 0.3) 0%, rgba(212, 169, 166, 0.1) 100%);
+}
+.svc-cert-row--kakao::after {
+  filter: brightness(0) saturate(100%) invert(92%) sepia(10%) saturate(634%) hue-rotate(305deg) brightness(98%) contrast(94%);
+}
+
+.svc-cert-row--bumble {
+  background: linear-gradient(135deg, #780115 0%, #a30120 100%);
+  color: #f7b638;
+}
+.svc-cert-row--bumble::before {
+  background: linear-gradient(135deg, rgba(247, 182, 56, 0.3) 0%, rgba(200, 128, 32, 0.1) 100%);
+}
+.svc-cert-row--bumble::after {
+  filter: brightness(0) saturate(100%) invert(69%) sepia(66%) saturate(551%) hue-rotate(359deg) brightness(101%) contrast(94%);
+}
+
+.svc-cert-row--matcha {
+  background: linear-gradient(135deg, #383f0c 0%, #4a5416 100%);
+  color: #c4d18b;
+}
+.svc-cert-row--matcha::before {
+  background: linear-gradient(135deg, rgba(196, 209, 139, 0.3) 0%, rgba(165, 177, 100, 0.1) 100%);
+}
+.svc-cert-row--matcha::after {
+  filter: brightness(0) saturate(100%) invert(86%) sepia(13%) saturate(871%) hue-rotate(38deg) brightness(92%) contrast(88%);
+}
+
+.svc-cert-row--ice {
+  background: linear-gradient(135deg, #3730a2 0%, #4a41cc 100%);
+  color: #c8bbe7;
+}
+.svc-cert-row--ice::before {
+  background: linear-gradient(135deg, rgba(200, 187, 231, 0.3) 0%, rgba(167, 148, 210, 0.1) 100%);
+}
+.svc-cert-row--ice::after {
+  filter: brightness(0) saturate(100%) invert(86%) sepia(17%) saturate(861%) hue-rotate(204deg) brightness(96%) contrast(88%);
+}

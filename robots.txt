@@ -1,0 +1,12 @@
+# robots.txt для chas.mk.ua
+# Дозволяємо індексацію всього сайту
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://chas.mk.ua/sitemap.xml
+
+# Опціонально: блокуємо службові файли якщо є
+# Disallow: /api/
+# Disallow: /admin/
