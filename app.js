@@ -1694,3 +1694,143 @@ ${groupsMarkup}</svg>`;
     initConfetti();
   }
 })();
+
+
+/* ══════════════════════════════════════
+   НОВИНКИ CAROUSEL (Instagram-style)
+══════════════════════════════════════ */
+
+(function initNewsCarousel() {
+  const track = document.getElementById('newsTrack');
+  const dotsContainer = document.getElementById('newsDots');
+  
+  if (!track || !dotsContainer) return;
+  
+  const dots = Array.from(dotsContainer.querySelectorAll('.news-dot'));
+  const slides = Array.from(track.querySelectorAll('.news-carousel__slide'));
+  
+  let currentSlide = 0;
+  let autoplayInterval = null;
+  let startX = 0;
+  let currentX = 0;
+  let isDragging = false;
+  
+  // Переход на слайд
+  function goToSlide(index) {
+    if (index < 0 || index >= slides.length) return;
+    
+    currentSlide = index;
+    track.style.transform = `translateX(-${currentSlide * 100}%)`;
+    
+    // Обновить точки
+    dots.forEach((dot, i) => {
+      dot.classList.remove('active');
+      if (i === currentSlide) {
+        dot.classList.add('active');
+      }
+    });
+    
+    // Перезапустить автоплей
+    startAutoplay();
+  }
+  
+  // Автопереключение
+  function startAutoplay() {
+    clearInterval(autoplayInterval);
+    
+    autoplayInterval = setInterval(() => {
+      const nextSlide = (currentSlide + 1) % slides.length;
+      goToSlide(nextSlide);
+    }, 5000);
+  }
+  
+  // Клик по точкам
+  dots.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      const slideIndex = parseInt(dot.dataset.slide);
+      goToSlide(slideIndex);
+    });
+  });
+  
+  // Свайп на мобильных
+  track.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+    clearInterval(autoplayInterval);
+  });
+  
+  track.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    currentX = e.touches[0].clientX;
+  });
+  
+  track.addEventListener('touchend', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    
+    const diff = startX - currentX;
+    
+    if (Math.abs(diff) > 50) {
+      if (diff > 0 && currentSlide < slides.length - 1) {
+        goToSlide(currentSlide + 1);
+      } else if (diff < 0 && currentSlide > 0) {
+        goToSlide(currentSlide - 1);
+      }
+    } else {
+      startAutoplay();
+    }
+  });
+  
+  // Драг на десктопе
+  track.addEventListener('mousedown', (e) => {
+    startX = e.clientX;
+    isDragging = true;
+    track.style.cursor = 'grabbing';
+    clearInterval(autoplayInterval);
+  });
+  
+  track.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    currentX = e.clientX;
+  });
+  
+  track.addEventListener('mouseup', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    track.style.cursor = 'grab';
+    
+    const diff = startX - currentX;
+    
+    if (Math.abs(diff) > 50) {
+      if (diff > 0 && currentSlide < slides.length - 1) {
+        goToSlide(currentSlide + 1);
+      } else if (diff < 0 && currentSlide > 0) {
+        goToSlide(currentSlide - 1);
+      }
+    } else {
+      startAutoplay();
+    }
+  });
+  
+  track.addEventListener('mouseleave', () => {
+    if (isDragging) {
+      isDragging = false;
+      track.style.cursor = 'grab';
+      startAutoplay();
+    }
+  });
+  
+  // Пауза при наведении
+  track.addEventListener('mouseenter', () => {
+    clearInterval(autoplayInterval);
+  });
+  
+  track.addEventListener('mouseleave', () => {
+    if (!isDragging) {
+      startAutoplay();
+    }
+  });
+  
+  // Старт
+  goToSlide(0);
+})();
